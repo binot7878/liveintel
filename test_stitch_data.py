@@ -1,5 +1,6 @@
 import json
 import sqlite3
+from datetime import datetime, timezone
 import unittest
 
 import stitch_data
@@ -69,6 +70,34 @@ class StitchCalculationTests(unittest.TestCase):
         self.assertTrue(dispatched["available"])
         self.assertFalse(dispatched["fail_closed"])
         self.assertEqual(dispatched["result"]["over_fair"], 0.5)
+
+    def test_system_health_interprets_naive_liveintel_timestamps_as_eastern(self):
+        connection = sqlite3.connect(":memory:")
+        connection.row_factory = sqlite3.Row
+        connection.execute("CREATE TABLE game_state(last_updated TEXT)")
+        connection.execute("CREATE TABLE games(last_updated TEXT)")
+        connection.execute("CREATE TABLE player_game_stats(last_updated TEXT)")
+        connection.execute("CREATE TABLE plays(local_received_timestamp TEXT)")
+        connection.execute("CREATE TABLE challenge_decisions(created_at TEXT)")
+
+        connection.execute("INSERT INTO game_state(last_updated) VALUES(?)", ("2026-11-01 14:50:45",))
+        connection.execute("INSERT INTO games(last_updated) VALUES(?)", ("2026-11-01 14:50:45",))
+        connection.execute("INSERT INTO player_game_stats(last_updated) VALUES(?)", ("2026-11-01 14:50:45",))
+        connection.execute("INSERT INTO plays(local_received_timestamp) VALUES(?)", ("2026-11-01T19:50:45Z",))
+        connection.execute("INSERT INTO challenge_decisions(created_at) VALUES(?)", ("2026-11-01T19:50:45+00:00",))
+
+        now = datetime(2026, 11, 1, 19, 51, 0, tzinfo=timezone.utc)
+        result = stitch_data.system_health(connection, now)
+
+        feeds = {feed["name"]: feed for feed in result["feeds"]}
+
+        self.assertLess(feeds["game_state"]["age_seconds"], 60)
+        self.assertLess(feeds["games"]["age_seconds"], 60)
+        self.assertLess(feeds["player_stats"]["age_seconds"], 60)
+        self.assertLess(feeds["plays"]["age_seconds"], 60)
+        self.assertLess(feeds["challenge"]["age_seconds"], 60)
+
+        connection.close()
 
     def test_stats_extraction_uses_recorded_values(self):
         payload = {"shooting": {"FG": "8/15", "3PT": "3/7"}, "totals": {"points": 22, "assists": 6}}

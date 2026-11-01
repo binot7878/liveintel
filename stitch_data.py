@@ -194,8 +194,8 @@ def system_health(connection: sqlite3.Connection, clock: datetime | None = None)
         try:
             stamp = datetime.fromisoformat(stamp_text.replace("Z", "+00:00"))
             if stamp.tzinfo is None:
-                stamp = stamp.replace(tzinfo=timezone.utc)
-            age = max(0, (now - stamp).total_seconds())
+                stamp = stamp.replace(tzinfo=ET)
+            age = max(0, (now - stamp.astimezone(timezone.utc)).total_seconds())
         except (ValueError, TypeError):
             pass
         feeds.append({"name": name, "updated_at": stamp_text or None, "age_seconds": round(age, 1) if age is not None else None,
