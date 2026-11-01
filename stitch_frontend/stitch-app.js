@@ -152,7 +152,19 @@
         const detail = leafElements(footer).find(element => !/GAMECAST|arrow_forward|open_in_new/i.test(element.textContent));
         text(detail, game.status === 'FINAL' ? 'FINAL • RECORDED' : game.status === 'LIVE' ? 'LIVEINTEL STATE CURRENT' : `START ${game.start_time || 'TIME NOT SUPPLIED'}`);
         const button = one('button', footer);
-        if (button) { button.dataset.liAction = 'gamecast'; button.dataset.url = game.gamecast || ''; }
+        if (button) {
+          button.dataset.liAction = 'gamecast';
+          button.dataset.url = game.gamecast || '';
+          const buttonLeaves = leafElements(button).filter(
+            element => !/arrow_forward|open_in_new/i.test(element.textContent)
+          );
+          const buttonLabel = buttonLeaves.find(
+            element => !/^[•·]$/.test(element.textContent.trim())
+          );
+          if (buttonLabel) {
+            text(buttonLabel, game.status === 'FINAL' ? 'RECAP & LOG' : 'GAMECAST');
+          }
+        }
       }
     });
     const radar = Array.from(document.querySelectorAll('main div')).find(element => /QUANT LIVE EDGE RADAR/i.test(element.textContent) && element.children.length < 8);
