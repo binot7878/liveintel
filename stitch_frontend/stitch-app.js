@@ -218,8 +218,51 @@
         if (buttonIndex > 0) { button.dataset.market = titleStat(market); button.dataset.gameId = player.game_id; }
       });
     });
+    const applyPlayerFilters = () => {
+      const query = (one('#player-filter-input')?.value || '').trim().toLowerCase();
+      const activeRole = document.querySelector('[data-player-role-filter].li-active-role')?.dataset.playerRoleFilter || 'all';
+
+      rows.forEach(row => {
+        const matchesText = !query || row.textContent.toLowerCase().includes(query);
+        const role = (row.dataset.playerRole || '').toLowerCase();
+        const matchesRole = activeRole === 'all' || role === activeRole;
+        row.classList.toggle('li-hidden', !(matchesText && matchesRole));
+      });
+    };
+
+    const roleButtons = Array.from(document.querySelectorAll('button')).filter(button =>
+      /^(ALL|STARTERS|BENCH|ROTATION)$/i.test(button.textContent.trim())
+    );
+
+    roleButtons.forEach(button => {
+      const label = button.textContent.trim().toLowerCase();
+      button.dataset.playerRoleFilter =
+        label === 'starters' ? 'starter' :
+        label === 'bench' ? 'bench' :
+        label === 'rotation' ? 'rotation' : 'all';
+
+      button.addEventListener('click', () => {
+        roleButtons.forEach(item => item.classList.remove('li-active-role'));
+        button.classList.add('li-active-role');
+        applyPlayerFilters();
+      });
+    });
+
+    const allRoleButton = roleButtons.find(button => button.dataset.playerRoleFilter === 'all');
+    if (allRoleButton) allRoleButton.classList.add('li-active-role');
+
+    rows.forEach((row, index) => {
+      const player = players[index];
+      if (player) row.dataset.playerRole = String(player.role || '').toLowerCase();
+    });
+
     const input = one('#player-filter-input');
-    if (input) input.addEventListener('input', () => rows.forEach(row => row.classList.toggle('li-hidden', !row.textContent.toLowerCase().includes(input.value.trim().toLowerCase()))));
+    if (input) input.addEventListener('input', applyPlayerFilters);
+
+    const activeClaim = leafElements(document.querySelector('main')).find(
+      element => /LIVE SLATE:\s*\d+\s+ACTIVE PROPS IDENTIFIED/i.test(element.textContent)
+    );
+    if (activeClaim) text(activeClaim, `LIVE SLATE: ${players.length} CURRENT PLAYERS • PROP SOURCE PENDING`);
   }
 
   function bindHeat(data) {
