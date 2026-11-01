@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),path=require('path');global.TicketMath=require('/opt/liveintel/ticket_math.js');
+const ui=require(path.join(process.env.LIVEINTEL_TEST_DIR||__dirname,'board.js')),s=ui.state;
+const parsed=ui.parsePastedTicket('NBA | A @ B | Recorded Player | Points | 20.5 | OVER | -110');assert.equal(parsed[0].player,'Recorded Player');assert.equal(parsed[0].line,'20.5');assert.equal(ui.parsePastedTicket(JSON.stringify({legs:parsed}))[0].market,'Points');assert.throws(()=>ui.parsePastedTicket('invalid'));assert.throws(()=>ui.parsePastedTicket(JSON.stringify(Array(13).fill(parsed[0]))));
+s.terminal={games:[{id:'g1',sport:'NBA',away:'A',home:'B'}],roster:[{game_id:'g1',player_name:'Recorded Player',player_id:'123',team:'B'}]};
+assert.equal(ui.resolveLeg(parsed[0]).player_id,'123');assert.equal(ui.resolveLeg({sport:'NBA',game:'A @ B',player:'Manual Player'}).player_id,undefined);
+s.draft=[{...parsed[0],game_id:'g1'},{...parsed[0],game_id:'g2'}];s.stake='10';s.combined='';assert.equal(ui.pricing().payout,36.45);
+s.draft[1].game_id='g1';assert.throws(()=>ui.pricing(),/combined quote/);s.combined='+300';assert.equal(ui.pricing().payout,40);
+s.combined='3x';assert.equal(ui.pricing().payout,30);s.combined='';s.draft=[{...parsed[0],odds:''}];assert.throws(()=>ui.pricing());
+assert.equal(ui.observedPrice('-110').decimal,1+100/110);assert.equal(ui.observedPrice('3x').decimal,3);assert.throws(()=>ui.observedPrice('-99'));
+console.log('PASS: player-prop text/JSON import, identity resolution, manual identity preservation, exact payout, same-game guard and observed multiplier support');

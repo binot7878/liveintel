@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict'),path=require('path');global.TicketMath=require('/opt/liveintel/ticket_math.js');
+const ui=require(path.join(process.env.LIVEINTEL_TEST_DIR||__dirname,'board.js')),s=ui.state;
+s.terminal={games:[{id:'g',sport:'NBA',away:'A',home:'B'}],roster:[],watch_history:[{player_id:'123',sport:'NBA',market:'Points',values:[10,11,12,13],average:11.5,history:[{date:'2026-10-01'},{date:'2026-10-02'},{date:'2026-10-03'},{date:'2026-10-04'}]}]};s.research=[];
+const watch=ui.watchCard({id:'123',name:'Recorded Player',sport:'NBA',team:'B',status:'NO GAME TODAY'});
+assert.deepEqual(watch.values,[10,11,12,13]);assert.equal(watch.average,11.5);assert.equal(watch.dates.length,4);
+s.research=[{kind:'team',sport:'NBA',team:'B',player:'B',values:[20]},{kind:'player',sport:'NBA',team:'B',player_id:'123',player:'Recorded Player',values:[10]}];assert.equal(ui.watchCard({id:'123',sport:'NBA',team:'B',status:'PRE'}).kind,'player','a watched player must not resolve to their team');assert.equal(ui.watchCard({id:'123',sport:'NBA',team:'B',status:'PRE'}).watch_id,'123');
+s.filters={players:{sport:'NBA',role:'starter'}};
+assert.equal(ui.filtered([{sport:'NBA',role:0},{sport:'NBA',role:1},{sport:'CFB',role:1}],'players').length,2,'starter must never be a shared eligibility gate');
+s.filters.players.search='recorded';assert.equal(ui.filtered([{sport:'NBA',player:'Recorded Player'},{sport:'NBA',player:'Another'}],'players').length,1);
+const leg=ui.toLeg({kind:'player',player:'Recorded Player',player_id:'123',team:'B',game_id:'g',sport:'NBA',market:'Points',current_line:null,odds:null});assert.equal(leg.line,'');assert.equal(leg.odds,'');assert.equal(leg.player_id,'123');
+const team=ui.toLeg({kind:'team',player:'B',team:'B',game_id:'g',sport:'NBA',market:'Team score'});assert.equal(team.player_id,'');
+assert.equal(ui.escape('<script>'), '&lt;script&gt;');assert.equal(ui.num(null),'Unavailable');assert.equal(ui.num(0),'0');assert.equal(ui.money(null),'Not recorded');
+console.log('PASS: historical Watch without today game, role eligibility, search, player/team draft bindings, unavailable prices and safe rendering');

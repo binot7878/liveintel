@@ -1,0 +1,970 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_standard" name="shell-type">
+<title>LiveIntel // Sports Intelligence Terminal - Betslip Execution</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "surface": "#10131a",
+        "surface-container-lowest": "#0b0e15",
+        "surface-container-low": "#191b23",
+        "surface-container": "#1d1f27",
+        "surface-container-high": "#272a32",
+        "surface-container-highest": "#32353d",
+        "on-surface": "#e1e2ec",
+        "on-surface-variant": "#bbcabf",
+        "outline": "#86948a",
+        "primary": "#4edea3",
+        "primary-container": "#10b981",
+        "on-primary": "#003824",
+        "secondary": "#ffb95f",
+        "secondary-container": "#ee9800",
+        "on-secondary": "#472a00",
+        "error": "#ffb4ab",
+        "error-container": "#93000a"
+      },
+      fontFamily: {
+        headline: ["Inter", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"]
+      }
+    }
+  }
+};
+</script>
+<style>
+@layer base {
+  html, body { margin: 0; padding: 0; }
+  body { overscroll-behavior: none; }
+}
+::-webkit-scrollbar { display: none; }
+.custom-scrollbar::-webkit-scrollbar {
+  display: block;
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #10131a;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #272a32;
+  border-radius: 2px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #4edea3;
+}
+@keyframes tickerSlide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-ticker {
+  display: flex;
+  width: max-content;
+  animation: tickerSlide 35s linear infinite;
+}
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+@keyframes flashGreen {
+  0% { background-color: rgba(78, 222, 163, 0.4); color: #4edea3; }
+  100% { background-color: transparent; }
+}
+.cell-flash-green { animation: flashGreen 1.2s ease-out forwards; }
+</style>
+</head>
+<body class="bg-surface font-headline text-on-surface antialiased selection:bg-primary-container selection:text-on-primary">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 left-0 right-0 z-40 bg-surface-container-lowest/95 backdrop-blur-md border-b border-[#262a36] h-14 px-4 flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 cursor-pointer select-none">
+<div class="w-7 h-7 rounded bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-[18px]">insights</span>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-sm tracking-wider uppercase leading-none">LiveIntel</span>
+<span class="font-mono text-[9px] text-outline uppercase tracking-widest">Terminal v2.4</span>
+</div>
+</div>
+<div class="hidden xl:flex items-center px-2 py-0.5 bg-surface-container-high rounded gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-mono text-[10px] text-primary uppercase font-bold tracking-wider">LIVE SLATE • OCT 31</span>
+</div>
+</div>
+<nav class="hidden lg:flex items-center gap-1">
+<a class="px-3 py-1.5 rounded text-[11px] font-semibold uppercase text-on-surface-variant hover:bg-surface-container transition-colors" href="#">LIVE</a>
+<a class="px-3 py-1.5 rounded text-[11px] font-semibold uppercase text-on-surface-variant hover:bg-surface-container transition-colors" href="#">PLAYERS</a>
+<a class="px-3 py-1.5 rounded text-[11px] font-semibold uppercase text-on-surface-variant hover:bg-surface-container transition-colors" href="#">HEAT'S ON</a>
+<a class="px-3 py-1.5 rounded text-[11px] font-semibold uppercase text-on-surface-variant hover:bg-surface-container transition-colors" href="#">MATH LAB</a>
+<a class="px-3 py-1.5 rounded text-[11px] font-semibold uppercase bg-surface-container-highest text-on-surface" href="#">WATCH 5</a>
+<a class="px-3 py-1.5 rounded text-[11px] font-semibold uppercase text-on-surface-variant hover:bg-surface-container transition-colors" href="#">PICKS</a>
+<a class="relative px-3 py-1.5 rounded text-[11px] font-semibold uppercase text-on-surface-variant hover:bg-surface-container transition-all flex items-center gap-1.5" href="#tickets" id="navTicketsBtn"><span class="material-symbols-outlined text-[14px] text-outline">receipt</span><span class="">TICKETS</span><span class="hidden px-1.5 py-0.2 rounded bg-primary/20 text-primary border border-primary/40 font-mono text-[9px] font-bold tracking-wider animate-pulse" id="ticketsNavBadge">+1 NEW</span></a>
+<a class="px-3 py-1.5 rounded text-[11px] font-semibold uppercase text-on-surface-variant hover:bg-surface-container transition-colors" href="#">INTELLIGENCE</a>
+</nav>
+<div class="flex items-center gap-3">
+<!-- Live Feed status -->
+<div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary/10 border border-primary/30 text-primary font-mono text-[10px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="">FEED: LIVE (18ms)</span>
+</div>
+<!-- Bankroll -->
+<div class="flex items-center px-3 py-1 bg-surface-container rounded gap-3">
+<div class="flex flex-col text-right">
+<span class="font-mono text-[9px] text-outline uppercase">ROLL</span>
+<span class="font-mono text-xs text-on-surface font-semibold">$100.00</span>
+</div>
+<div class="w-px h-5 bg-surface-container-highest"></div>
+<div class="flex flex-col">
+<span class="font-mono text-[9px] text-outline uppercase">P/L</span>
+<span class="font-mono text-xs text-primary font-semibold">+$0.00</span>
+</div>
+</div>
+<!-- Active Betslip Header Trigger Button -->
+<button class="flex items-center gap-2 px-3 py-1.5 bg-primary/15 hover:bg-primary/25 border border-primary/40 rounded text-on-surface transition-all shadow-[0_0_12px_rgba(78,222,163,0.15)] group" id="headerSlipBtn" title="Toggle Execution Slip [B]">
+<span class="material-symbols-outlined text-[17px] text-primary group-hover:scale-110 transition-transform">receipt_long</span>
+<div class="flex items-center gap-1.5">
+<span class="font-mono text-xs font-bold text-primary" id="headerSlipCount">SLIP (3)</span>
+<span class="hidden md:inline text-outline text-[10px]">•</span>
+<span class="hidden md:inline font-mono text-[10px] text-on-surface-variant font-semibold" id="headerSlipStake">$75.00 MONITORED</span>
+</div>
+</button>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="w-full pt-14 pb-12 flex flex-col min-h-screen">
+<!-- Live Stream Ticker Ribbon -->
+<div class="w-full bg-surface-container-lowest border-b border-surface-container-high h-8 overflow-hidden select-none relative flex items-center">
+<div class="absolute left-0 top-0 bottom-0 z-10 px-3 bg-surface-container-low flex items-center gap-1.5 border-r border-surface-container-highest shadow-md shrink-0">
+<span class="material-symbols-outlined text-[14px] text-secondary animate-pulse">sensors</span>
+<span class="font-mono text-[10px] text-secondary font-bold uppercase tracking-wider hidden sm:inline">LIVE LINE TICKER</span>
+</div>
+<div class="w-full overflow-hidden pl-28 md:pl-36">
+<div class="animate-ticker flex items-center gap-6 whitespace-nowrap text-on-surface font-mono text-[10px] uppercase">
+<div class="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">
+<span class="px-1 py-0.2 rounded bg-secondary/20 text-secondary font-bold">STEAM DETECTED</span>
+<span class="text-on-surface font-bold">PINNACLE</span>
+<span class="text-outline">D. White O2.5 3PTM:</span>
+<span class="text-on-surface line-through text-outline">+105</span>
+<span class="text-primary font-bold">→ +118</span>
+<span class="text-primary font-bold bg-primary/10 px-1 rounded">[▲ +13c]</span>
+</div>
+<div class="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">
+<span class="px-1 py-0.2 rounded bg-secondary/20 text-secondary font-bold">SHARP INFLOW</span>
+<span class="text-on-surface font-bold">CIRCA</span>
+<span class="text-outline">C.J. Stroud U228.5 Pass Yds:</span>
+<span class="text-on-surface line-through text-outline">-115</span>
+<span class="text-secondary font-bold">→ -122</span>
+<span class="text-secondary font-bold bg-secondary/10 px-1 rounded">[▼ -7c]</span>
+</div>
+<div class="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">
+<span class="px-1 py-0.2 rounded bg-primary/20 text-primary font-bold">VALUE ARB</span>
+<span class="text-on-surface font-bold">DRAFTKINGS</span>
+<span class="text-outline">C. Holmgren O7.5 Reb:</span>
+<span class="text-on-surface line-through text-outline">-110</span>
+<span class="text-primary font-bold">→ -112</span>
+<span class="text-primary font-bold bg-primary/10 px-1 rounded">[▲ +2c]</span>
+</div>
+<div class="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-surface-container-low border border-surface-container-high">
+<span class="px-1 py-0.2 rounded bg-secondary/20 text-secondary font-bold">STEAM DETECTED</span>
+<span class="text-on-surface font-bold">PINNACLE</span>
+<span class="text-outline">D. White O2.5 3PTM:</span>
+<span class="text-primary font-bold">→ +118</span>
+<span class="text-primary font-bold bg-primary/10 px-1 rounded">[▲ +13c]</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Page Header & Metrics Strip -->
+<div class="px-6 py-4 flex flex-col gap-3">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+<div>
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary font-mono text-[10px] uppercase tracking-wider font-bold">RESTRICTED REGISTER</span>
+<h1 class="text-xl font-bold uppercase tracking-tight text-on-surface">WATCH 5 // HIGH-CONVICTION RADAR</h1>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high font-mono text-[10px] text-primary uppercase font-bold">5 / 5 SLOTS ACTIVE</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-0.5">Real-time telemetry, line drift, and delta tracking for up to 5 prioritized targets with instant slip routing.</p>
+</div>
+<div class="flex items-center gap-2"><div class="flex items-center bg-surface-container rounded p-0.5 border border-surface-container-high font-mono text-[10px] font-bold"><button class="px-2.5 py-1 rounded text-outline hover:text-on-surface transition-colors uppercase" id="toggleFullGameView">FULL GAME</button><button class="px-2.5 py-1 rounded bg-primary/20 text-primary border border-primary/40 uppercase flex items-center gap-1 shadow-sm" id="toggle1QView"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>1Q LIVE ODDS</button><button class="px-2.5 py-1 rounded text-outline hover:text-on-surface transition-colors uppercase flex items-center gap-1" id="toggle1HView">1H (FIRST HALF)</button><button class="px-2.5 py-1 rounded text-secondary hover:text-on-surface hover:bg-secondary/10 transition-colors uppercase flex items-center gap-1 border border-secondary/30" id="toggle2HHedgeView"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>2H LIVE HEDGE <span class="px-1 py-0.2 rounded bg-secondary/20 text-[9px] font-bold">LOCK +$42</span></button></div>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-primary hover:bg-primary-container text-on-primary font-mono text-xs font-bold uppercase transition-all shadow-[0_0_12px_rgba(78,222,163,0.3)]" id="openSlipDirectBtn">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+          VIEW SLIP DRAWER
+        </button>
+</div>
+</div>
+<!-- Quick Metrics -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
+<div class="bg-surface-container p-3 rounded flex flex-col gap-1 border border-surface-container-high">
+<span class="font-mono text-[10px] text-outline uppercase">MONITORED EXPOSURE</span>
+<div class="flex items-baseline gap-1.5">
+<span class="text-lg font-bold text-on-surface">$275.00</span>
+<span class="font-mono text-[10px] text-primary">3 TICKETS</span>
+</div>
+</div>
+<div class="bg-surface-container p-3 rounded flex flex-col gap-1 border border-surface-container-high">
+<span class="font-mono text-[10px] text-outline uppercase">LIVE TRIGGERS</span>
+<div class="flex items-baseline gap-1.5">
+<span class="text-lg font-bold text-secondary">3 IN-PLAY</span>
+<span class="font-mono text-[10px] text-outline">2 PRE-LOCK</span>
+</div>
+</div>
+<div class="bg-surface-container p-3 rounded flex flex-col gap-1 border border-surface-container-high">
+<span class="font-mono text-[10px] text-outline uppercase">TOTAL TARGET EDGE</span>
+<div class="flex items-baseline gap-1.5">
+<span class="text-lg font-bold text-primary">+5.4%</span>
+<span class="font-mono text-[10px] text-primary">AVG EV</span>
+</div>
+</div>
+<div class="bg-surface-container p-3 rounded flex flex-col gap-1 border border-surface-container-high">
+<span class="font-mono text-[10px] text-outline uppercase">RAPID STEAM ALERTS</span>
+<div class="flex items-baseline gap-1.5">
+<span class="text-lg font-bold text-secondary">2 ACTIVE</span>
+<span class="font-mono text-[10px] text-secondary">&lt;5M DELTA</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 5-Slot Radar Cards Grid -->
+<div class="px-6 grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-3">
+<!-- Slot 1: D. White -->
+<div class="bg-surface-container rounded border border-surface-container-high p-3 flex flex-col justify-between hover:border-primary/50 transition-all group"><div class="flex flex-col gap-2"><div class="flex items-center justify-between text-[10px] font-mono"><span class="text-primary font-bold">SLOT 01 • NBA</span><span class="text-primary font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>1Q LIVE (Q1 04:12)</span></div><div><div class="text-sm font-bold uppercase text-on-surface flex items-center justify-between"><span class="">D. WHITE <span class="text-[10px] text-outline font-normal">BOS</span></span><span class="px-1.5 py-0.2 rounded bg-primary/15 text-primary text-[9px] font-mono font-bold">1Q FOCUS</span></div><div class="text-[11px] text-on-surface-variant font-mono mt-0.5">1Q 3PT Made: <span class="text-primary font-bold">1 / 0.5 (1Q HIT ✓)</span> <span class="text-outline text-[9px]">[FG: 3/3]</span></div></div><div class="bg-surface-container-lowest p-2 rounded text-[10px] font-mono flex flex-col gap-1.5 border border-surface-container-high"><div class="flex items-center justify-between border-b border-surface-container-high pb-1"><span class="text-outline uppercase text-[9px]">1Q LIVE LINE &amp; DRIFT</span><span class="text-primary font-bold bg-primary/10 px-1 rounded text-[9px]">[▲ +17c STEAM]</span></div><div class="flex justify-between items-baseline"><span class="text-outline">1Q O0.5 3PT:</span><div class="text-right"><span class="line-through text-outline mr-1">+125</span><span class="text-primary font-bold">+142 (Pin)</span></div></div><div class="flex justify-between text-[9px] text-on-surface-variant"><span class="">1Q Proj Pace: 1.2 3PA</span><span class="text-primary font-semibold">Sharp Inflow: 84%</span></div><div class="w-full bg-surface-container-high h-1.5 rounded overflow-hidden"><div class="bg-primary h-full rounded" style="width: 100%;"></div></div></div></div><div class="pt-3 flex flex-col gap-1.5"><button class="w-full py-1.5 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/40 rounded text-[10px] font-mono font-bold uppercase transition-colors add-to-slip-btn flex items-center justify-center gap-1" data-book="Pinnacle" data-odds="+142" data-player="Derrick White" data-spec="1Q Over 0.5 3PTM"><span class="material-symbols-outlined text-[13px]">bolt</span>ROUTE 1Q O0.5 (+142)</button></div></div>
+<!-- Slot 2: Missouri -->
+<div class="bg-surface-container rounded border border-surface-container-high p-3 flex flex-col justify-between hover:border-primary/50 transition-all group"><div class="flex flex-col gap-2"><div class="flex items-center justify-between text-[10px] font-mono"><span class="text-primary font-bold">SLOT 02 • CFB</span><span class="text-primary font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>1Q IN-PLAY (01:45)</span></div><div><div class="text-sm font-bold uppercase text-on-surface flex items-center justify-between"><span class="">#21 MISSOURI <span class="text-[10px] text-outline font-normal">SEC</span></span><span class="px-1.5 py-0.2 rounded bg-primary/15 text-primary text-[9px] font-mono font-bold">1Q FOCUS</span></div><div class="text-[11px] text-on-surface-variant font-mono mt-0.5">1Q Team Total: <span class="text-primary font-bold">7 PTS / 7.5 (LIVE)</span> <span class="text-outline text-[9px]">[FG: 31]</span></div></div><div class="bg-surface-container-lowest p-2 rounded text-[10px] font-mono flex flex-col gap-1.5 border border-surface-container-high"><div class="flex items-center justify-between border-b border-surface-container-high pb-1"><span class="text-outline uppercase text-[9px]">1Q LIVE LINE &amp; DRIFT</span><span class="text-primary font-bold bg-primary/10 px-1 rounded text-[9px]">[▲ +10c STEAM]</span></div><div class="flex justify-between items-baseline"><span class="text-outline">1Q O7.5 PTS:</span><div class="text-right"><span class="line-through text-outline mr-1">-105</span><span class="text-primary font-bold">-115 (DK)</span></div></div><div class="flex justify-between text-[9px] text-on-surface-variant"><span class="">Redzone: 2-for-2</span><span class="text-primary font-semibold">Pred Model: 10.4 1Q</span></div><div class="w-full bg-surface-container-high h-1.5 rounded overflow-hidden"><div class="bg-primary h-full rounded" style="width: 93.3%;"></div></div></div></div><div class="pt-3 flex flex-col gap-1.5"><button class="w-full py-1.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded text-[10px] font-mono font-bold uppercase transition-colors add-to-slip-btn flex items-center justify-center gap-1 border border-surface-container-highest hover:border-primary/40" data-book="DraftKings" data-odds="-115" data-player="Missouri Tigers" data-spec="1Q Team Total Over 7.5"><span class="material-symbols-outlined text-[13px] text-primary">bolt</span>+ ADD 1Q O7.5 (-115)</button></div></div>
+<!-- Slot 3: LaMelo Ball -->
+<div class="bg-surface-container rounded border border-surface-container-high p-3 flex flex-col justify-between hover:border-primary/50 transition-all group"><div class="flex flex-col gap-2"><div class="flex items-center justify-between text-[10px] font-mono"><span class="text-primary font-bold">SLOT 03 • NBA</span><span class="text-primary font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>1Q LIVE (Q1 03:20)</span></div><div><div class="text-sm font-bold uppercase text-on-surface flex items-center justify-between"><span class="">L. BALL <span class="text-[10px] text-outline font-normal">CHA</span></span><span class="px-1.5 py-0.2 rounded bg-primary/15 text-primary text-[9px] font-mono font-bold">1Q FOCUS</span></div><div class="text-[11px] text-on-surface-variant font-mono mt-0.5">1Q Assists: <span class="text-primary font-bold">2 / 2.5 AST (1 AWAY)</span> <span class="text-outline text-[9px]">[FG: 7]</span></div></div><div class="bg-surface-container-lowest p-2 rounded text-[10px] font-mono flex flex-col gap-1.5 border border-surface-container-high"><div class="flex items-center justify-between border-b border-surface-container-high pb-1"><span class="text-outline uppercase text-[9px]">1Q LIVE LINE &amp; DRIFT</span><span class="text-secondary font-bold bg-secondary/10 px-1 rounded text-[9px]">[▼ -15c UNDER PUSH]</span></div><div class="flex justify-between items-baseline"><span class="text-outline">1Q O2.5 AST:</span><div class="text-right"><span class="line-through text-outline mr-1">-125</span><span class="text-primary font-bold">-110 (FD)</span></div></div><div class="flex justify-between text-[9px] text-on-surface-variant"><span class="">1Q Potential AST: 4</span><span class="text-primary font-semibold">Usage: 36.4%</span></div><div class="w-full bg-surface-container-high h-1.5 rounded overflow-hidden"><div class="bg-primary h-full rounded" style="width: 80%;"></div></div></div></div><div class="pt-3 flex flex-col gap-1.5"><button class="w-full py-1.5 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded text-[10px] font-mono font-bold uppercase transition-colors add-to-slip-btn flex items-center justify-center gap-1 border border-surface-container-highest hover:border-primary/40" data-book="FanDuel" data-odds="-110" data-player="LaMelo Ball" data-spec="1Q Over 2.5 Assists"><span class="material-symbols-outlined text-[13px] text-primary">bolt</span>+ ADD 1Q O2.5 (-110)</button></div></div>
+<!-- Slot 4: C.J. Stroud -->
+<div class="bg-surface-container rounded border border-surface-container-high p-3 flex flex-col justify-between hover:border-secondary/50 transition-all group"><div class="flex flex-col gap-2"><div class="flex items-center justify-between text-[10px] font-mono"><span class="text-secondary font-bold">SLOT 04 • NFL</span><span class="text-secondary font-bold">PRE-LOCK • 1Q TARGET</span></div><div><div class="text-sm font-bold uppercase text-on-surface flex items-center justify-between"><span class="">C.J. STROUD <span class="text-[10px] text-outline font-normal">HOU</span></span><span class="px-1.5 py-0.2 rounded bg-secondary/15 text-secondary text-[9px] font-mono font-bold">1Q CRASH</span></div><div class="text-[11px] text-secondary font-mono mt-0.5">1Q Pass Yds: <span class="font-bold">U 52.5 (DOWN -6.0 YD)</span> <span class="text-outline text-[9px]">[FG: 228.5]</span></div></div><div class="bg-surface-container-lowest p-2 rounded text-[10px] font-mono flex flex-col gap-1.5 border border-surface-container-high"><div class="flex items-center justify-between border-b border-surface-container-high pb-1"><span class="text-outline uppercase text-[9px]">1Q LIVE LINE &amp; DRIFT</span><span class="text-secondary font-bold bg-secondary/10 px-1 rounded text-[9px]">[▼ -6 YD STEAM]</span></div><div class="flex justify-between items-baseline"><span class="text-outline">1Q U52.5 YDS:</span><div class="text-right"><span class="line-through text-outline mr-1">-108</span><span class="text-secondary font-bold">-118 (Circa)</span></div></div><div class="flex justify-between text-[9px] text-on-surface-variant"><span class="">18mph Crosswind</span><span class="text-secondary font-semibold">1Q Run Heavy Proj</span></div><div class="w-full bg-surface-container-high h-1.5 rounded overflow-hidden"><div class="bg-secondary h-full rounded" style="width: 38%;"></div></div></div></div><div class="pt-3 flex flex-col gap-1.5"><button class="w-full py-1.5 bg-secondary/20 hover:bg-secondary/30 text-secondary border border-secondary/40 rounded text-[10px] font-mono font-bold uppercase transition-colors add-to-slip-btn flex items-center justify-center gap-1" data-book="Circa" data-odds="-118" data-player="C.J. Stroud" data-spec="1Q Under 52.5 Passing Yards"><span class="material-symbols-outlined text-[13px]">bolt</span>ROUTE 1Q U52.5 (-118)</button></div></div>
+<!-- Slot 5: Chet Holmgren -->
+<div class="bg-surface-container rounded border border-surface-container-high p-3 flex flex-col justify-between hover:border-primary/50 transition-all group"><div class="flex flex-col gap-2"><div class="flex items-center justify-between text-[10px] font-mono"><span class="text-primary font-bold">SLOT 05 • NBA</span><span class="text-outline font-bold">PRE-LOCK • 1Q TARGET</span></div><div><div class="text-sm font-bold uppercase text-on-surface flex items-center justify-between"><span class="">C. HOLMGREN <span class="text-[10px] text-outline font-normal">OKC</span></span><span class="px-1.5 py-0.2 rounded bg-primary/15 text-primary text-[9px] font-mono font-bold">1Q FOCUS</span></div><div class="text-[11px] text-on-surface-variant font-mono mt-0.5">1Q Rebounds: <span class="text-primary font-bold">3.1 1Q Proj (Avg 2.8)</span> <span class="text-outline text-[9px]">[FG: 9.6]</span></div></div><div class="bg-surface-container-lowest p-2 rounded text-[10px] font-mono flex flex-col gap-1.5 border border-surface-container-high"><div class="flex items-center justify-between border-b border-surface-container-high pb-1"><span class="text-outline uppercase text-[9px]">1Q LIVE LINE &amp; DRIFT</span><span class="text-primary font-bold bg-primary/10 px-1 rounded text-[9px]">[▲ +7c VALUE]</span></div><div class="flex justify-between items-baseline"><span class="text-outline">1Q O2.5 REB:</span><div class="text-right"><span class="line-through text-outline mr-1">-102</span><span class="text-primary font-bold">+105 (DK)</span></div></div><div class="flex justify-between text-[9px] text-on-surface-variant"><span class="">Edey Out Rim Vac</span><span class="text-primary font-semibold">+5.8% 1Q Edge</span></div><div class="w-full bg-surface-container-high h-1.5 rounded overflow-hidden"><div class="bg-primary h-full rounded" style="width: 75%;"></div></div></div></div><div class="pt-3 flex flex-col gap-1.5"><button class="w-full py-1.5 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/40 rounded text-[10px] font-mono font-bold uppercase transition-colors add-to-slip-btn flex items-center justify-center gap-1" data-book="DraftKings" data-odds="+105" data-player="Chet Holmgren" data-spec="1Q Over 2.5 Rebounds"><span class="material-symbols-outlined text-[13px]">bolt</span>ROUTE 1Q O2.5 (+105)</button></div></div>
+</div>
+<!-- Multi-Bookmaker Arbitrage Table -->
+<div class="px-6 mt-6 flex flex-col gap-2"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-primary text-[18px]">table_chart</span><span class="text-xs font-bold uppercase tracking-wider text-on-surface">RAPID EXECUTION ARBITRAGE LEDGER // LIVE 1Q &amp; FULL GAME MATRIX</span></div><div class="flex items-center gap-2"><div class="flex items-center bg-surface-container rounded p-0.5 border border-surface-container-high font-mono text-[9px] font-bold"><button class="px-2.5 py-1 rounded text-outline hover:text-on-surface transition-colors uppercase" id="toggleFullGameView">FULL GAME</button><button class="px-2.5 py-1 rounded bg-primary/20 text-primary border border-primary/40 uppercase flex items-center gap-1 shadow-sm" id="toggle1QView"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>1Q LIVE ODDS</button><button class="px-2.5 py-1 rounded text-outline hover:text-on-surface transition-colors uppercase flex items-center gap-1" id="toggle1HView">1H (FIRST HALF)</button><button class="px-2.5 py-1 rounded text-secondary hover:text-on-surface hover:bg-secondary/10 transition-colors uppercase flex items-center gap-1 border border-secondary/30" id="toggle2HHedgeView"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>2H LIVE HEDGE <span class="px-1 py-0.2 rounded bg-secondary/20 text-[9px] font-bold">LOCK +$42</span></button><button class="px-2.5 py-1 rounded text-secondary hover:text-on-surface hover:bg-secondary/10 transition-colors uppercase flex items-center gap-1 border border-secondary/30" id="toggle2HMatrixView"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>2H HEDGE MATRIX <span class="px-1 py-0.2 rounded bg-secondary/20 text-[9px] font-bold">8.5 MID OP</span></button></div><span class="text-[10px] font-mono text-outline hidden md:inline">CLICK ANY ODDS TO ROUTE</span></div></div><div class="w-full bg-surface-container rounded border border-surface-container-high overflow-x-auto"><table class="w-full text-left border-collapse min-w-[700px] text-xs font-mono"><thead class="bg-surface-container-low text-outline text-[10px] uppercase border-b border-surface-container-high"><tr><th class="py-2 px-3">SLOT / TARGET</th><th class="py-2 px-3">PERIOD &amp; SPEC</th><th class="py-2 px-3 text-center">PINNACLE (SHARP)</th><th class="py-2 px-3 text-center">CIRCA (SHARP)</th><th class="py-2 px-3 text-center">DRAFTKINGS</th><th class="py-2 px-3 text-center">FANDUEL</th><th class="py-2 px-3 text-right">1Q MODEL DEV</th></tr></thead><tbody class="divide-y divide-surface-container-low"><tr class="hover:bg-surface-container-high transition-colors bg-primary/5"><td class="py-2 px-3 font-bold text-on-surface"><div class="flex items-center gap-1.5"><span class="px-1 py-0.2 rounded bg-primary/20 text-primary text-[9px] font-bold">1Q STEAM</span><span class="">[01] Derrick White</span><span class="text-outline font-normal">BOS</span></div></td><td class="py-2 px-3 text-on-surface-variant font-semibold"><span class="text-primary font-bold">1Q</span> Over 0.5 3PTM</td><td class="py-2 px-3 text-center text-primary font-bold bg-primary/15 cursor-pointer hover:bg-primary/25 transition-colors add-to-slip-btn" data-book="Pinnacle" data-odds="+142" data-player="Derrick White" data-spec="1Q Over 0.5 3PTM">+142 (Pin) [▲17c]</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="Circa" data-odds="+132" data-player="Derrick White" data-spec="1Q Over 0.5 3PTM">+132</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="DraftKings" data-odds="+128" data-player="Derrick White" data-spec="1Q Over 0.5 3PTM">+128</td><td class="py-2 px-3 text-center text-outline cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="FanDuel" data-odds="+125" data-player="Derrick White" data-spec="1Q Over 0.5 3PTM">+125</td><td class="py-2 px-3 text-right text-primary font-bold">+7.8% 1Q EV</td></tr><tr class="hover:bg-surface-container-high transition-colors"><td class="py-2 px-3 font-bold text-on-surface"><div class="flex items-center gap-1.5"><span class="px-1 py-0.2 rounded bg-surface-container-high text-outline text-[9px]">FULL GAME</span><span class="">[01] Derrick White</span><span class="text-outline font-normal">BOS</span></div></td><td class="py-2 px-3 text-on-surface-variant">Full Game Over 2.5 3PTM</td><td class="py-2 px-3 text-center text-primary font-bold bg-primary/10 cursor-pointer hover:bg-primary/20 transition-colors add-to-slip-btn" data-book="Pinnacle" data-odds="+118" data-player="Derrick White" data-spec="Over 2.5 3PTM">+118 (Pin)</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="Circa" data-odds="+110" data-player="Derrick White" data-spec="Over 2.5 3PTM">+110</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="DraftKings" data-odds="+105" data-player="Derrick White" data-spec="Over 2.5 3PTM">+105</td><td class="py-2 px-3 text-center text-outline cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="FanDuel" data-odds="+100" data-player="Derrick White" data-spec="Over 2.5 3PTM">+100</td><td class="py-2 px-3 text-right text-primary font-bold">+6.2% EV</td></tr><tr class="hover:bg-surface-container-high transition-colors bg-primary/5"><td class="py-2 px-3 font-bold text-on-surface"><div class="flex items-center gap-1.5"><span class="px-1 py-0.2 rounded bg-primary/20 text-primary text-[9px] font-bold">1Q LIVE</span><span class="">[02] Missouri Tigers</span><span class="text-outline font-normal">SEC</span></div></td><td class="py-2 px-3 text-on-surface-variant font-semibold"><span class="text-primary font-bold">1Q</span> Team Total O 7.5</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="Pinnacle" data-odds="-118" data-player="Missouri Tigers" data-spec="1Q Team Total Over 7.5">-118</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="Circa" data-odds="-120" data-player="Missouri Tigers" data-spec="1Q Team Total Over 7.5">-120</td><td class="py-2 px-3 text-center text-primary font-bold bg-primary/15 cursor-pointer hover:bg-primary/25 transition-colors add-to-slip-btn" data-book="DraftKings" data-odds="-115" data-player="Missouri Tigers" data-spec="1Q Team Total Over 7.5">-115 (DK) [▲10c]</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="FanDuel" data-odds="-122" data-player="Missouri Tigers" data-spec="1Q Team Total Over 7.5">-122</td><td class="py-2 px-3 text-right text-primary font-bold">+5.5% 1Q EV</td></tr><tr class="hover:bg-surface-container-high transition-colors bg-secondary/5"><td class="py-2 px-3 font-bold text-secondary"><div class="flex items-center gap-1.5"><span class="px-1 py-0.2 rounded bg-secondary/20 text-secondary text-[9px] font-bold">1Q CRASH</span><span class="">[04] C.J. Stroud</span><span class="text-outline font-normal">HOU</span></div></td><td class="py-2 px-3 text-on-surface-variant font-semibold"><span class="text-secondary font-bold">1Q</span> Under 52.5 Pass Yds</td><td class="py-2 px-3 text-center text-secondary font-bold bg-secondary/15 cursor-pointer hover:bg-secondary/25 transition-colors add-to-slip-btn" data-book="Pinnacle" data-odds="-115" data-player="C.J. Stroud" data-spec="1Q Under 52.5 Passing Yards">52.5 (-115) ↓</td><td class="py-2 px-3 text-center text-secondary font-bold bg-secondary/20 cursor-pointer hover:bg-secondary/30 transition-colors add-to-slip-btn" data-book="Circa" data-odds="-118" data-player="C.J. Stroud" data-spec="1Q Under 52.5 Passing Yards">52.5 (-118) [▼6Y]</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="DraftKings" data-odds="-112" data-player="C.J. Stroud" data-spec="1Q Under 52.5 Passing Yards">54.5 (-112)</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="FanDuel" data-odds="-116" data-player="C.J. Stroud" data-spec="1Q Under 52.5 Passing Yards">53.5 (-116)</td><td class="py-2 px-3 text-right text-secondary font-bold">+6.0 YD 1Q</td></tr><tr class="hover:bg-surface-container-high transition-colors bg-primary/5"><td class="py-2 px-3 font-bold text-on-surface"><div class="flex items-center gap-1.5"><span class="px-1 py-0.2 rounded bg-primary/20 text-primary text-[9px] font-bold">1Q ARB</span><span class="">[05] Chet Holmgren</span><span class="text-outline font-normal">OKC</span></div></td><td class="py-2 px-3 text-on-surface-variant font-semibold"><span class="text-primary font-bold">1Q</span> Over 2.5 Rebounds</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="Pinnacle" data-odds="+100" data-player="Chet Holmgren" data-spec="1Q Over 2.5 Rebounds">+100</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="Circa" data-odds="-102" data-player="Chet Holmgren" data-spec="1Q Over 2.5 Rebounds">-102</td><td class="py-2 px-3 text-center text-primary font-bold bg-primary/15 cursor-pointer hover:bg-primary/25 transition-colors add-to-slip-btn" data-book="DraftKings" data-odds="+105" data-player="Chet Holmgren" data-spec="1Q Over 2.5 Rebounds">+105 (DK) [▲7c]</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="FanDuel" data-odds="+102" data-player="Chet Holmgren" data-spec="1Q Over 2.5 Rebounds">+102</td><td class="py-2 px-3 text-right text-primary font-bold">+5.8% 1Q EV</td></tr><tr class="hover:bg-surface-container-high transition-colors bg-secondary/5"><td class="py-2 px-3 font-bold text-secondary"><div class="flex items-center gap-1.5"><span class="px-1 py-0.2 rounded bg-secondary/20 text-secondary text-[9px] font-bold">2H HEDGE</span><span class="">[02] Missouri Tigers</span><span class="text-outline font-normal">SEC</span></div></td><td class="py-2 px-3 text-on-surface-variant font-semibold"><div class="flex items-center gap-1.5"><span class="text-secondary font-bold">2H</span><span class="">Spread +4.5 / Mkt -3.5</span><span class="px-1 py-0.2 rounded bg-secondary/15 text-secondary text-[9px] font-bold">8.5 PTS SPREAD MIDDLE OP</span></div></td><td class="py-2 px-3 text-center text-secondary font-bold bg-secondary/15 cursor-pointer hover:bg-secondary/25 transition-colors add-to-slip-btn" data-book="Pinnacle" data-odds="+108" data-player="Missouri Tigers" data-spec="2H Spread +4.5">+108 (Pin) [2H LOCK]</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="Circa" data-odds="+102" data-player="Missouri Tigers" data-spec="2H Spread +4.5">+102</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="DraftKings" data-odds="-105" data-player="Missouri Tigers" data-spec="2H Spread +4.5">-105</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="FanDuel" data-odds="-102" data-player="Missouri Tigers" data-spec="2H Spread +4.5">-102</td><td class="py-2 px-3 text-right text-secondary font-bold">+$42.50 GUARANTEED</td></tr><tr class="hover:bg-surface-container-high transition-colors bg-secondary/5"><td class="py-2 px-3 font-bold text-secondary"><div class="flex items-center gap-1.5"><span class="px-1 py-0.2 rounded bg-secondary/20 text-secondary text-[9px] font-bold">2H MIDDLE</span><span class="">[04] C.J. Stroud</span><span class="text-outline font-normal">HOU</span></div></td><td class="py-2 px-3 text-on-surface-variant font-semibold"><div class="flex items-center gap-1.5"><span class="text-secondary font-bold">2H</span><span class="">Live Pass Yds U110.5 / O98.5</span><span class="px-1 py-0.2 rounded bg-secondary/15 text-secondary text-[9px] font-bold">12.0 YD WINDOW</span></div></td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="Pinnacle" data-odds="-110" data-player="C.J. Stroud" data-spec="2H Live Pass Yds U110.5">110.5 (-110)</td><td class="py-2 px-3 text-center text-secondary font-bold bg-secondary/15 cursor-pointer hover:bg-secondary/25 transition-colors add-to-slip-btn" data-book="Circa" data-odds="-108" data-player="C.J. Stroud" data-spec="2H Live Pass Yds U110.5">111.0 (-108) [HEDGE]</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="DraftKings" data-odds="-112" data-player="C.J. Stroud" data-spec="2H Live Pass Yds U110.5">109.5 (-112)</td><td class="py-2 px-3 text-center text-on-surface cursor-pointer hover:bg-surface-container-highest transition-colors add-to-slip-btn" data-book="FanDuel" data-odds="-115" data-player="C.J. Stroud" data-spec="2H Live Pass Yds U110.5">108.5 (-115)</td><td class="py-2 px-3 text-right text-secondary font-bold">2.8x DOUBLE-DIP EV</td></tr></tbody></table></div><div class="mt-3 bg-surface-container rounded border border-secondary/40 shadow-xl p-4 flex flex-col gap-4 relative overflow-hidden" id="middleAnalyzerSection"><div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-surface-container-high pb-3"><div class="flex items-center gap-2.5"><div class="w-7 h-7 rounded bg-secondary/20 flex items-center justify-center border border-secondary/40 text-secondary"><span class="material-symbols-outlined text-[18px]">show_chart</span></div><div><div class="flex items-center gap-2"><h3 class="text-xs font-bold uppercase tracking-wider text-on-surface flex items-center gap-1.5"><span class="text-secondary">⚡ LIVE MIDDLE PROBABILITY CURVE</span> // GAUSS DISTRIBUTION &amp; DOUBLE-DIP WINDOW</h3><span class="px-1.5 py-0.2 rounded bg-secondary/20 text-secondary font-mono text-[9px] font-bold border border-secondary/30 animate-pulse">ACTIVE WINDOW DETECTED</span></div><p class="font-mono text-[10px] text-outline mt-0.5">Quantitative normal density curve f(x), asymmetric middle corridor probability &amp; guaranteed zero-loss payoff telemetry.</p></div></div><div class="flex items-center gap-2 font-mono"><div class="flex items-center bg-surface-container-lowest rounded p-0.5 border border-surface-container-high text-[10px] font-bold" id="curvePairSelector"><button class="px-2.5 py-1 rounded bg-secondary/20 text-secondary border border-secondary/40 flex items-center gap-1 transition-all" id="btnCurveMissouri"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>[02] MIZ SPREAD (8.5 PT)</button><button class="px-2.5 py-1 rounded text-outline hover:text-on-surface transition-colors flex items-center gap-1" id="btnCurveStroud"><span class="w-1.5 h-1.5 rounded-full bg-outline"></span>[04] STROUD PASS (12.0 YD)</button></div><button class="px-2 py-1 rounded bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 text-[10px] font-bold uppercase transition-all flex items-center gap-1" id="btnStageBothMiddles"><span class="material-symbols-outlined text-[13px]">bolt</span>LOCK DUAL-LEG ARB</button></div></div><div class="grid grid-cols-2 md:grid-cols-4 gap-2 font-mono text-[10px]"><div class="bg-surface-container-lowest p-2.5 rounded border border-surface-container-high flex flex-col gap-0.5"><span class="text-outline uppercase text-[9px]">GUARANTEED BASE FLOOR</span><span class="text-primary font-bold text-sm leading-tight" id="statGuaranteedFloor">+$42.50 LOCK</span><span class="text-outline text-[9px]">100% Zero-Loss Hedge Return</span></div><div class="bg-surface-container-lowest p-2.5 rounded border border-secondary/30 flex flex-col gap-0.5"><span class="text-outline uppercase text-[9px]">DOUBLE-DIP SWEET SPOT</span><span class="text-secondary font-bold text-sm leading-tight" id="statDoubleDipMax">+$385.00 WIN-BOTH</span><span class="text-secondary text-[9px] font-bold" id="statMiddleProbLabel">18.4% Corridor Probability</span></div><div class="bg-surface-container-lowest p-2.5 rounded border border-surface-container-high flex flex-col gap-0.5"><span class="text-outline uppercase text-[9px]">CORRIDOR / WINDOW SPAN</span><span class="text-on-surface font-bold text-sm leading-tight" id="statWindowSpan">8.5 PTS (+4.5 vs -3.5)</span><span class="text-outline text-[9px]" id="statMktImplied">Pinnacle +108 / Circa -102</span></div><div class="bg-surface-container-lowest p-2.5 rounded border border-surface-container-high flex flex-col gap-0.5"><span class="text-outline uppercase text-[9px]">RISK-ADJUSTED SHARPE / EV</span><span class="text-primary font-bold text-sm leading-tight" id="statQuantEv">+19.8% EXP VALUE</span><span class="text-primary text-[9px]">Synthetic Arb Double-Win Edge</span></div></div><div class="relative bg-surface-container-lowest rounded border border-surface-container-high p-3 flex flex-col gap-2 overflow-hidden"><div class="flex items-center justify-between text-[10px] font-mono"><div class="flex items-center gap-3"><span class="flex items-center gap-1.5 text-secondary font-bold"><span class="w-2.5 h-2.5 rounded bg-secondary/30 border border-secondary"></span>DOUBLE-DIP CORRIDOR (BOTH BETS WIN)</span><span class="flex items-center gap-1.5 text-primary"><span class="w-2.5 h-2.5 rounded bg-primary/30 border border-primary"></span>LEG 1 CASH (+$42.50 FLOOR)</span><span class="flex items-center gap-1.5 text-outline"><span class="w-2.5 h-2.5 rounded bg-surface-container-high border border-outline"></span>LEG 2 CASH</span></div><div class="text-outline text-[9px] flex items-center gap-1"><span class="material-symbols-outlined text-[12px] text-secondary">info</span><span id="curveHoverTooltip" class="">Hover curve coordinates to inspect margin density &amp; payoff</span></div></div><div class="w-full h-44 relative"><svg class="w-full h-full overflow-visible" id="middleCurveSvg" preserveAspectRatio="none" viewBox="0 0 800 170"><defs><linearGradient id="middleGradient" x1="0%" x2="0%" y1="0%" y2="100%"><stop offset="0%" stop-color="#ffb95f" stop-opacity="0.45"></stop><stop offset="100%" stop-color="#ffb95f" stop-opacity="0.02"></stop></linearGradient><linearGradient id="curveAreaGrad" x1="0%" x2="0%" y1="0%" y2="100%"><stop offset="0%" stop-color="#4edea3" stop-opacity="0.2"></stop><stop offset="100%" stop-color="#4edea3" stop-opacity="0.0"></stop></linearGradient></defs><line stroke="#272a32" stroke-dasharray="3,3" stroke-width="1" x1="40" x2="760" y1="130" y2="130"></line><line stroke="#272a32" stroke-dasharray="3,3" stroke-width="1" x1="40" x2="760" y1="75" y2="75"></line><line stroke="#272a32" stroke-dasharray="3,3" stroke-width="1" x1="40" x2="760" y1="25" y2="25"></line><path d="M 40 130 C 140 130, 200 120, 280 85 C 340 50, 370 20, 400 20 C 430 20, 460 50, 520 85 C 600 120, 660 130, 760 130 Z" fill="url(#curveAreaGrad)" id="curveBaseArea"></path><path d="M 320 67 C 350 40, 375 20, 400 20 C 425 20, 450 40, 480 67 L 480 130 L 320 130 Z" fill="url(#middleGradient)" id="corridorFill"></path><path d="M 40 130 C 140 130, 200 120, 280 85 C 340 50, 370 20, 400 20 C 430 20, 460 50, 520 85 C 600 120, 660 130, 760 130" fill="none" id="curveLine" stroke="#4edea3" stroke-width="2.5"></path><line id="leftBoundaryLine" stroke="#ffb95f" stroke-dasharray="4,3" stroke-width="2" x1="320" x2="320" y1="10" y2="140"></line><line id="rightBoundaryLine" stroke="#ffb95f" stroke-dasharray="4,3" stroke-width="2" x1="480" x2="480" y1="10" y2="140"></line><line id="medianLine" stroke="#4edea3" stroke-dasharray="2,2" stroke-width="1.5" x1="400" x2="400" y1="15" y2="140"></line><circle cx="400" cy="20" fill="#ffb95f" id="medianDot" r="4" stroke="#10131a" stroke-width="2"></circle><text fill="#ffb95f" font-family="monospace" font-size="10" font-weight="bold" id="leftBoundText" text-anchor="middle" x="320" y="155">-3.5 CIR (LOCK A)</text><text fill="#ffb95f" font-family="monospace" font-size="10" font-weight="bold" id="rightBoundText" text-anchor="middle" x="480" y="155">+4.5 PIN (LOCK B)</text><text fill="#4edea3" font-family="monospace" font-size="10" font-weight="bold" id="centerLabelText" text-anchor="middle" x="400" y="15">MEDIAN MARGIN (0.0)</text><text fill="#ffb95f" font-family="monospace" font-size="11" font-weight="bold" id="sweetSpotTagText" text-anchor="middle" x="400" y="80">★ DOUBLE-DIP CORRIDOR (+8.5 PTS) ★</text></svg></div><div class="flex items-center justify-between font-mono text-[9px] text-outline pt-1 border-t border-surface-container-high"><span class="">← LOWER MARGIN (SINGLE SIDE CASHES)</span><span class="text-secondary font-bold">▲ WIN BOTH TICKETS (+385.00) IN SWEET SPOT ▲</span><span class="">HIGHER MARGIN (SINGLE SIDE CASHES) →</span></div></div><div class="p-3 rounded bg-surface-container-lowest border border-surface-container-high flex flex-col gap-3 font-mono" id="kellySizingEngine"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-surface-container-high pb-2"><div class="flex items-center gap-2"><div class="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-primary text-[12px] font-bold border border-primary/30"><span class="material-symbols-outlined text-[13px]">calculate</span></div><span class="text-[11px] font-bold uppercase text-on-surface tracking-wide flex items-center gap-1.5">KELLY CRITERION POSITION SIZING ENGINE <span class="text-outline text-[10px] font-normal">// ASYMMETRIC DUAL-LEG ALLOCATOR</span></span></div><div class="flex items-center gap-2"><span class="text-outline text-[9px] uppercase">SIZING MODE:</span><div class="flex items-center bg-surface-container rounded p-0.5 border border-surface-container-high text-[9px] font-bold"><button class="px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30 uppercase" id="kellyModeGrowth">MAX GROWTH (KELLY)</button><button class="px-2 py-0.5 rounded text-outline hover:text-on-surface uppercase transition-colors" id="kellyModeZeroLoss">ZERO-LOSS HEDGE</button><button class="px-2 py-0.5 rounded text-outline hover:text-on-surface uppercase transition-colors" id="kellyModeEqualPayoff">EQUAL PAYOFF</button></div></div></div><div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-[10px]"><div class="bg-surface-container-low p-2 rounded border border-surface-container-high flex flex-col gap-1"><div class="flex items-center justify-between text-outline text-[9px] uppercase"><span class="">BANKROLL BASE</span><span class="text-primary font-bold">SYNCED</span></div><div class="flex items-center gap-1"><span class="text-outline font-bold text-xs">$</span><input type="number" value="10000.00" step="500" id="kellyBankrollInput" class="w-full bg-surface-container-lowest px-2 py-1 rounded border border-surface-container-high text-xs font-bold text-on-surface outline-none focus:border-primary"></div><span class="text-[9px] text-outline">Avail Term Cap: $10,000.00</span></div><div class="bg-surface-container-low p-2 rounded border border-surface-container-high flex flex-col gap-1"><div class="flex items-center justify-between text-outline text-[9px] uppercase"><span class="">FRACTIONAL MULTIPLIER</span><span class="text-secondary text-[9px] font-bold">0.50x REC</span></div><div class="grid grid-cols-4 gap-1"><button class="py-1 rounded bg-surface-container text-outline hover:text-on-surface border border-surface-container-high text-[9px] font-bold uppercase transition-colors kelly-frac-btn" data-frac="1.0">1.0x</button><button class="py-1 rounded bg-primary/20 text-primary border border-primary/40 text-[9px] font-bold uppercase transition-colors kelly-frac-btn" data-frac="0.5">0.5x</button><button class="py-1 rounded bg-surface-container text-outline hover:text-on-surface border border-surface-container-high text-[9px] font-bold uppercase transition-colors kelly-frac-btn" data-frac="0.25">0.25x</button><button class="py-1 rounded bg-surface-container text-outline hover:text-on-surface border border-surface-container-high text-[9px] font-bold uppercase transition-colors kelly-frac-btn" data-frac="0.125">0.125x</button></div><span class="text-[9px] text-on-surface-variant flex items-center justify-between"><span class="">Growth: +3.42%/wk</span><span class="text-primary">Sharpe: 2.14</span></span></div><div class="bg-surface-container-low p-2 rounded border border-surface-container-high flex flex-col gap-1"><div class="flex items-center justify-between text-outline text-[9px] uppercase"><span class="">SYNTHETIC CORRIDOR</span><span class="text-secondary font-bold">18.4% PROB</span></div><div class="flex items-baseline justify-between"><span class="text-secondary font-bold text-xs">DOUBLE-WIN:</span><span class="text-secondary font-bold text-xs" id="kellyDoubleWinTotal">+$610.50</span></div><div class="flex items-baseline justify-between text-[9px]"><span class="text-outline">WORST CASE:</span><span class="text-primary font-bold" id="kellyFloorGuarantee">+$42.50 (LOCK)</span></div></div><div class="bg-surface-container-low p-2 rounded border border-surface-container-high flex flex-col justify-between"><div class="flex items-center justify-between text-outline text-[9px] uppercase"><span class="">TOTAL COMBINED STAKE</span><span class="text-primary font-bold" id="kellyTotalStakePct">3.00% ROLL</span></div><div class="flex items-baseline justify-between"><span class="text-sm font-bold text-on-surface" id="kellyTotalStakeAmt">$300.50</span><span class="text-[9px] text-primary font-bold">+19.8% EXP ROI</span></div><button class="w-full py-1 rounded bg-primary hover:bg-primary-container text-on-primary text-[10px] font-bold uppercase transition-all shadow-[0_0_10px_rgba(78,222,163,0.25)] flex items-center justify-center gap-1 active:scale-[0.99]" id="applyKellyToSlipBtn"><span class="material-symbols-outlined text-[12px]">sync_alt</span>APPLY SIZING TO BETSLIP</button></div></div><div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[10px]"><div class="p-2.5 rounded bg-surface-container-low border border-primary/30 flex flex-col gap-1.5"><div class="flex items-center justify-between border-b border-surface-container-high pb-1"><div class="flex items-center gap-1.5"><span class="px-1 py-0.2 rounded bg-primary/20 text-primary font-bold text-[9px]">LEG A (PRIMARY)</span><span class="text-on-surface font-bold">Missouri Tigers +4.5</span><span class="text-outline text-[9px]">@ Pinnacle</span></div><span class="text-primary font-bold">+108 ODDS</span></div><div class="grid grid-cols-3 gap-1 pt-0.5"><div class="flex flex-col"><span class="text-[9px] text-outline uppercase">KELLY STAKE</span><span class="text-primary font-bold text-xs" id="kellyLegAStake">$148.50</span><span class="text-[9px] text-outline" id="kellyLegARollPct">1.48% Bankroll</span></div><div class="flex flex-col"><span class="text-[9px] text-outline uppercase">MODEL VS IMPL</span><span class="text-on-surface font-semibold text-[10px]">56.4% <span class="text-outline">vs</span> 48.1%</span><span class="text-primary text-[9px] font-bold">+8.3% Edge</span></div><div class="flex flex-col text-right"><span class="text-[9px] text-outline uppercase">SINGLE PAYOUT</span><span class="text-on-surface font-bold text-xs" id="kellyLegAPayout">$308.88</span><span class="text-primary text-[9px] font-bold">Net: +$160.38</span></div></div></div><div class="p-2.5 rounded bg-surface-container-low border border-secondary/30 flex flex-col gap-1.5"><div class="flex items-center justify-between border-b border-surface-container-high pb-1"><div class="flex items-center gap-1.5"><span class="px-1 py-0.2 rounded bg-secondary/20 text-secondary font-bold text-[9px]">LEG B (HEDGE CORRIDOR)</span><span class="text-on-surface font-bold">Opposing Tigers -3.5</span><span class="text-outline text-[9px]">@ Circa</span></div><span class="text-secondary font-bold">-102 ODDS</span></div><div class="grid grid-cols-3 gap-1 pt-0.5"><div class="flex flex-col"><span class="text-[9px] text-outline uppercase">HEDGE STAKE</span><span class="text-secondary font-bold text-xs" id="kellyLegBStake">$152.00</span><span class="text-[9px] text-outline" id="kellyLegBRollPct">1.52% Bankroll</span></div><div class="flex flex-col"><span class="text-[9px] text-outline uppercase">MODEL VS IMPL</span><span class="text-on-surface font-semibold text-[10px]">53.2% <span class="text-outline">vs</span> 50.5%</span><span class="text-secondary text-[9px] font-bold">+2.7% Edge</span></div><div class="flex flex-col text-right"><span class="text-[9px] text-outline uppercase">SINGLE PAYOUT</span><span class="text-on-surface font-bold text-xs" id="kellyLegBPayout">$301.06</span><span class="text-secondary text-[9px] font-bold">Net: +$149.06</span></div></div></div></div></div><div class="flex flex-col sm:flex-row items-center justify-between gap-2 p-2 rounded bg-surface-container-low border border-surface-container-high font-mono text-[10px]"><div class="flex items-center gap-2"><span class="px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold text-[9px]">SMART ROUTE</span><span class="text-on-surface">Missouri Tigers 2H Spread +4.5 @ Pinnacle (+108) vs Tigers -3.5 @ Circa (+102)</span></div><div class="flex items-center gap-2 shrink-0"><span class="text-outline">HEDGE STAKE: $50.00 / $50.00</span><button class="px-2.5 py-1 rounded bg-secondary text-on-secondary font-bold uppercase transition-all hover:bg-secondary-container shadow-sm add-to-slip-btn" data-book="Pinnacle &amp; Circa" data-odds="Lock +108 / +102" data-player="Missouri 2H Middle Window" data-spec="Dual Middle Lock (+4.5 / -3.5)">+ ROUTE TO EXECUTION SLIP</button></div></div></div></div>
+<script>
+(function() {
+  const transmitBtn = document.getElementById('transmitTicketBtn');
+  const transmitText = document.getElementById('transmitTicketBtnText');
+  const transmitSpinner = document.getElementById('transmitSpinner');
+  const stageBtn = document.getElementById('stageTicketBtn');
+  const stageText = document.getElementById('stageTicketBtnText');
+  const banner = document.getElementById('slipSuccessBanner');
+  const ticketsBadge = document.getElementById('ticketsNavBadge');
+  const navTickets = document.getElementById('navTicketsBtn');
+
+  function activateTicketsLedgerState() {
+    if (ticketsBadge) {
+      ticketsBadge.classList.remove('hidden');
+      ticketsBadge.classList.add('inline-flex');
+    }
+    if (navTickets) {
+      navTickets.classList.add('bg-primary/10', 'text-primary', 'border', 'border-primary/40');
+      navTickets.classList.remove('text-on-surface-variant');
+    }
+  }
+
+  if (transmitBtn) {
+    transmitBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (transmitSpinner) {
+        transmitSpinner.textContent = 'progress_activity';
+        transmitSpinner.classList.add('animate-spin');
+      }
+      transmitText.textContent = 'TRANSMITTING TO LEDGER...';
+      transmitBtn.classList.add('animate-pulse');
+      setTimeout(() => {
+        transmitBtn.classList.remove('animate-pulse');
+        if (transmitSpinner) {
+          transmitSpinner.textContent = 'verified';
+          transmitSpinner.classList.remove('animate-spin');
+        }
+        transmitText.textContent = 'DISPATCHED & SYNCED ✓';
+        if (banner) {
+          banner.classList.remove('hidden');
+          banner.classList.add('flex');
+        }
+        activateTicketsLedgerState();
+      }, 800);
+    });
+  }
+
+  if (stageBtn) {
+    stageBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      stageText.textContent = 'ROUTING TO LEDGER...';
+      setTimeout(() => {
+        stageText.textContent = 'VIEW IN TICKETS LEDGER ↗';
+        activateTicketsLedgerState();
+        if (banner) {
+          banner.classList.remove('hidden');
+          banner.classList.add('flex');
+        }
+      }, 500);
+    });
+  }
+
+  if (navTickets) {
+    navTickets.addEventListener('click', () => {
+      if (typeof window.location !== 'undefined') {
+        window.location.hash = 'tickets';
+      }
+    });
+  }
+})();
+</script><script>
+(function() {
+  const bankrollInput = document.getElementById('kellyBankrollInput');
+  const fracBtns = document.querySelectorAll('.kelly-frac-btn');
+  const modeGrowth = document.getElementById('kellyModeGrowth');
+  const modeZeroLoss = document.getElementById('kellyModeZeroLoss');
+  const modeEqualPayoff = document.getElementById('kellyModeEqualPayoff');
+  const applyBtn = document.getElementById('applyKellyToSlipBtn');
+  const legAStakeEl = document.getElementById('kellyLegAStake');
+  const legBStakeEl = document.getElementById('kellyLegBStake');
+  const legAPayoutEl = document.getElementById('kellyLegAPayout');
+  const legBPayoutEl = document.getElementById('kellyLegBPayout');
+  const legARollPctEl = document.getElementById('kellyLegARollPct');
+  const legBRollPctEl = document.getElementById('kellyLegBRollPct');
+  const totalStakeAmtEl = document.getElementById('kellyTotalStakeAmt');
+  const totalStakePctEl = document.getElementById('kellyTotalStakePct');
+  const doubleWinTotalEl = document.getElementById('kellyDoubleWinTotal');
+  const floorGuaranteeEl = document.getElementById('kellyFloorGuarantee');
+  const slipStakeInput = document.getElementById('slipStakeInput');
+
+  let currentFrac = 0.5;
+  let currentMode = 'growth';
+
+  function calculateKelly() {
+    const bankroll = parseFloat(bankrollInput ? bankrollInput.value : 10000) || 10000;
+    const bA = 1.08;
+    const pA = 0.564;
+    const qA = 1 - pA;
+    const fullKellyA = (bA * pA - qA) / bA;
+    const fracKellyA = Math.max(0.005, fullKellyA * currentFrac);
+
+    let stakeA = bankroll * fracKellyA;
+    let stakeB = 0;
+
+    if (currentMode === 'growth') {
+      stakeB = stakeA * (1.08 / 1.05);
+    } else if (currentMode === 'zeroLoss') {
+      stakeB = (stakeA * 1.08) / 0.9804;
+    } else {
+      stakeB = (stakeA * (1 + 1.08)) / (1 + 0.9804);
+    }
+
+    const payoutA = stakeA * (1 + bA);
+    const payoutB = stakeB * (1 + 0.9804);
+    const totalStake = stakeA + stakeB;
+    const totalStakePct = (totalStake / bankroll) * 100;
+    const doubleWin = (payoutA + payoutB) - totalStake;
+    const worstCaseFloor = Math.min(payoutA - totalStake, payoutB - totalStake);
+
+    if (legAStakeEl) legAStakeEl.textContent = '$' + stakeA.toFixed(2);
+    if (legBStakeEl) legBStakeEl.textContent = '$' + stakeB.toFixed(2);
+    if (legARollPctEl) legARollPctEl.textContent = ((stakeA / bankroll) * 100).toFixed(2) + '% Bankroll';
+    if (legBRollPctEl) legBRollPctEl.textContent = ((stakeB / bankroll) * 100).toFixed(2) + '% Bankroll';
+    if (legAPayoutEl) legAPayoutEl.textContent = '$' + payoutA.toFixed(2);
+    if (legBPayoutEl) legBPayoutEl.textContent = '$' + payoutB.toFixed(2);
+    if (totalStakeAmtEl) totalStakeAmtEl.textContent = '$' + totalStake.toFixed(2);
+    if (totalStakePctEl) totalStakePctEl.textContent = totalStakePct.toFixed(2) + '% ROLL';
+    if (doubleWinTotalEl) doubleWinTotalEl.textContent = '+$' + doubleWin.toFixed(2);
+    if (floorGuaranteeEl) floorGuaranteeEl.textContent = (worstCaseFloor >= 0 ? '+$' : '-$') + Math.abs(worstCaseFloor).toFixed(2) + ' (LOCK)';
+  }
+
+  if (bankrollInput) {
+    bankrollInput.addEventListener('input', calculateKelly);
+  }
+
+  fracBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      fracBtns.forEach(b => {
+        b.classList.remove('bg-primary/20', 'text-primary', 'border-primary/40');
+        b.classList.add('bg-surface-container', 'text-outline', 'border-surface-container-high');
+      });
+      btn.classList.remove('bg-surface-container', 'text-outline', 'border-surface-container-high');
+      btn.classList.add('bg-primary/20', 'text-primary', 'border-primary/40');
+      currentFrac = parseFloat(btn.getAttribute('data-frac')) || 0.5;
+      calculateKelly();
+    });
+  });
+
+  function setMode(mode, activeBtn) {
+    currentMode = mode;
+    [modeGrowth, modeZeroLoss, modeEqualPayoff].forEach(b => {
+      if (b) {
+        b.classList.remove('bg-primary/20', 'text-primary', 'border', 'border-primary/30');
+        b.classList.add('text-outline');
+      }
+    });
+    if (activeBtn) {
+      activeBtn.classList.add('bg-primary/20', 'text-primary', 'border', 'border-primary/30');
+      activeBtn.classList.remove('text-outline');
+    }
+    calculateKelly();
+  }
+
+  if (modeGrowth) modeGrowth.addEventListener('click', () => setMode('growth', modeGrowth));
+  if (modeZeroLoss) modeZeroLoss.addEventListener('click', () => setMode('zeroLoss', modeZeroLoss));
+  if (modeEqualPayoff) modeEqualPayoff.addEventListener('click', () => setMode('equalPayoff', modeEqualPayoff));
+
+  if (applyBtn) {
+    applyBtn.addEventListener('click', () => {
+      const totalStake = totalStakeAmtEl ? parseFloat(totalStakeAmtEl.textContent.replace('$', '')) : 300.50;
+      if (slipStakeInput) {
+        slipStakeInput.value = totalStake.toFixed(2);
+        slipStakeInput.dispatchEvent(new Event('input'));
+      }
+      const headerSlipBtn = document.getElementById('headerSlipBtn');
+      if (headerSlipBtn) headerSlipBtn.click();
+    });
+  }
+
+  calculateKelly();
+})();
+</script></main>
+<!-- Floating Collapsed Slip Pill (Bottom-Right) -->
+<div class="fixed bottom-4 right-4 z-40" id="floatingSlipBadge">
+<button class="flex items-center gap-2.5 px-3.5 py-2 rounded bg-surface-container-high/95 hover:bg-surface-container-highest border border-primary/40 shadow-2xl backdrop-blur text-on-surface hover:text-primary transition-all group hover:scale-[1.02]" id="floatingSlipBtn">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-mono text-xs font-bold text-primary" id="floatLegCount">3 LEGS</span>
+<span class="text-outline text-xs">|</span>
+<span class="font-mono text-[10px] text-on-surface-variant font-semibold">ODDS <span class="text-primary font-bold" id="floatOddsText">+485</span></span>
+<span class="text-outline text-xs">|</span>
+<span class="font-mono text-[10px] text-primary uppercase font-bold tracking-wider flex items-center gap-0.5">
+      OPEN SLIP <span class="material-symbols-outlined text-[13px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">north_east</span>
+</span>
+</button>
+</div>
+<!-- ============================================================== -->
+<!-- INTERACTIVE BETSLIP DRAWER OVERLAY -->
+<!-- ============================================================== -->
+<div class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300" id="betslipOverlay">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300 pointer-events-none" id="betslipBackdrop"></div>
+<!-- Drawer Body -->
+<aside aria-label="Order Router Betslip" class="absolute top-0 right-0 h-full w-full max-w-[430px] bg-surface-container-lowest border-l border-[#262a36] shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out pointer-events-auto" id="betslipDrawer">
+<!-- Drawer Header -->
+<div class="p-4 bg-surface-container-low border-b border-[#262a36] flex flex-col gap-2 shrink-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded bg-primary/20 flex items-center justify-center border border-primary/40">
+<span class="material-symbols-outlined text-primary text-[16px]">send_time_extension</span>
+</div>
+<div>
+<h2 class="text-sm font-bold uppercase tracking-tight text-on-surface leading-none">EXECUTION SLIP // ORDER ROUTER</h2>
+<p class="font-mono text-[9px] text-outline mt-0.5">Institutional Smart Order Routing &amp; Hedging</p>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="px-2 py-1 rounded hover:bg-error/20 hover:text-error text-outline font-mono text-[10px] uppercase transition-colors" id="slipClearBtn">CLEAR</button>
+<button class="w-7 h-7 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-colors" id="slipCloseBtn" title="Close drawer (ESC)">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-surface-container">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 border border-primary/30 text-primary font-mono text-[9px] font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span> OFFSHORE ROUTING ACTIVE
+          </span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-outline font-mono text-[9px] font-semibold">BUFFER: SYNCED</span>
+</div>
+<span class="font-mono text-[10px] text-secondary font-bold" id="slipLegCountBadge">3 ACTIVE LEGS</span>
+</div>
+</div>
+<!-- Bet Type Navigation Tabs -->
+<div class="grid grid-cols-4 bg-surface-container-lowest border-b border-[#262a36] shrink-0 text-center text-outline font-mono text-[10px] uppercase font-bold" id="slipTypeTabs">
+<button class="py-2.5 px-1 border-b-2 border-transparent hover:text-on-surface transition-colors" data-tab="singles">
+        SINGLES (<span class="" id="singlesTabCount">3</span>)
+      </button>
+<button class="py-2.5 px-1 border-b-2 border-primary text-primary bg-primary/5 transition-colors" data-tab="parlay">
+        PARLAY (<span class="" id="parlayLegsCount">3-LEG</span>)
+      </button>
+<button class="py-2.5 px-1 border-b-2 border-transparent hover:text-on-surface transition-colors" data-tab="round-robin">
+        ROUND ROBIN
+      </button>
+<button class="py-2.5 px-1 border-b-2 border-transparent hover:text-on-surface transition-colors text-secondary" data-tab="hedge">
+        HEDGE / ARB
+      </button>
+</div>
+<!-- Dynamic Legs Container (Scrollable) -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-3 flex flex-col gap-2.5" id="slipLegsContainer">
+<!-- Leg 1 -->
+<div class="bg-surface-container-low rounded border border-[#262a36] hover:border-outline/50 transition-all p-3 flex flex-col gap-2 relative group leg-item" data-leg-id="leg-white" data-odds="+118">
+<button class="absolute top-2 right-2 w-5 h-5 rounded hover:bg-error/20 hover:text-error text-outline flex items-center justify-center transition-colors leg-remove-btn" title="Remove leg">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+<div class="flex items-center gap-1.5 text-outline font-mono text-[10px] font-bold uppercase">
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-primary">SLOT 01</span>
+<span class="">NBA</span><span class="">•</span><span class="text-on-surface">BOS @ CHA</span>
+</div>
+<div>
+<div class="text-xs font-bold uppercase tracking-tight text-on-surface flex items-center gap-1.5">
+<span class="">DERRICK WHITE</span>
+<span class="px-1 py-0.2 text-[9px] rounded bg-primary/20 text-primary font-bold font-mono">TARGET CASHED</span>
+</div>
+<div class="text-[11px] font-mono text-primary font-semibold mt-0.5">Over 2.5 3-Pointers Made <span class="text-outline font-normal">· 3/3 HIT</span></div>
+</div>
+<div class="flex items-center justify-between bg-surface-container-lowest p-2 rounded text-[10px] font-mono">
+<div><span class="text-outline">BEST ROUTE: </span><span class="text-primary font-bold">PINNACLE</span> <span class="line-through text-outline ml-1">+105</span> <span class="text-primary font-bold">+118</span></div>
+<span class="text-primary font-bold bg-primary/10 px-1 rounded">[▲ +13c STEAM]</span>
+</div>
+<!-- Single stake row (visible when in singles mode) -->
+<div class="single-stake-row hidden flex items-center justify-between pt-1 border-t border-surface-container gap-2">
+<div class="flex items-center gap-1">
+<span class="font-mono text-[10px] text-outline">STAKE:</span>
+<input class="single-leg-stake w-20 h-6 px-1.5 bg-surface-container-lowest rounded border border-surface-container-high font-mono text-xs text-on-surface outline-none focus:border-primary" type="number" value="25.00">
+</div>
+<div class="text-right">
+<span class="font-mono text-[9px] text-outline block">POTENTIAL:</span>
+<span class="single-leg-return font-mono text-xs text-primary font-bold">$54.50</span>
+</div>
+</div>
+</div>
+<!-- Leg 2 -->
+<div class="bg-surface-container-low rounded border border-[#262a36] hover:border-outline/50 transition-all p-3 flex flex-col gap-2 relative group leg-item" data-leg-id="leg-stroud" data-odds="-115">
+<button class="absolute top-2 right-2 w-5 h-5 rounded hover:bg-error/20 hover:text-error text-outline flex items-center justify-center transition-colors leg-remove-btn" title="Remove leg">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+<div class="flex items-center gap-1.5 text-outline font-mono text-[10px] font-bold uppercase">
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-secondary">SLOT 04</span>
+<span class="">NFL</span><span class="">•</span><span class="text-on-surface">HOU @ NYJ</span>
+</div>
+<div>
+<div class="text-xs font-bold uppercase tracking-tight text-on-surface flex items-center gap-1.5">
+<span class="">C.J. STROUD</span>
+<span class="px-1 py-0.2 text-[9px] rounded bg-secondary/20 text-secondary font-bold font-mono">CRASH -8 YDS</span>
+</div>
+<div class="text-[11px] font-mono text-secondary font-semibold mt-0.5">Under 228.5 Passing Yards <span class="text-outline font-normal">· 18mph Crosswind</span></div>
+</div>
+<div class="flex items-center justify-between bg-surface-container-lowest p-2 rounded text-[10px] font-mono">
+<div><span class="text-outline">BEST ROUTE: </span><span class="text-secondary font-bold">CIRCA</span> <span class="text-secondary font-bold ml-1">-115</span></div>
+<span class="text-secondary font-bold bg-secondary/10 px-1 rounded">[WEATHER EDGE]</span>
+</div>
+<div class="single-stake-row hidden flex items-center justify-between pt-1 border-t border-surface-container gap-2">
+<div class="flex items-center gap-1">
+<span class="font-mono text-[10px] text-outline">STAKE:</span>
+<input class="single-leg-stake w-20 h-6 px-1.5 bg-surface-container-lowest rounded border border-surface-container-high font-mono text-xs text-on-surface outline-none focus:border-primary" type="number" value="25.00">
+</div>
+<div class="text-right">
+<span class="font-mono text-[9px] text-outline block">POTENTIAL:</span>
+<span class="single-leg-return font-mono text-xs text-primary font-bold">$46.74</span>
+</div>
+</div>
+</div>
+<!-- Leg 3 -->
+<div class="bg-surface-container-low rounded border border-[#262a36] hover:border-outline/50 transition-all p-3 flex flex-col gap-2 relative group leg-item" data-leg-id="leg-chet" data-odds="-110">
+<button class="absolute top-2 right-2 w-5 h-5 rounded hover:bg-error/20 hover:text-error text-outline flex items-center justify-center transition-colors leg-remove-btn" title="Remove leg">
+<span class="material-symbols-outlined text-[14px]">close</span>
+</button>
+<div class="flex items-center gap-1.5 text-outline font-mono text-[10px] font-bold uppercase">
+<span class="px-1 py-0.2 rounded bg-surface-container-high text-primary">SLOT 05</span>
+<span class="">NBA</span><span class="">•</span><span class="text-on-surface">OKC @ MEM</span>
+</div>
+<div>
+<div class="text-xs font-bold uppercase tracking-tight text-on-surface flex items-center gap-1.5">
+<span class="">CHET HOLMGREN</span>
+<span class="px-1 py-0.2 text-[9px] rounded bg-primary/20 text-primary font-bold font-mono">EDEY OUT RIM VAC</span>
+</div>
+<div class="text-[11px] font-mono text-primary font-semibold mt-0.5">Over 7.5 Rebounds <span class="text-outline font-normal">· L5 Avg 9.6</span></div>
+</div>
+<div class="flex items-center justify-between bg-surface-container-lowest p-2 rounded text-[10px] font-mono">
+<div><span class="text-outline">BEST ROUTE: </span><span class="text-primary font-bold">DRAFTKINGS</span> <span class="text-primary font-bold ml-1">-110</span></div>
+<span class="text-primary font-bold bg-primary/10 px-1 rounded">[+5.1% EV MODEL]</span>
+</div>
+<div class="single-stake-row hidden flex items-center justify-between pt-1 border-t border-surface-container gap-2">
+<div class="flex items-center gap-1">
+<span class="font-mono text-[10px] text-outline">STAKE:</span>
+<input class="single-leg-stake w-20 h-6 px-1.5 bg-surface-container-lowest rounded border border-surface-container-high font-mono text-xs text-on-surface outline-none focus:border-primary" type="number" value="25.00">
+</div>
+<div class="text-right">
+<span class="font-mono text-[9px] text-outline block">POTENTIAL:</span>
+<span class="single-leg-return font-mono text-xs text-primary font-bold">$47.73</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Drawer Footer: Calculator & Execution -->
+<div class="p-4 bg-surface-container-low border-t border-[#262a36] flex flex-col gap-2.5 shrink-0">
+<!-- Stake Input & Quick Chips -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="font-mono text-[10px] text-outline uppercase font-semibold">TICKET STAKE ALLOCATION</span>
+<span class="font-mono text-[10px] text-outline">AVAIL ROLL: <span class="text-on-surface font-bold">$100.00</span></span>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative flex-1">
+<span class="absolute left-3 top-2 text-outline font-mono text-xs">$</span>
+<input class="w-full h-8 pl-6 pr-2 bg-surface-container-lowest border border-surface-container-high focus:border-primary focus:ring-1 focus:ring-primary rounded font-mono text-xs text-on-surface font-bold outline-none" id="slipStakeInput" type="number" value="75.00">
+</div>
+<div class="flex items-center gap-1" id="quickStakeChips">
+<button class="px-2 py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-mono text-[10px] font-bold rounded transition-colors" data-amt="10">+10</button>
+<button class="px-2 py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-mono text-[10px] font-bold rounded transition-colors" data-amt="25">+25</button>
+<button class="px-2 py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-mono text-[10px] font-bold rounded transition-colors" data-amt="50">+50</button>
+<button class="px-2 py-1 bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 font-mono text-[10px] font-bold rounded transition-colors" data-amt="max">MAX</button>
+</div>
+</div>
+</div>
+<!-- Real-Time Dynamic Payout Card -->
+<div class="bg-surface-container-lowest p-2.5 rounded border border-surface-container-high flex flex-col gap-1 font-mono">
+<div class="flex items-center justify-between text-[10px]">
+<span class="text-outline uppercase" id="slipMultiplierLabel">3-LEG PARLAY MULTIPLIER:</span>
+<span class="text-primary font-bold" id="slipTotalOddsDisplay">+485 (17.1% IMPL)</span>
+</div>
+<div class="flex items-center justify-between text-[10px]">
+<span class="text-outline uppercase">COMBINED QUANT EDGE:</span>
+<span class="text-primary font-bold" id="slipAvgEvDisplay">+14.8% AVG EV</span>
+</div>
+<div class="h-px bg-surface-container-high my-0.5"></div>
+<div class="flex items-baseline justify-between">
+<div class="flex flex-col">
+<span class="text-[9px] text-outline uppercase font-semibold">TOTAL ESTIMATED PAYOUT</span>
+<span class="text-lg font-bold text-primary leading-tight" id="slipPayoutDisplay">$438.75</span>
+</div>
+<div class="text-right flex flex-col">
+<span class="text-[9px] text-outline uppercase">NET PROFIT</span>
+<span class="text-xs font-bold text-primary font-mono" id="slipProfitDisplay">+$363.75</span>
+</div>
+</div>
+</div>
+<!-- Execution Checkbox Toggles -->
+<div class="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container-lowest border border-surface-container-high font-mono text-[9px] text-outline"><span class="material-symbols-outlined text-[13px] text-primary">lock_clock</span><span class="leading-tight">Auto-syncs to Tickets Ledger upon transmission with cryptographic hash verification.</span></div><div class="flex flex-col gap-1 font-mono text-[10px] text-outline">
+<label class="flex items-center gap-1.5 cursor-pointer text-on-surface-variant hover:text-on-surface">
+<input checked="" class="rounded bg-surface-container border-surface-container-high text-primary focus:ring-0 w-3 h-3" type="checkbox">
+<span class="">Accept line movement up to 5c</span>
+</label>
+<label class="flex items-center gap-1.5 cursor-pointer text-on-surface-variant hover:text-on-surface">
+<input checked="" class="rounded bg-surface-container border-surface-container-high text-primary focus:ring-0 w-3 h-3" type="checkbox">
+<span class="">Auto-hedge alert threshold at 80% reach</span>
+</label>
+</div>
+<!-- Submit Order Button -->
+<div class="flex flex-col gap-1.5 pt-1"><button class="w-full py-2 px-3 rounded bg-primary hover:bg-primary-container text-on-primary font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_14px_rgba(78,222,163,0.3)] flex items-center justify-center gap-1.5 active:scale-[0.99]" id="transmitTicketBtn"><span class="material-symbols-outlined text-[16px] animate-none" id="transmitSpinner">verified</span><span class="" id="transmitTicketBtnText">TRANSMIT TICKET // LOCK $75.00</span></button><button class="w-full py-1.5 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-mono text-[10px] font-bold uppercase transition-colors flex items-center justify-center gap-1 border border-surface-container-highest hover:border-outline/50" id="stageTicketBtn"><span class="material-symbols-outlined text-[13px] text-primary">receipt_long</span><span class="" id="stageTicketBtnText">STAGE TO TICKETS LEDGER ↗</span></button></div>
+<!-- Order Routed Feedback Banner -->
+<div class="hidden p-2.5 rounded bg-primary/10 border border-primary text-primary flex-col gap-1.5 text-left font-mono" id="slipSuccessBanner"><div class="flex items-start justify-between"><div class="flex items-center gap-1.5 font-bold text-xs uppercase text-primary"><span class="material-symbols-outlined text-[16px]">check_circle</span><span class="">TICKET #TK-84921 STAGED TO SETTLEMENT LEDGER</span></div><span class="px-1.5 py-0.2 rounded bg-primary/20 text-[9px] font-bold text-primary">CONFIRMED</span></div><div class="flex items-center justify-between text-[10px] text-on-surface"><span class="text-outline">3 LEGS • $75.00 STAKE • HASH: 0x8F4A...B92</span><a class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-primary hover:bg-primary-container text-on-primary font-bold transition-all shadow-sm" href="#tickets" id="viewInLedgerActionBtn"><span class="">VIEW IN LEDGER</span><span class="material-symbols-outlined text-[12px]">arrow_forward</span></a></div></div>
+</div>
+</aside>
+</div>
+<!-- Drawer Controller Script -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const betslipDrawer = document.getElementById('betslipDrawer');
+  const betslipBackdrop = document.getElementById('betslipBackdrop');
+  const betslipOverlay = document.getElementById('betslipOverlay');
+  const headerSlipBtn = document.getElementById('headerSlipBtn');
+  const openSlipDirectBtn = document.getElementById('openSlipDirectBtn');
+  const floatingSlipBtn = document.getElementById('floatingSlipBtn');
+  const slipCloseBtn = document.getElementById('slipCloseBtn');
+  const slipClearBtn = document.getElementById('slipClearBtn');
+  const slipStakeInput = document.getElementById('slipStakeInput');
+  const slipPayoutDisplay = document.getElementById('slipPayoutDisplay');
+  const slipProfitDisplay = document.getElementById('slipProfitDisplay');
+  const transmitTicketBtn = document.getElementById('transmitTicketBtn');
+  const transmitTicketBtnText = document.getElementById('transmitTicketBtnText');
+  const slipSuccessBanner = document.getElementById('slipSuccessBanner');
+  const quickStakeChips = document.querySelectorAll('#quickStakeChips button');
+  const slipTypeTabs = document.querySelectorAll('#slipTypeTabs button');
+  const headerSlipCount = document.getElementById('headerSlipCount');
+  const headerSlipStake = document.getElementById('headerSlipStake');
+  const floatLegCount = document.getElementById('floatLegCount');
+  const floatOddsText = document.getElementById('floatOddsText');
+  const slipLegCountBadge = document.getElementById('slipLegCountBadge');
+  const singlesTabCount = document.getElementById('singlesTabCount');
+  const parlayLegsCount = document.getElementById('parlayLegsCount');
+  const slipMultiplierLabel = document.getElementById('slipMultiplierLabel');
+  const slipTotalOddsDisplay = document.getElementById('slipTotalOddsDisplay');
+  const slipAvgEvDisplay = document.getElementById('slipAvgEvDisplay');
+
+  let currentBetType = 'parlay';
+
+  function openBetslip() {
+    if (!betslipDrawer) return;
+    betslipOverlay.classList.remove('pointer-events-none');
+    betslipBackdrop.classList.remove('opacity-0', 'pointer-events-none');
+    betslipBackdrop.classList.add('opacity-100', 'pointer-events-auto');
+    betslipDrawer.classList.remove('translate-x-full');
+    betslipDrawer.classList.add('translate-x-0');
+  }
+
+  function closeBetslip() {
+    if (!betslipDrawer) return;
+    betslipDrawer.classList.remove('translate-x-0');
+    betslipDrawer.classList.add('translate-x-full');
+    betslipBackdrop.classList.remove('opacity-100', 'pointer-events-auto');
+    betslipBackdrop.classList.add('opacity-0', 'pointer-events-none');
+    setTimeout(() => {
+      betslipOverlay.classList.add('pointer-events-none');
+    }, 300);
+  }
+
+  function toggleBetslip() {
+    if (betslipDrawer.classList.contains('translate-x-0')) {
+      closeBetslip();
+    } else {
+      openBetslip();
+    }
+  }
+
+  // Bind Open/Close Triggers
+  if (headerSlipBtn) headerSlipBtn.addEventListener('click', toggleBetslip);
+  if (openSlipDirectBtn) openSlipDirectBtn.addEventListener('click', openBetslip);
+  if (floatingSlipBtn) floatingSlipBtn.addEventListener('click', openBetslip);
+  if (slipCloseBtn) slipCloseBtn.addEventListener('click', closeBetslip);
+  if (betslipBackdrop) betslipBackdrop.addEventListener('click', closeBetslip);
+
+  // Keyboard shortcut [B] to toggle, [ESC] to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'b' || e.key === 'B') {
+      if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        toggleBetslip();
+      }
+    }
+    if (e.key === 'Escape') {
+      if (betslipDrawer.classList.contains('translate-x-0')) {
+        closeBetslip();
+      }
+    }
+  });
+
+  // Dynamic Add-To-Slip buttons
+  document.querySelectorAll('.add-to-slip-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const player = btn.dataset.player || 'Target Selection';
+      const spec = btn.dataset.spec || 'Market Spec';
+      const book = btn.dataset.book || 'Pinnacle';
+      const odds = btn.dataset.odds || '+110';
+      
+      // Append a new leg if under 5
+      const currentLegs = document.querySelectorAll('#slipLegsContainer .leg-item');
+      if (currentLegs.length < 5) {
+        const newLegId = 'leg-' + Date.now();
+        const legEl = document.createElement('div');
+        legEl.className = 'bg-surface-container-low rounded border border-[#262a36] hover:border-outline/50 transition-all p-3 flex flex-col gap-2 relative group leg-item';
+        legEl.dataset.legId = newLegId;
+        legEl.dataset.odds = odds;
+        legEl.innerHTML = `
+          <button class="absolute top-2 right-2 w-5 h-5 rounded hover:bg-error/20 hover:text-error text-outline flex items-center justify-center transition-colors leg-remove-btn" title="Remove leg">
+            <span class="material-symbols-outlined text-[14px]">close</span>
+          </button>
+          <div class="flex items-center gap-1.5 text-outline font-mono text-[10px] font-bold uppercase">
+            <span class="px-1 py-0.2 rounded bg-surface-container-high text-primary">SLOT QUEUE</span>
+            <span>INSTITUTIONAL</span><span>•</span><span class="text-on-surface">${player}</span>
+          </div>
+          <div>
+            <div class="text-xs font-bold uppercase tracking-tight text-on-surface">${player}</div>
+            <div class="text-[11px] font-mono text-primary font-semibold mt-0.5">${spec}</div>
+          </div>
+          <div class="flex items-center justify-between bg-surface-container-lowest p-2 rounded text-[10px] font-mono">
+            <div><span class="text-outline">BEST ROUTE: </span><span class="text-primary font-bold">${book}</span> <span class="text-primary font-bold ml-1">${odds}</span></div>
+            <span class="text-primary font-bold bg-primary/10 px-1 rounded">[ROUTED]</span>
+          </div>
+          <div class="single-stake-row ${currentBetType === 'singles' ? '' : 'hidden'} flex items-center justify-between pt-1 border-t border-surface-container gap-2">
+            <div class="flex items-center gap-1">
+              <span class="font-mono text-[10px] text-outline">STAKE:</span>
+              <input type="number" class="single-leg-stake w-20 h-6 px-1.5 bg-surface-container-lowest rounded border border-surface-container-high font-mono text-xs text-on-surface outline-none focus:border-primary" value="25.00"/>
+            </div>
+            <div class="text-right">
+              <span class="font-mono text-[9px] text-outline block">POTENTIAL:</span>
+              <span class="single-leg-return font-mono text-xs text-primary font-bold">$52.50</span>
+            </div>
+          </div>
+        `;
+        document.getElementById('slipLegsContainer').appendChild(legEl);
+        wireLegRemovers();
+        recalculateSlip();
+      }
+      openBetslip();
+    });
+  });
+
+  // Tab switching
+  slipTypeTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      slipTypeTabs.forEach(t => {
+        t.classList.remove('border-primary', 'text-primary', 'bg-primary/5');
+        t.classList.add('border-transparent', 'text-outline');
+      });
+      tab.classList.remove('border-transparent', 'text-outline');
+      tab.classList.add('border-primary', 'text-primary', 'bg-primary/5');
+      currentBetType = tab.getAttribute('data-tab');
+
+      const singleRows = document.querySelectorAll('.single-stake-row');
+      if (currentBetType === 'singles') {
+        singleRows.forEach(r => r.classList.remove('hidden'));
+      } else {
+        singleRows.forEach(r => r.classList.add('hidden'));
+      }
+      recalculateSlip();
+    });
+  });
+
+  // Quick Stake Chips
+  quickStakeChips.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const amt = btn.getAttribute('data-amt');
+      let current = parseFloat(slipStakeInput.value) || 0;
+      if (amt === 'max') {
+        current = 100.00;
+      } else {
+        current += parseFloat(amt);
+      }
+      slipStakeInput.value = current.toFixed(2);
+      recalculateSlip();
+    });
+  });
+
+  if (slipStakeInput) {
+    slipStakeInput.addEventListener('input', recalculateSlip);
+  }
+
+  // Wire Leg Removal Handlers
+  function wireLegRemovers() {
+    document.querySelectorAll('.leg-remove-btn').forEach(btn => {
+      btn.onclick = (e) => {
+        const item = e.target.closest('.leg-item');
+        if (item) {
+          item.remove();
+          recalculateSlip();
+        }
+      };
+    });
+  }
+  wireLegRemovers();
+
+  if (slipClearBtn) {
+    slipClearBtn.addEventListener('click', () => {
+      document.querySelectorAll('#slipLegsContainer .leg-item').forEach(el => el.remove());
+      recalculateSlip();
+    });
+  }
+
+  // Recalculate Totals
+  function recalculateSlip() {
+    const legs = document.querySelectorAll('#slipLegsContainer .leg-item');
+    const count = legs.length;
+    const stake = parseFloat(slipStakeInput.value) || 0;
+
+    if (headerSlipCount) headerSlipCount.textContent = `SLIP (${count})`;
+    if (headerSlipStake) headerSlipStake.textContent = `$${stake.toFixed(2)} MONITORED`;
+    if (floatLegCount) floatLegCount.textContent = `${count} LEGS`;
+    if (slipLegCountBadge) slipLegCountBadge.textContent = `${count} ACTIVE LEGS`;
+    if (singlesTabCount) singlesTabCount.textContent = count;
+    if (parlayLegsCount) parlayLegsCount.textContent = `${count}-LEG`;
+
+    if (count === 0) {
+      slipPayoutDisplay.textContent = '$0.00';
+      slipProfitDisplay.textContent = '+$0.00';
+      transmitTicketBtnText.textContent = 'SLIP EMPTY';
+      transmitTicketBtn.disabled = true;
+      transmitTicketBtn.classList.add('opacity-50', 'pointer-events-none');
+      if (floatOddsText) floatOddsText.textContent = '+0';
+      return;
+    } else {
+      transmitTicketBtn.disabled = false;
+      transmitTicketBtn.classList.remove('opacity-50', 'pointer-events-none');
+    }
+
+    if (currentBetType === 'parlay') {
+      let mult = 5.85;
+      let odds = '+485 (17.1% IMPL)';
+      let floatOdds = '+485';
+      let ev = '+14.8% AVG EV';
+
+      if (count === 1) {
+        mult = 2.18;
+        odds = '+118 (45.9% IMPL)';
+        floatOdds = '+118';
+        ev = '+6.2% AVG EV';
+      } else if (count === 2) {
+        mult = 3.65;
+        odds = '+265 (27.4% IMPL)';
+        floatOdds = '+265';
+        ev = '+10.2% AVG EV';
+      } else if (count === 4) {
+        mult = 11.20;
+        odds = '+1020 (8.9% IMPL)';
+        floatOdds = '+1020';
+        ev = '+19.4% AVG EV';
+      } else if (count >= 5) {
+        mult = 21.50;
+        odds = '+2050 (4.6% IMPL)';
+        floatOdds = '+2050';
+        ev = '+24.1% AVG EV';
+      }
+
+      if (slipMultiplierLabel) slipMultiplierLabel.textContent = `${count}-LEG PARLAY MULTIPLIER:`;
+      if (slipTotalOddsDisplay) slipTotalOddsDisplay.textContent = odds;
+      if (slipAvgEvDisplay) slipAvgEvDisplay.textContent = ev;
+      if (floatOddsText) floatOddsText.textContent = floatOdds;
+
+      const payout = stake * mult;
+      const profit = payout - stake;
+      slipPayoutDisplay.textContent = `$${payout.toFixed(2)}`;
+      slipProfitDisplay.textContent = `+$${profit.toFixed(2)}`;
+      transmitTicketBtnText.textContent = `TRANSMIT TICKET // LOCK $${stake.toFixed(2)}`;
+    } else if (currentBetType === 'singles') {
+      const payout = stake * 2.05;
+      const profit = payout - stake;
+      if (slipMultiplierLabel) slipMultiplierLabel.textContent = `SINGLES BATCH (${count}x):`;
+      if (slipTotalOddsDisplay) slipTotalOddsDisplay.textContent = 'DIVERSIFIED SPREAD';
+      if (slipAvgEvDisplay) slipAvgEvDisplay.textContent = '+5.0% COMPOSITE EV';
+      slipPayoutDisplay.textContent = `$${payout.toFixed(2)}`;
+      slipProfitDisplay.textContent = `+$${profit.toFixed(2)}`;
+      transmitTicketBtnText.textContent = `TRANSMIT ${count} SINGLES // LOCK $${stake.toFixed(2)}`;
+    } else if (currentBetType === 'round-robin') {
+      const payout = stake * 7.42;
+      const profit = payout - stake;
+      if (slipMultiplierLabel) slipMultiplierLabel.textContent = `ROUND ROBIN COMBO:`;
+      if (slipTotalOddsDisplay) slipTotalOddsDisplay.textContent = '+642 COMBINED';
+      if (slipAvgEvDisplay) slipAvgEvDisplay.textContent = '+16.5% HIGH COVER';
+      slipPayoutDisplay.textContent = `$${payout.toFixed(2)}`;
+      slipProfitDisplay.textContent = `+$${profit.toFixed(2)}`;
+      transmitTicketBtnText.textContent = `TRANSMIT ROUND ROBIN // LOCK $${stake.toFixed(2)}`;
+    } else if (currentBetType === 'hedge') {
+      const payout = stake * 1.98;
+      const profit = payout - stake;
+      if (slipMultiplierLabel) slipMultiplierLabel.textContent = `HEDGE ARB BALANCER:`;
+      if (slipTotalOddsDisplay) slipTotalOddsDisplay.textContent = 'LOCKED ARBITRAGE';
+      if (slipAvgEvDisplay) slipAvgEvDisplay.textContent = '+2.85% GUARANTEED';
+      slipPayoutDisplay.textContent = `$${payout.toFixed(2)}`;
+      slipProfitDisplay.textContent = `+$${profit.toFixed(2)}`;
+      transmitTicketBtnText.textContent = `EXECUTE ARB ROUTE // LOCK $${stake.toFixed(2)}`;
+    }
+  }
+
+  // Transmit simulated order
+  if (transmitTicketBtn) {
+    transmitTicketBtn.addEventListener('click', () => {
+      transmitTicketBtnText.textContent = 'ROUTING ORDER TO PINNACLE...';
+      transmitTicketBtn.classList.add('animate-pulse');
+      setTimeout(() => {
+        transmitTicketBtn.classList.remove('animate-pulse');
+        transmitTicketBtnText.textContent = 'TRANSMITTED & LOCKED ✓';
+        if (slipSuccessBanner) {
+          slipSuccessBanner.classList.remove('hidden');
+          slipSuccessBanner.classList.add('flex');
+        }
+        setTimeout(() => {
+          if (slipSuccessBanner) {
+            slipSuccessBanner.classList.add('hidden');
+            slipSuccessBanner.classList.remove('flex');
+          }
+          recalculateSlip();
+        }, 3500);
+      }, 1000);
+    });
+  }
+
+  // Initial calculation
+  recalculateSlip();
+});
+</script>
+
+
+</body></html>

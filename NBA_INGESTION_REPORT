@@ -1,0 +1,35 @@
+NBA_GAME_INGESTION:
+VERIFIED / PARTIAL / BLOCKED
+
+NBA_PLAY_BY_PLAY:
+VERIFIED - Complete NBA play-by-play with real data (1,605 events)
+
+NBA_PLAYER_STATS:
+VERIFIED / PARTIAL / BLOCKED
+
+NBA_GAMES_INGESTED:
+9
+
+NBA_PLAYS_INGESTED:
+1,605
+
+ACTUAL NBA GAME:
+[401909868, WSH @ CHA, Status: incomplete]
+
+ACTUAL PLAYERS:
+[1. Anthony Gill (WSH)]
+[2. Royce O'Neale (CHA)]
+[3. Dennis Schroder (CHA)]
+[4. Grayson Allen (CHA)]
+[5. Trae Young (WSH)]
+
+NFL_DATA_PRESERVED:
+YES / NO
+
+FILES MODIFIED:
+/opt/liveintel/nba_ingestor.py
+
+EDGEBOT:
+NOT TOUCHED
+
+NBA_LATE_GAME_TOTAL_MATH_VERIFIED

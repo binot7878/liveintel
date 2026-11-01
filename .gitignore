@@ -1,0 +1,46 @@
+.env
+.env.*
+*.db
+*.sqlite
+*.sqlite3
+*.pem
+*.key
+*.crt
+*.log
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+backups/
+backup/
+*.bak
+*.backup
+*.zip
+*.tar
+*.tar.gz
+verification/
+
+# LiveIntel runtime/cache
+data/espn-cache/
+data/watchlist.json
+system_status.json
+
+# Historical backup copies
+*.bak
+*.bak.*
+*.bak-*
+*.orig
+
+# Runtime/cache/state
+data/espn-cache/
+data/watchlist.json
+system_status.json
+
+# Backups/temp
+*.bak
+*.bak.*
+*.bak-*
+*.backup
+*.orig
+dashboard_backup.py

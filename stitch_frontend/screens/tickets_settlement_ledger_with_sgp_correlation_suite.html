@@ -1,0 +1,945 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><title>LiveIntel // Sports Intelligence Terminal</title><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-surface":"#e1e2ec","surface-container-highest":"#32353d","surface":"#10131a","surface-container-high":"#272a32","outline":"#86948a","secondary-fixed-dim":"#ffb95f","secondary-container":"#ee9800","inverse-on-surface":"#2d3038","tertiary-fixed":"#ffdad7","error-container":"#93000a","on-secondary":"#472a00","on-tertiary":"#68000a","secondary":"#ffb95f","primary":"#4edea3","surface-container":"#1d1f27","on-primary-container":"#00422b","secondary-fixed":"#ffddb8","surface-container-lowest":"#0b0e15","on-tertiary-container":"#79000e","tertiary-container":"#ff7a73","on-error":"#690005","primary-fixed":"#6ffbbe","surface-tint":"#4edea3","on-secondary-container":"#5b3800","on-primary":"#003824","tertiary-fixed-dim":"#ffb3ad","inverse-primary":"#006c49","surface-variant":"#32353d","on-tertiary-fixed-variant":"#930013","primary-fixed-dim":"#4edea3","tertiary":"#ffb3ad","on-primary-fixed-variant":"#005236","on-error-container":"#ffdad6","error":"#ffb4ab","background":"#10131a","on-secondary-fixed":"#2a1700","inverse-surface":"#e1e2ec","surface-dim":"#10131a","on-tertiary-fixed":"#410004","on-secondary-fixed-variant":"#653e00","surface-bright":"#363941","on-background":"#e1e2ec","primary-container":"#10b981","on-surface-variant":"#bbcabf","on-primary-fixed":"#002113","surface-container-low":"#191b23","outline-variant":"#3c4a42"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-xs":"0.25rem","space-lg":"1rem","gutter":"0.75rem","space-sm":"0.375rem","margin":"1rem","space-md":"0.625rem","space-xl":"1.5rem"},"fontFamily":{"headline-xl-mobile":["Inter"],"label-mono-micro":["JetBrains Mono"],"label-mono-md":["JetBrains Mono"],"headline-sm":["Inter"],"label-mono-sm":["JetBrains Mono"],"headline-xl":["Inter"],"label-mono-lg":["JetBrains Mono"],"table-header":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"]},"fontSize":{"headline-xl-mobile":["22px",{"lineHeight":"28px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-mono-micro":["10px",{"lineHeight":"12px","letterSpacing":"0.04em","fontWeight":"600"}],"label-mono-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-sm":["15px",{"lineHeight":"20px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-mono-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}],"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.025em","fontWeight":"700"}],"label-mono-lg":["14px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"600"}],"table-header":["11px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"26px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}};</script><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="h-14 w-full px-gutter flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-lg shrink-0"><div class="flex items-center gap-space-sm cursor-pointer select-none"><div class="w-7 h-7 rounded bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">insights</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface leading-none">LiveIntel</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-widest">Terminal v2.4</span></div></div><div class="hidden xl:flex items-center px-space-sm py-space-xs bg-surface-container-high rounded gap-space-xs"><span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold tracking-wider">LIVE SLATE • OCT 31</span></div></div><nav class="hidden lg:flex items-center gap-space-xs h-9" data-active-classes="bg-surface-container-highest text-on-surface font-semibold"><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="live" href="#">LIVE</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="players" href="#">PLAYERS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="heats-on" href="#">HEAT'S ON</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="math-lab" href="#">MATH LAB</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="watch-5" href="#">WATCH 5</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="picks" href="#">PICKS</a><a aria-current="page" class="px-space-md py-space-xs rounded uppercase transition-colors bg-surface-container-highest text-on-surface font-semibold" data-path="tickets" href="#">TICKETS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="intelligence" href="#">INTELLIGENCE</a></nav><div class="flex items-center gap-space-md shrink-0"><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-low rounded"><span class="material-symbols-outlined text-[14px] text-primary animate-spin">sync</span><span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">FEED LIVE</span><span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">18ms</span></div><div class="flex items-center px-space-md py-space-xs bg-surface-container rounded gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">ROLL</span><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">$100.00</span></div><div class="w-px h-6 bg-surface-container-highest"></div><div class="flex flex-col"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">P/L</span><span class="font-label-mono-sm text-label-mono-sm text-primary font-semibold">+$0.00</span></div></div><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest rounded text-on-surface hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[16px] text-secondary">receipt_long</span><span class="font-label-mono-sm text-label-mono-sm hidden md:inline uppercase">SLIP (0)</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-surface min-h-[calc(100vh-3.5rem)] flex flex-col"><div class="flex flex-col w-full">
+<!-- Top Command Ribbon: Portfolio Context & Telemetry Sync -->
+<section class="w-full bg-surface-container-lowest px-gutter py-space-md">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[14px]">account_balance_wallet</span>
+</span>
+<h1 class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface">
+            TICKET PORTFOLIO <span class="text-outline mx-1">//</span> SETTLEMENT &amp; AUDIT LEDGER
+          </h1>
+<span class="bg-primary/15 text-primary text-[10px] font-label-mono-micro px-space-xs py-[2px] rounded uppercase font-bold tracking-widest">REAL-TIME TELEMETRY</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          Institutional ticket management, active exposure tracking, and settlement history.
+        </p>
+</div>
+<!-- Quick Action Desk -->
+<div class="flex items-center gap-space-xs flex-wrap">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-primary">sync</span>
+<span class="">FORCE SYNC API</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-secondary">tune</span>
+<span class="">EXPOSURE LIMITS</span>
+</button><button onclick="openBacktestModal('batch')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 text-label-mono-sm font-label-mono-sm font-bold transition-colors shadow-sm"><span class="material-symbols-outlined text-[14px]">dataset</span><span class="">BATCH COVARIANCE EXPORT (28 TICKETS)</span></button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary text-on-primary text-label-mono-sm font-label-mono-sm font-semibold transition-opacity hover:opacity-90 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+<span class="">MANUAL AUDIT ENTRY</span>
+</button>
+</div>
+</div>
+</section>
+<!-- High-Density KPI Metric Strip -->
+<section class="w-full bg-surface-container-low px-gutter py-space-md">
+<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-space-sm">
+<!-- Metric 1 -->
+<div class="bg-surface-container p-space-md rounded flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro uppercase text-outline">TOTAL BANKROLL</span>
+<span class="material-symbols-outlined text-[14px] text-outline">arrow_forward_ios</span>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">$10,480.00</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary flex items-center">
+<span class="material-symbols-outlined text-[12px]">arrow_drop_up</span>+12.4%
+          </span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 82%;"></div>
+</div>
+</div>
+<!-- Metric 2 -->
+<div class="bg-surface-container p-space-md rounded flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro uppercase text-outline">ACTIVE EXPOSURE (IN-PLAY)</span>
+<span class="inline-flex w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<span class="font-headline-lg text-headline-lg font-bold text-secondary tracking-tight">$375.00</span>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant font-semibold">4 TICKETS</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-2 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 28%;"></div>
+</div>
+</div>
+<!-- Metric 3 -->
+<div class="bg-surface-container p-space-md rounded flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro uppercase text-outline">SETTLED P/L (MTD)</span>
+<span class="material-symbols-outlined text-[14px] text-primary">trending_up</span>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<span class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">+$1,840.50</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+18.2% ROI</span>
+</div>
+<!-- Sparkline visualization -->
+<div class="mt-2 h-4 w-full flex items-end gap-[2px]">
+<span class="h-2 w-full bg-primary/30 rounded-t-sm"></span>
+<span class="h-3 w-full bg-primary/40 rounded-t-sm"></span>
+<span class="h-1 w-full bg-error/40 rounded-t-sm"></span>
+<span class="h-4 w-full bg-primary/70 rounded-t-sm"></span>
+<span class="h-2 w-full bg-primary/50 rounded-t-sm"></span>
+<span class="h-5 w-full bg-primary rounded-t-sm"></span>
+</div>
+</div>
+<!-- Metric 4 -->
+<div class="bg-surface-container p-space-md rounded flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro uppercase text-outline">WIN RATE / RATIO</span>
+<span class="material-symbols-outlined text-[14px] text-outline">pie_chart</span>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">64.8%</span>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant font-medium">16W - 7L - 1V</span>
+</div>
+<div class="flex gap-1 mt-2">
+<div class="h-1 rounded-full bg-primary" style="width: 65%;"></div>
+<div class="h-1 rounded-full bg-error" style="width: 30%;"></div>
+<div class="h-1 rounded-full bg-outline" style="width: 5%;"></div>
+</div>
+</div>
+<!-- Metric 5 -->
+<div class="col-span-2 md:col-span-1 bg-surface-container p-space-md rounded flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro uppercase text-outline">CLV BEAT RATE</span>
+<span class="px-1.5 py-[2px] rounded bg-primary/10 text-primary text-[9px] font-label-mono-micro font-bold">+EV EDGE</span>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<span class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">78.4%</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">AVG +4.2c</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 78.4%;"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Filter & Sub-Navigation Workstation Bar -->
+<section class="w-full bg-surface-container-lowest px-gutter py-space-sm">
+<div class="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-space-sm">
+<!-- Status Tabs -->
+<div class="flex items-center gap-space-xs overflow-x-auto pb-1 xl:pb-0" id="ticket-tabs">
+<button class="px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-table-header text-table-header uppercase transition-colors shrink-0">
+          ALL (28)
+        </button>
+<button class="px-space-md py-space-xs rounded bg-surface-container-highest text-on-surface font-table-header text-table-header uppercase flex items-center gap-1.5 shrink-0 shadow-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="">OPEN (4)</span>
+</button><button class="px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-secondary font-table-header text-table-header uppercase flex items-center gap-1.5 shrink-0 transition-colors"><span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span><span class="">SGP CORRELATED (2)</span><span class="text-[9px] bg-secondary/15 px-1 py-[1px] rounded text-secondary font-bold tracking-tight font-label-mono-micro">+14.2% EDGE</span></button><button class="px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary font-table-header text-table-header uppercase flex items-center gap-1.5 shrink-0 transition-colors border border-primary/30"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span><span class="">KELLY HEDGED (2)</span><span class="text-[9px] bg-primary/15 px-1 py-[1px] rounded text-primary font-bold tracking-tight font-label-mono-micro">$300.50 EXPOSURE</span></button>
+<button class="px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-table-header text-table-header uppercase transition-colors shrink-0">
+          WON (16)
+        </button>
+<button class="px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-table-header text-table-header uppercase transition-colors shrink-0">
+          LOST (7)
+        </button>
+<button class="px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-table-header text-table-header uppercase transition-colors shrink-0">
+          VOID (1)
+        </button>
+</div>
+<!-- Quick Filter Dropdowns & View Switches -->
+<div class="flex items-center gap-space-xs flex-wrap">
+<!-- Sport Filter -->
+<div class="flex items-center gap-1 bg-surface-container-high rounded px-space-xs py-[2px]"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase mr-1 pl-1">SPORT:</span><button onclick="quickFilterMainSport('all')" id="toolbar-sport-all" class="px-2 py-[2px] rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold">ALL (28)</button><button onclick="quickFilterMainSport('nba')" id="toolbar-sport-nba" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">NBA (14)</button><button onclick="quickFilterMainSport('cfb')" id="toolbar-sport-cfb" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">CFB (8)</button><button onclick="quickFilterMainSport('nfl')" id="toolbar-sport-nfl" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">NFL (6)</button></div>
+<!-- Bookmaker Filter -->
+<div class="flex items-center gap-1 bg-surface-container-high rounded px-space-xs py-[2px]"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase mr-1 pl-1">SPORT:</span><button onclick="quickFilterMainSport('all')" id="toolbar-sport-all" class="px-2 py-[2px] rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold">ALL (28)</button><button onclick="quickFilterMainSport('nba')" id="toolbar-sport-nba" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">NBA (14)</button><button onclick="quickFilterMainSport('cfb')" id="toolbar-sport-cfb" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">CFB (8)</button><button onclick="quickFilterMainSport('nfl')" id="toolbar-sport-nfl" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">NFL (6)</button></div>
+<!-- Date Range -->
+<div class="flex items-center gap-1 bg-surface-container-high rounded px-space-xs py-[2px]"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase mr-1 pl-1">SPORT:</span><button onclick="quickFilterMainSport('all')" id="toolbar-sport-all" class="px-2 py-[2px] rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold">ALL (28)</button><button onclick="quickFilterMainSport('nba')" id="toolbar-sport-nba" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">NBA (14)</button><button onclick="quickFilterMainSport('cfb')" id="toolbar-sport-cfb" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">CFB (8)</button><button onclick="quickFilterMainSport('nfl')" id="toolbar-sport-nfl" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">NFL (6)</button></div>
+<!-- Search Input -->
+<div class="flex items-center gap-1 bg-surface-container-high rounded px-space-xs py-[2px]"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase mr-1 pl-1">SPORT:</span><button onclick="quickFilterMainSport('all')" id="toolbar-sport-all" class="px-2 py-[2px] rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold">ALL (28)</button><button onclick="quickFilterMainSport('nba')" id="toolbar-sport-nba" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">NBA (14)</button><button onclick="quickFilterMainSport('cfb')" id="toolbar-sport-cfb" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">CFB (8)</button><button onclick="quickFilterMainSport('nfl')" id="toolbar-sport-nfl" class="px-2 py-[2px] rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-medium">NFL (6)</button></div><div class="flex items-center gap-1 bg-surface-container-high rounded p-[2px] border border-primary/20"><button id="btn-quick-batch-export" onclick="openBacktestModal('batch', currentSelectedSport)" class="flex items-center gap-1 hover:bg-surface-container-highest text-primary rounded px-space-sm py-[3px] font-label-mono-micro text-label-mono-micro font-bold transition-colors"><span class="material-symbols-outlined text-[13px]">cloud_download</span><span id="toolbar-batch-label" class="">BATCH EXPORT (28 TIX)</span></button><button onclick="openBacktestModal('batch', 'nba')" class="px-1.5 py-[2px] rounded text-[10px] font-label-mono-micro text-outline hover:text-on-surface hover:bg-surface-container transition-colors">NBA (14)</button><button onclick="openBacktestModal('batch', 'cfb')" class="px-1.5 py-[2px] rounded text-[10px] font-label-mono-micro text-outline hover:text-on-surface hover:bg-surface-container transition-colors">CFB (8)</button><button onclick="openBacktestModal('batch', 'nfl')" class="px-1.5 py-[2px] rounded text-[10px] font-label-mono-micro text-outline hover:text-on-surface hover:bg-surface-container transition-colors">NFL (6)</button></div>
+</div>
+</div>
+</section>
+<!-- Main Ledger Multi-Pane Content Area -->
+<section class="w-full px-gutter py-space-md flex-1">
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg">
+<!-- Primary Tickets Stream (8 Cols on XL) -->
+<div class="xl:col-span-8 flex flex-col gap-space-md">
+<!-- Section Subtitle & Count -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface uppercase font-bold">ACTIVE TICKETS &amp; LEDGER STREAM</span>
+<span class="bg-surface-container-highest px-space-sm py-[1px] rounded text-outline font-label-mono-micro text-label-mono-micro">4 LIVE / 24 ARCHIVED</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">AUTO-REFRESH:</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">1 SEC</span>
+</div>
+</div>
+<!-- TICKET 1: In-Play Multi-Leg Parlay (Glowing Green Feature Card) -->
+<div class="bg-surface-container p-space-md rounded shadow-md relative overflow-hidden"><div class="absolute top-0 left-0 right-0 h-[2px] bg-primary animate-pulse"></div><div class="flex flex-col gap-space-md"><div class="flex flex-wrap items-center justify-between gap-space-xs pb-space-xs"><button onclick="openBacktestModal('batch')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary text-on-primary text-label-mono-sm font-label-mono-sm transition-opacity hover:opacity-90 shadow-sm font-bold"><span class="material-symbols-outlined text-[15px]">dataset</span><span class="">BATCH EXPORT: ALL 28 TICKETS (CSV + PY + R)</span></button><button onclick="openBacktestModal('csv')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[15px]">analytics</span><span class="">#TK-84935 SGP CSV</span></button><button onclick="openBacktestModal('python')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">terminal</span><span class="">SINGLE .PY SCRIPT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">description</span><span class="">TAX REPORT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold"><span class="material-symbols-outlined text-[15px]">cable</span><span class="">SYNC TO BOOKMAKER API</span></button></div><div class="flex flex-col gap-space-xs"><div class="bg-surface-container-low p-space-sm rounded flex flex-col md:flex-row md:items-center justify-between gap-space-xs"><div class="flex items-center gap-space-sm"><div class="w-6 h-6 rounded bg-secondary/20 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-secondary text-[16px] animate-spin">autorenew</span></div><div><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm font-semibold text-on-surface">LaMelo Ball Over 7.5 Assists</span><span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold">(+105)</span><span class="text-[10px] font-label-mono-micro text-outline uppercase bg-surface-container px-1 py-[1px] rounded">NBA PROP</span><span class="text-[9px] font-label-mono-micro text-primary bg-primary/10 px-1 py-[1px] rounded uppercase font-semibold">COV r = +0.64</span></div><span class="font-body-sm text-body-sm text-on-surface-variant">CHA Hornets vs BOS Celtics • 3Q 04:12 • Live Pace: 102.4</span></div></div><div class="flex items-center gap-space-md self-end md:self-auto"><div class="flex flex-col text-right"><span class="font-label-mono-sm text-label-mono-sm text-secondary font-bold tracking-tight">6 OF 8 AST (75%)</span><span class="font-label-mono-micro text-label-mono-micro text-primary uppercase">ELEVATED HIT PROB</span></div><div class="w-16 bg-surface-container h-2 rounded-full overflow-hidden"><div class="bg-secondary h-full rounded-full" style="width: 75%;"></div></div></div></div><div class="bg-surface-container-low p-space-sm rounded flex flex-col md:flex-row md:items-center justify-between gap-space-xs"><div class="flex items-center gap-space-sm"><div class="w-6 h-6 rounded bg-primary/20 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-primary text-[16px]">trending_up</span></div><div><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm font-semibold text-on-surface">CHA @ BOS Game Total Over 228.5</span><span class="font-label-mono-micro text-label-mono-micro text-outline">(-110)</span><span class="text-[10px] font-label-mono-micro text-outline uppercase bg-surface-container px-1 py-[1px] rounded">NBA TOTAL</span><span class="text-[9px] font-label-mono-micro text-primary bg-primary/10 px-1 py-[1px] rounded uppercase font-semibold">ANCHOR LEG</span></div><span class="font-body-sm text-body-sm text-on-surface-variant">Combined: 178 Pts @ 3Q 04:12 • Projected Finish: 236.4 Pts</span></div></div><div class="flex items-center gap-space-md self-end md:self-auto"><div class="flex flex-col text-right"><span class="font-label-mono-sm text-label-mono-sm text-primary font-bold tracking-tight">+7.9 PTS OVER PACE</span><span class="font-label-mono-micro text-label-mono-micro text-primary uppercase">BULLISH OVER BIAS</span></div><div class="w-16 bg-surface-container h-2 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width: 78%;"></div></div></div></div><div class="bg-surface-container-low p-space-sm rounded flex flex-col md:flex-row md:items-center justify-between gap-space-xs"><div class="flex items-center gap-space-sm"><div class="w-6 h-6 rounded bg-secondary/20 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-secondary text-[16px] animate-spin">autorenew</span></div><div><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm font-semibold text-on-surface">Derrick White Over 2.5 3-Pointers Made</span><span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold">(+115)</span><span class="text-[10px] font-label-mono-micro text-outline uppercase bg-surface-container px-1 py-[1px] rounded">NBA PROP</span><span class="text-[9px] font-label-mono-micro text-primary bg-primary/10 px-1 py-[1px] rounded uppercase font-semibold">COV r = +0.59</span></div><span class="font-body-sm text-body-sm text-on-surface-variant">BOS Celtics @ CHA Hornets • High Perimeter Shot Volume</span></div></div><div class="flex items-center gap-space-md self-end md:self-auto"><div class="flex flex-col text-right"><span class="font-label-mono-sm text-label-mono-sm text-secondary font-bold tracking-tight">2 OF 3 MADE</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">1 PENDING SHOT</span></div><div class="w-16 bg-surface-container h-2 rounded-full overflow-hidden"><div class="bg-secondary h-full rounded-full" style="width: 66.6%;"></div></div></div></div></div><div class="bg-surface-container-lowest p-space-sm rounded border border-surface-container-high"><div class="flex flex-col md:flex-row md:items-center justify-between gap-space-xs mb-space-xs"><div class="flex items-center gap-space-xs flex-wrap"><button onclick="openBacktestModal('batch')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary text-on-primary text-label-mono-sm font-label-mono-sm transition-opacity hover:opacity-90 shadow-sm font-bold"><span class="material-symbols-outlined text-[15px]">dataset</span><span class="">BATCH EXPORT: ALL 28 TICKETS (CSV + PY + R)</span></button><button onclick="openBacktestModal('csv')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[15px]">analytics</span><span class="">#TK-84935 SGP CSV</span></button><button onclick="openBacktestModal('python')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">terminal</span><span class="">SINGLE .PY SCRIPT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">description</span><span class="">TAX REPORT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold"><span class="material-symbols-outlined text-[15px]">cable</span><span class="">SYNC TO BOOKMAKER API</span></button></div><div class="flex items-center gap-space-xs"><button id="btn-ticket-cov-export" onclick="openBacktestModal('csv')" class="flex items-center gap-1 px-space-xs py-[2px] rounded bg-surface-container-high hover:bg-surface-container-highest text-primary font-label-mono-micro text-label-mono-micro font-semibold transition-colors border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[12px]">table_view</span><span class="">EXPORT COVARIANCE AUDIT</span></button><button id="btn-ticket-py-export" onclick="openBacktestModal('python')" class="flex items-center gap-1 px-space-xs py-[2px] rounded bg-primary/10 hover:bg-primary/20 text-primary font-label-mono-micro text-label-mono-micro font-bold transition-colors"><span class="material-symbols-outlined text-[12px]">terminal</span><span class="">BACKTEST SCRIPT (.PY)</span></button></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-space-xs text-[11px] font-label-mono-sm"><div class="bg-surface-container-high px-space-sm py-1 rounded flex items-center justify-between"><span class="text-on-surface-variant">Ball AST × Total:</span><span class="text-primary font-bold">r = +0.64 (High)</span></div><div class="bg-surface-container-high px-space-sm py-1 rounded flex items-center justify-between"><span class="text-on-surface-variant">White 3PM × Total:</span><span class="text-primary font-bold">r = +0.59 (High)</span></div><div class="bg-surface-container-high px-space-sm py-1 rounded flex items-center justify-between"><span class="text-on-surface-variant">Ball AST × White 3PM:</span><span class="text-primary font-bold">r = +0.47 (Moderate)</span></div></div></div><div class="bg-surface-container-lowest p-space-sm rounded border border-primary/30 flex flex-col gap-space-xs"><div class="flex flex-wrap items-center justify-between gap-1"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="text-[10px] font-label-mono-micro bg-primary/15 text-primary border border-primary/30 px-1.5 py-[2px] rounded font-bold uppercase tracking-wider">KELLY 0.5x SIZED // DUAL-LEG MIDDLE CORRIDOR (+8.5 PTS WINDOW)</span></div><div class="flex items-center gap-1"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">CORRIDOR EV:</span><span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+18.4% SHARPE 2.14</span><button class="ml-1 flex items-center gap-1 px-2 py-[2px] rounded bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 font-label-mono-micro text-label-mono-micro font-bold transition-colors"><span class="material-symbols-outlined text-[12px]">radar</span><span class="">SYNCED TO WATCH 5 RADAR</span></button></div></div><div class="bg-surface-container-low px-space-sm py-1.5 rounded flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] font-label-mono-sm border border-surface-container-high"><div class="flex items-center gap-2"><span class="text-outline">LEG A:</span><span class="text-on-surface font-semibold">$148.50 (+108)</span><span class="text-primary font-bold">➔</span><span class="text-outline">LEG B HEDGE:</span><span class="text-secondary font-bold">$152.00 (-102 Circa)</span></div><div class="flex items-center gap-2"><span class="text-outline">NET GUARANTEE:</span><span class="text-primary font-bold bg-primary/10 px-1.5 py-[1px] rounded">+$42.50 LOCK</span><span class="text-outline hidden md:inline">|</span><span class="text-secondary font-bold">+$610.50 DOUBLE-DIP WIN</span></div></div></div><div class="flex flex-wrap items-center justify-between pt-space-xs bg-surface-container-low/60 p-space-sm rounded gap-space-xs"><button onclick="openBacktestModal('batch')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary text-on-primary text-label-mono-sm font-label-mono-sm transition-opacity hover:opacity-90 shadow-sm font-bold"><span class="material-symbols-outlined text-[15px]">dataset</span><span class="">BATCH EXPORT: ALL 28 TICKETS (CSV + PY + R)</span></button><button onclick="openBacktestModal('csv')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[15px]">analytics</span><span class="">#TK-84935 SGP CSV</span></button><button onclick="openBacktestModal('python')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">terminal</span><span class="">SINGLE .PY SCRIPT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">description</span><span class="">TAX REPORT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold"><span class="material-symbols-outlined text-[15px]">cable</span><span class="">SYNC TO BOOKMAKER API</span></button></div></div></div><div class="bg-surface-container p-space-md rounded shadow-md relative overflow-hidden">
+<!-- Subtle top accent glow -->
+<div class="absolute top-0 left-0 right-0 h-[2px] bg-primary animate-pulse"></div>
+<div class="flex flex-col gap-space-md">
+<!-- Ticket Header Info Bar -->
+<div class="flex flex-wrap items-center justify-between gap-space-xs pb-space-xs"><button onclick="openBacktestModal('batch')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary text-on-primary text-label-mono-sm font-label-mono-sm transition-opacity hover:opacity-90 shadow-sm font-bold"><span class="material-symbols-outlined text-[15px]">dataset</span><span class="">BATCH EXPORT: ALL 28 TICKETS (CSV + PY + R)</span></button><button onclick="openBacktestModal('csv')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[15px]">analytics</span><span class="">#TK-84935 SGP CSV</span></button><button onclick="openBacktestModal('python')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">terminal</span><span class="">SINGLE .PY SCRIPT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">description</span><span class="">TAX REPORT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold"><span class="material-symbols-outlined text-[15px]">cable</span><span class="">SYNC TO BOOKMAKER API</span></button></div>
+<!-- Legs Breakdown List -->
+<div class="flex flex-col gap-space-xs">
+<!-- Leg 1: HIT -->
+<div class="bg-surface-container-low p-space-sm rounded flex flex-col md:flex-row md:items-center justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded bg-primary/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[16px]">check_circle</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">MIZ Team Total Over 28.5</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">(-110)</span>
+<span class="text-[10px] font-label-mono-micro text-outline uppercase bg-surface-container px-1 py-[1px] rounded">CFB</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Missouri vs Central Florida • Regular Season Week 10</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md self-end md:self-auto">
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-semibold">WON / HIT in 3Q 04:18</span>
+<span class="font-label-mono-micro text-label-mono-micro bg-primary/15 text-primary px-space-sm py-[2px] rounded font-bold uppercase">SETTLED LEG</span>
+</div>
+</div>
+<!-- Leg 2: PENDING LIVE -->
+<div class="bg-surface-container-low p-space-sm rounded flex flex-col md:flex-row md:items-center justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded bg-secondary/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[16px] animate-spin">autorenew</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">Derrick White Over 2.5 3-Pointers Made</span>
+<span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold">(+115)</span>
+<span class="text-[10px] font-label-mono-micro text-outline uppercase bg-surface-container px-1 py-[1px] rounded">NBA</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">BOS Celtics @ CHA Hornets • 3Q 06:12</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md self-end md:self-auto">
+<div class="flex flex-col text-right">
+<span class="font-label-mono-sm text-label-mono-sm text-secondary font-bold tracking-tight">2 OF 3 MADE</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">3RD QTR LIVE</span>
+</div>
+<div class="w-16 bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 66.6%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Leg Action & Hedging Bar -->
+<div class="flex flex-wrap items-center justify-between pt-space-xs bg-surface-container-low/60 p-space-sm rounded gap-space-xs"><button onclick="openBacktestModal('batch')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary text-on-primary text-label-mono-sm font-label-mono-sm transition-opacity hover:opacity-90 shadow-sm font-bold"><span class="material-symbols-outlined text-[15px]">dataset</span><span class="">BATCH EXPORT: ALL 28 TICKETS (CSV + PY + R)</span></button><button onclick="openBacktestModal('csv')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[15px]">analytics</span><span class="">#TK-84935 SGP CSV</span></button><button onclick="openBacktestModal('python')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">terminal</span><span class="">SINGLE .PY SCRIPT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">description</span><span class="">TAX REPORT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold"><span class="material-symbols-outlined text-[15px]">cable</span><span class="">SYNC TO BOOKMAKER API</span></button></div>
+</div>
+</div>
+<!-- TICKET 2: Straight Bet (Pre-Lock) -->
+<div class="bg-surface-container p-space-md rounded shadow-sm relative overflow-hidden">
+<div class="flex flex-col gap-space-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-xs"><button onclick="openBacktestModal('batch')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary text-on-primary text-label-mono-sm font-label-mono-sm transition-opacity hover:opacity-90 shadow-sm font-bold"><span class="material-symbols-outlined text-[15px]">dataset</span><span class="">BATCH EXPORT: ALL 28 TICKETS (CSV + PY + R)</span></button><button onclick="openBacktestModal('csv')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[15px]">analytics</span><span class="">#TK-84935 SGP CSV</span></button><button onclick="openBacktestModal('python')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">terminal</span><span class="">SINGLE .PY SCRIPT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">description</span><span class="">TAX REPORT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold"><span class="material-symbols-outlined text-[15px]">cable</span><span class="">SYNC TO BOOKMAKER API</span></button></div>
+<!-- Single Leg Detail -->
+<div class="bg-surface-container-low p-space-sm rounded flex flex-col md:flex-row md:items-center justify-between gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<div class="w-6 h-6 rounded bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-outline text-[16px]">sports_football</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface">C.J. Stroud Under 228.5 Passing Yards</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">(-115)</span>
+<span class="text-[10px] font-label-mono-micro text-outline uppercase bg-surface-container px-1 py-[1px] rounded">NFL</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Houston Texans vs New York Jets • MetLife Stadium</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-micro text-label-mono-micro bg-primary/10 text-primary px-space-sm py-[2px] rounded font-bold uppercase">
+                  SIGNAL EDGE: +24.0 YDS DISCREPANCY
+                </span>
+<button class="px-space-sm py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant text-[12px]">
+<span class="material-symbols-outlined text-[14px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- TICKET 3: Settled Ticket - WON -->
+<div class="bg-surface-container p-space-md rounded shadow-sm relative overflow-hidden">
+<div class="flex flex-col gap-space-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-xs"><button onclick="openBacktestModal('batch')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary text-on-primary text-label-mono-sm font-label-mono-sm transition-opacity hover:opacity-90 shadow-sm font-bold"><span class="material-symbols-outlined text-[15px]">dataset</span><span class="">BATCH EXPORT: ALL 28 TICKETS (CSV + PY + R)</span></button><button onclick="openBacktestModal('csv')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[15px]">analytics</span><span class="">#TK-84935 SGP CSV</span></button><button onclick="openBacktestModal('python')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">terminal</span><span class="">SINGLE .PY SCRIPT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">description</span><span class="">TAX REPORT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold"><span class="material-symbols-outlined text-[15px]">cable</span><span class="">SYNC TO BOOKMAKER API</span></button></div>
+<!-- Legs Overview -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-xs">
+<div class="bg-surface-container-low p-space-xs rounded flex items-center justify-between px-space-sm">
+<div class="truncate">
+<span class="font-body-sm text-body-sm font-medium text-on-surface">LaMelo Ball Over 7.5 Assists</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline block">Result: 9 AST • HIT (4Q)</span>
+</div>
+<span class="material-symbols-outlined text-primary text-[16px]">check_circle</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex items-center justify-between px-space-sm">
+<div class="truncate">
+<span class="font-body-sm text-body-sm font-medium text-on-surface">Aaron Wiggins Over 4.5 3PA</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline block">Result: 6 3PA • HIT (3Q)</span>
+</div>
+<span class="material-symbols-outlined text-primary text-[16px]">check_circle</span>
+</div>
+</div>
+</div>
+</div>
+<!-- TICKET 4: Settled Ticket - LOST -->
+<div class="bg-surface-container p-space-md rounded shadow-sm relative overflow-hidden opacity-85 hover:opacity-100 transition-opacity">
+<div class="flex flex-col gap-space-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-xs"><button onclick="openBacktestModal('batch')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary text-on-primary text-label-mono-sm font-label-mono-sm transition-opacity hover:opacity-90 shadow-sm font-bold"><span class="material-symbols-outlined text-[15px]">dataset</span><span class="">BATCH EXPORT: ALL 28 TICKETS (CSV + PY + R)</span></button><button onclick="openBacktestModal('csv')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[15px]">analytics</span><span class="">#TK-84935 SGP CSV</span></button><button onclick="openBacktestModal('python')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">terminal</span><span class="">SINGLE .PY SCRIPT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">description</span><span class="">TAX REPORT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold"><span class="material-symbols-outlined text-[15px]">cable</span><span class="">SYNC TO BOOKMAKER API</span></button></div>
+<!-- Loss Detail -->
+<div class="bg-surface-container-low p-space-xs rounded flex items-center justify-between px-space-sm">
+<div>
+<span class="font-body-sm text-body-sm text-on-surface">Minnesota Vikings -3.0 vs LAR Rams</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline block">Final: LAR 30 - 20 MIN (Cover Missed: 13.0 pts)</span>
+</div>
+<span class="material-symbols-outlined text-error text-[16px]">close</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Telemetry & Portfolio Analytics Pane (4 Cols on XL) -->
+<div class="xl:col-span-4 flex flex-col gap-space-md">
+<!-- Risk Distribution Visualizer -->
+<div class="bg-surface-container p-space-md rounded shadow-sm flex flex-col gap-space-sm border border-primary/20"><div class="flex items-center justify-between"><span class="font-headline-sm text-headline-sm uppercase text-on-surface font-bold flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-[18px]">hub</span>SGP CORRELATION EXPOSURE &amp; EDGE</span><span class="font-label-mono-micro text-label-mono-micro text-primary bg-primary/10 px-space-xs py-[2px] rounded font-bold uppercase">SYNCED HEAT'S ON</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">Joint probability distribution and inter-market correlation weighting.</p><div class="grid grid-cols-2 gap-space-xs my-space-xs"><div class="bg-surface-container-low p-space-xs rounded"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase block">SGP ALLOCATION</span><span class="font-label-mono-md text-label-mono-md text-secondary font-bold">$150.00</span><span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant block">40% of In-Play Risk</span></div><div class="bg-surface-container-low p-space-xs rounded"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase block">AVG JOINT EDGE</span><span class="font-label-mono-md text-label-mono-md text-primary font-bold">+13.8% EV</span><span class="font-label-mono-micro text-label-mono-micro text-primary block">2 Active Tickets</span></div></div><div class="bg-surface-container-low p-space-xs rounded flex flex-col gap-1"><div class="flex items-center justify-between font-label-mono-micro text-label-mono-micro"><span class="text-outline uppercase">COVARIANCE DENSITY MATRIX</span><span class="text-primary font-bold">r_avg = +0.567</span></div><div class="flex items-center justify-between text-[11px] font-label-mono-sm"><span class="text-on-surface">Ball (AST) ↔ Game Total</span><span class="text-primary font-bold">+0.64</span></div><div class="flex items-center justify-between text-[11px] font-label-mono-sm"><span class="text-on-surface">White (3PM) ↔ Game Total</span><span class="text-primary font-bold">+0.59</span></div><div class="flex items-center justify-between text-[11px] font-label-mono-sm"><span class="text-on-surface">Ball (AST) ↔ White (3PM)</span><span class="text-secondary font-bold">+0.47</span></div></div><div class="pt-space-xs border-t border-surface-container-high flex items-center justify-between gap-space-xs"><span class="font-label-mono-micro text-label-mono-micro text-outline">COVARIANCE AUDIT LOGS</span><div class="flex items-center gap-space-xs"><button onclick="openBacktestModal('csv')" class="px-space-xs py-[2px] rounded bg-surface-container-high hover:bg-surface-container-highest text-[10px] font-label-mono-micro text-on-surface flex items-center gap-1 transition-colors"><span class="material-symbols-outlined text-[11px] text-primary">download</span><span class="">CSV</span></button><button onclick="openBacktestModal('python')" class="px-space-xs py-[2px] rounded bg-surface-container-high hover:bg-surface-container-highest text-[10px] font-label-mono-micro text-primary flex items-center gap-1 transition-colors"><span class="material-symbols-outlined text-[11px]">code</span><span class="">.PY SCRIPT</span></button></div></div></div><div class="bg-surface-container p-space-md rounded shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface font-bold">ACTIVE EXPOSURE BY LEAGUE</span>
+<span class="material-symbols-outlined text-outline text-[16px]">donut_large</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Capital allocation across live pending markets.</p>
+<!-- Distribution Chart Mockup (SVG) -->
+<div class="flex items-center gap-space-md my-space-xs">
+<div class="relative w-28 h-28 shrink-0 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+<!-- Background track -->
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#272a32" stroke-width="3.8"></circle>
+<!-- NBA: 45% (emerald) -->
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#4edea3" stroke-dasharray="45 55" stroke-dashoffset="0" stroke-width="3.8"></circle>
+<!-- CFB: 35% (amber) -->
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#ffb95f" stroke-dasharray="35 65" stroke-dashoffset="-45" stroke-width="3.8"></circle>
+<!-- NFL: 20% (muted) -->
+<circle cx="18" cy="18" fill="none" r="15.915" stroke="#86948a" stroke-dasharray="20 80" stroke-dashoffset="-80" stroke-width="3.8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-on-surface">$375</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">RISK</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 w-full font-label-mono-sm text-label-mono-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+<span class="text-on-surface">NBA Props</span>
+</div>
+<span class="text-on-surface font-semibold">$170.00 (45%)</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="text-on-surface">CFB Totals</span>
+</div>
+<span class="text-on-surface font-semibold">$130.00 (35%)</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-outline"></span>
+<span class="text-on-surface">NFL Spreads</span>
+</div>
+<span class="text-on-surface font-semibold">$75.00 (20%)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bookmaker Exposure Breakdown Table -->
+<div class="bg-surface-container p-space-md rounded shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface font-bold">BOOKMAKER ALLOCATION</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">3 ACTIVE BOOKS</span>
+</div>
+<div class="flex flex-col gap-space-xs mt-1">
+<div class="bg-surface-container-low p-space-xs rounded flex items-center justify-between px-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">assured_workload</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface">CIRCA SPORTS</span>
+</div>
+<div class="text-right">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">$225.00</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary block">+24.5% ROI</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex items-center justify-between px-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">assured_workload</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface">PINNACLE</span>
+</div>
+<div class="text-right">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">$100.00</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary block">+19.1% ROI</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex items-center justify-between px-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[16px] text-outline">assured_workload</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface">DRAFTKINGS</span>
+</div>
+<div class="text-right">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">$50.00</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline block">+12.0% ROI</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Institutional Hedge Advisory Card -->
+<div class="bg-surface-container p-space-md rounded shadow-sm flex flex-col gap-space-sm bg-gradient-to-br from-surface-container via-surface-container to-surface-container-high"><div class="flex items-center justify-between"><span class="font-headline-sm text-headline-sm uppercase text-secondary font-bold flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">calculate</span>REAL-TIME KELLY HEDGE ENGINE</span><span class="font-label-mono-micro text-label-mono-micro bg-primary/10 text-primary px-space-xs py-[1px] rounded font-bold uppercase border border-primary/30 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>KELLY SYNC ACTIVE</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">Ticket <span class="font-label-mono-sm text-on-surface font-semibold">#TK-84935 (3-Leg SGP)</span> dynamically sized to <span class="text-primary font-bold">$10,480.00</span> Bankroll.</p><div class="flex items-center gap-1 bg-surface-container-low p-[2px] rounded border border-surface-container-high"><button class="flex-1 py-1 rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold uppercase text-center transition-colors shadow-sm">0.5x HALF KELLY (SYNCED)</button><button class="flex-1 py-1 rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold uppercase text-center transition-colors">ZERO-LOSS ARB</button><button class="flex-1 py-1 rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold uppercase text-center transition-colors">FULL KELLY 1.0x</button></div><div class="bg-surface-container-low p-space-sm rounded flex flex-col gap-1.5 border border-surface-container-high"><div class="flex justify-between font-label-mono-sm text-label-mono-sm items-center"><span class="text-outline text-[11px]">OPTIMAL HEDGE STAKE:</span><span class="text-primary font-bold text-headline-sm">$152.00 <span class="text-[11px] text-outline font-normal">(Circa -102 / Pin +108)</span></span></div><div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden"><div class="bg-primary h-full rounded-full" style="width: 38%;"></div></div><div class="grid grid-cols-2 gap-space-xs pt-1 border-t border-surface-container-high/60"><div class="flex flex-col"><span class="text-outline text-[10px] font-label-mono-micro uppercase">GROWTH / SHARPE</span><span class="text-on-surface font-bold text-[11px] font-label-mono-sm">+3.42%/wk <span class="text-primary">| 2.14 SR</span></span></div><div class="flex flex-col text-right"><span class="text-outline text-[10px] font-label-mono-micro uppercase">JOINT WIN CORR</span><span class="text-secondary font-bold text-[11px] font-label-mono-sm">18.4% Exceedance</span></div></div></div><div class="bg-surface-container-lowest p-space-xs rounded border border-primary/20 flex flex-col gap-1"><div class="flex justify-between text-[11px] font-label-mono-sm"><span class="text-outline">GUARANTEED ZERO-LOSS FLOOR:</span><span class="text-primary font-bold">+$42.50 LOCK</span></div><div class="flex justify-between text-[11px] font-label-mono-sm"><span class="text-outline">MIDDLE DOUBLE-DIP POTENTIAL:</span><span class="text-secondary font-bold">+$610.50 ($385.00 corridor win)</span></div></div><div class="flex flex-col gap-1.5 mt-1"><button class="w-full py-space-xs bg-primary hover:bg-primary-container text-on-primary font-label-mono-sm text-label-mono-sm font-bold uppercase rounded shadow-sm transition-colors flex items-center justify-center gap-1.5"><span class="material-symbols-outlined text-[15px]">lock</span><span class="">EXECUTE AUTOMATED KELLY HEDGE LOCK</span></button><button class="w-full py-1 bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold uppercase rounded transition-colors flex items-center justify-center gap-1"><span class="material-symbols-outlined text-[13px] text-outline">tune</span><span class="">OVERRIDE FRACTION (0.5x → 0.25x)</span></button></div></div>
+</div>
+</div>
+</section>
+<!-- Bottom Institutional Audit & Compliance Export Bar -->
+<section class="w-full bg-surface-container-lowest px-gutter py-space-md mt-auto">
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-md">
+<!-- Integrity Telemetry -->
+<div class="flex items-center gap-space-md flex-wrap">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">verified_user</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface">
+            SLIP INTEGRITY: <span class="text-primary font-bold">99.8%</span>
+</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">
+          CRYPTOGRAPHIC TIMESTAMP VERIFIABLE // SHA-256 HASH CHAIN MATCHED
+        </span>
+</div>
+<!-- Compliance Export CTAs -->
+<div class="flex items-center gap-space-xs flex-wrap"><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">download</span><span class="">EXPORT CSV AUDIT</span></button><button onclick="openBacktestModal('csv')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold border border-primary/20 hover:border-primary/40"><span class="material-symbols-outlined text-[15px]">analytics</span><span class="">EXPORT SGP COVARIANCE CSV</span></button><button onclick="openBacktestModal('python')" class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-primary/15 hover:bg-primary/25 text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-bold border border-primary/30"><span class="material-symbols-outlined text-[15px]">terminal</span><span class="">PYTHON BACKTEST SCRIPT (.PY)</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-label-mono-sm font-label-mono-sm transition-colors shadow-sm"><span class="material-symbols-outlined text-[15px] text-outline">description</span><span class="">DOWNLOAD TAX REPORT</span></button><button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-primary text-label-mono-sm font-label-mono-sm transition-colors shadow-sm font-semibold"><span class="material-symbols-outlined text-[15px]">cable</span><span class="">SYNC TO BOOKMAKER API</span></button></div>
+</div>
+</section>
+<!-- Interactive Client-side Script for Tab Toggles -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabContainer = document.getElementById('ticket-tabs');
+      if (tabContainer) {
+        const buttons = tabContainer.querySelectorAll('button');
+        buttons.forEach(btn => {
+          btn.addEventListener('click', () => {
+            buttons.forEach(b => {
+              b.classList.remove('bg-surface-container-highest', 'text-on-surface', 'font-semibold');
+              b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+            });
+            btn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+            btn.classList.add('bg-surface-container-highest', 'text-on-surface', 'font-semibold');
+          });
+        });
+      }
+    });
+  </script>
+</div><div id="backtest-export-modal" class="fixed inset-0 z-50 hidden bg-surface-container-lowest/90 backdrop-blur-md flex items-center justify-center p-space-md"><div class="bg-surface-container border border-surface-container-high rounded shadow-[0_1px_8px_rgba(0,0,0,0.5)] w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden"><div class="bg-surface-container-high px-space-md py-space-sm flex items-center justify-between border-b border-surface-container-highest"><div class="flex items-center gap-space-sm"><span class="w-6 h-6 rounded bg-primary/20 flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[15px]">dataset</span></span><div><h3 id="modal-headline-title" class="font-headline-sm text-headline-sm uppercase text-on-surface font-bold leading-none">COVARIANCE MATRIX TELEMETRY &amp; BATCH BACKTEST ENGINE</h3><span id="modal-headline-subtitle" class="font-label-mono-micro text-label-mono-micro text-outline">BATCH EXPORT // ALL SPORTS (28 TICKETS) • MONTE CARLO &amp; GAUSSIAN COPULA</span></div></div><div class="flex items-center gap-space-xs"><span id="modal-sport-badge" class="font-label-mono-micro text-label-mono-micro text-primary bg-primary/10 px-space-xs py-[2px] rounded font-bold uppercase">ALL 28 LEDGER TICKETS</span><button onclick="closeBacktestModal()" class="w-7 h-7 rounded hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[18px]">close</span></button></div></div><div class="bg-surface-container-low px-space-md py-space-xs border-b border-surface-container-high flex items-center justify-between gap-space-sm flex-wrap"><div class="flex items-center gap-space-xs flex-wrap"><div class="flex items-center gap-space-xs" id="modal-scope-tabs"><button id="tab-scope-batch" onclick="setModalScope('batch')" class="px-space-md py-space-xs rounded bg-surface-container-highest text-primary font-table-header text-table-header uppercase flex items-center gap-1.5 font-bold shadow-sm"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="">BATCH PORTFOLIO</span></button><button id="tab-scope-single" onclick="setModalScope('single')" class="px-space-md py-space-xs rounded bg-surface-container-high text-on-surface-variant hover:text-on-surface font-table-header text-table-header uppercase flex items-center gap-1.5 transition-colors"><span class="">SINGLE (#TK-84935)</span></button></div><div class="w-px h-5 bg-surface-container-highest mx-1 hidden sm:block"></div><div class="flex items-center gap-1 bg-surface-container rounded p-[2px]" id="modal-sport-filters"><button id="sport-filter-all" onclick="setModalSport('all')" class="px-2 py-1 rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors">ALL SPORTS (28)</button><button id="sport-filter-nba" onclick="setModalSport('nba')" class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold uppercase transition-colors">NBA ONLY (14)</button><button id="sport-filter-cfb" onclick="setModalSport('cfb')" class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold uppercase transition-colors">CFB ONLY (8)</button><button id="sport-filter-nfl" onclick="setModalSport('nfl')" class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold uppercase transition-colors">NFL ONLY (6)</button></div></div><div class="flex items-center gap-space-xs font-label-mono-micro text-label-mono-micro text-outline"><span class="material-symbols-outlined text-[14px] text-primary">verified</span><span id="modal-scope-meta" class="">ACTIVE FILTER: ALL SPORTS // N=28 TICKETS // CLV +4.2c</span></div></div><div class="p-space-md overflow-y-auto flex flex-col gap-space-md flex-1"><!-- Key Metrics Cards -->
+<div id="modal-metrics-batch" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-space-xs">
+  <div class="bg-surface-container-low p-space-xs rounded border border-surface-container-high">
+    <span class="font-label-mono-micro text-label-mono-micro text-outline uppercase block">BATCH PORTFOLIO SCOPE</span>
+    <span id="metric-ticket-count" class="font-label-mono-md text-label-mono-md text-on-surface font-bold block">28 TOTAL TICKETS</span>
+    <span id="metric-ticket-breakdown" class="font-label-mono-micro text-label-mono-micro text-primary">4 Open • 16 Won • 7 Lost • 1 Void</span>
+  </div>
+  <div class="bg-surface-container-low p-space-xs rounded border border-surface-container-high">
+    <span class="font-label-mono-micro text-label-mono-micro text-outline uppercase block">AVG COVARIANCE (r)</span>
+    <span id="metric-cov-avg" class="font-label-mono-md text-label-mono-md text-secondary font-bold block">r = +0.482</span>
+    <span id="metric-cov-sub" class="font-label-mono-micro text-label-mono-micro text-on-surface-variant">12 Correlated SGP Pairs</span>
+  </div>
+  <div class="bg-surface-container-low p-space-xs rounded border border-surface-container-high">
+    <span class="font-label-mono-micro text-label-mono-micro text-outline uppercase block">SIMULATED JOINT EDGE</span>
+    <span id="metric-edge-pct" class="font-label-mono-md text-label-mono-md text-primary font-bold block">+11.4% AVG EV</span>
+    <span id="metric-edge-sub" class="font-label-mono-micro text-label-mono-micro text-primary">PnL Alpha +18.2% ROI</span>
+  </div>
+  <div class="bg-surface-container-low p-space-xs rounded border border-surface-container-high">
+    <span class="font-label-mono-micro text-label-mono-micro text-outline uppercase block">BACKTEST SHARPE</span>
+    <span id="metric-sharpe" class="font-label-mono-md text-label-mono-md text-secondary font-bold block">3.12 SHARPE</span>
+    <span id="metric-sharpe-sub" class="font-label-mono-micro text-label-mono-micro text-outline">10,000 Monte Carlo Iter</span>
+  </div>
+</div>
+
+<!-- Navigation View Toggle Tabs inside Modal Telemetry Area -->
+<div class="flex items-center justify-between border-b border-surface-container-high pb-2 flex-wrap gap-2">
+  <div class="flex items-center gap-1 bg-surface-container-low p-[2px] rounded border border-surface-container-high" id="modal-view-mode-tabs"><button id="tab-view-dd" onclick="switchModalView('drawdown')" class="px-space-md py-1 rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold flex items-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[14px]">ssid_chart</span><span class="">MONTE CARLO DRAWDOWN &amp; VaR</span></button><button id="tab-view-table" onclick="switchModalView('table')" class="px-space-md py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-medium flex items-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[14px]">table_chart</span><span class="">COVARIANCE MATRIX TABLE</span></button><button id="tab-view-python" onclick="switchModalView('python')" class="px-space-md py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-medium flex items-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[14px]">terminal</span><span class="">PYTHON KELLY CODE (.PY)</span></button><button id="tab-view-r" onclick="switchModalView('r')" class="px-space-md py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-medium flex items-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[14px]">data_object</span><span class="">R VECTOR SCRIPT (.R)</span></button></div>
+  <div class="flex items-center gap-2">
+    <span class="font-label-mono-micro text-label-mono-micro bg-primary/10 text-primary px-space-xs py-[2px] rounded font-bold uppercase flex items-center gap-1">
+      <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> N=10,000 COPULA SIMULATIONS
+    </span>
+    <span class="font-label-mono-micro text-label-mono-micro text-outline">HORIZON: 100 SLATES</span>
+  </div>
+</div><div id="modal-kelly-controls-strip" class="bg-surface-container-lowest p-space-sm rounded border border-primary/30 flex flex-col gap-space-xs"><div class="flex flex-wrap items-center justify-between gap-space-xs"><div class="flex items-center gap-space-xs"><span class="w-5 h-5 rounded bg-primary/20 flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[14px]">tune</span></span><span class="font-label-mono-sm text-label-mono-sm uppercase text-on-surface font-bold tracking-wider">KELLY CRITERION SIZING &amp; JOINT MIDDLE CONFIGURATION</span></div><div class="flex items-center gap-1.5"><span id="kelly-badge-summary" class="font-label-mono-micro text-label-mono-micro bg-primary/15 text-primary border border-primary/30 px-2 py-[2px] rounded font-bold uppercase tracking-wider flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> KELLY PARAMETERS INCLUDED // 0.5x MULTIPLIER • $10,480 BASE</span></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm pt-space-xs border-t border-surface-container-high"><div class="flex flex-col gap-1"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-semibold flex items-center justify-between"><span class="">KELLY FRACTION (f* MULTIPLIER)</span><span id="active-kelly-label" class="text-primary font-bold">0.5x (HALF-KELLY)</span></span><div class="flex items-center gap-1 bg-surface-container-low p-[2px] rounded border border-surface-container-high"><button type="button" id="btn-kelly-025" onclick="updateKellyFraction(0.25)" class="flex-1 py-1 rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors">0.25x (QUARTER)</button><button type="button" id="btn-kelly-05" onclick="updateKellyFraction(0.5)" class="flex-1 py-1 rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold transition-colors shadow-sm">0.5x (HALF - DEFAULT)</button><button type="button" id="btn-kelly-10" onclick="updateKellyFraction(1.0)" class="flex-1 py-1 rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors">1.0x (FULL)</button></div></div><div class="flex flex-col gap-1"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-semibold flex items-center justify-between"><span class="">HEDGE OPTIMIZATION MODE</span><span id="active-opt-mode-label" class="text-secondary font-bold">MAX_GROWTH</span></span><div class="flex items-center gap-1 bg-surface-container-low p-[2px] rounded border border-surface-container-high"><button type="button" id="btn-opt-growth" onclick="updateHedgeMode('MAX_GROWTH')" class="flex-1 py-1 rounded bg-secondary text-on-secondary font-label-mono-micro text-label-mono-micro font-bold transition-colors shadow-sm">MAX GROWTH (KELLY)</button><button type="button" id="btn-opt-zero" onclick="updateHedgeMode('ZERO_LOSS')" class="flex-1 py-1 rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors">ZERO-LOSS ARB FLOOR</button><button type="button" id="btn-opt-equal" onclick="updateHedgeMode('EQUAL_PAYOFF')" class="flex-1 py-1 rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors">EQUAL NET PAYOUT</button></div></div><div class="flex flex-col gap-1"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-semibold flex items-center justify-between"><span class="">BANKROLL ANCHOR (PORTFOLIO SYNC)</span><span class="text-primary font-bold">LIVE LEDGER</span></span><div class="flex items-center gap-2 bg-surface-container-low px-space-sm py-1 rounded border border-surface-container-high"><span class="material-symbols-outlined text-[15px] text-primary">account_balance_wallet</span><input type="text" id="input-bankroll-anchor" value="$10,480.00 (Synced Ledger)" readonly="" class="bg-transparent text-on-surface font-label-mono-sm text-label-mono-sm font-semibold outline-none w-full"><span class="text-[10px] font-label-mono-micro text-primary bg-primary/10 px-1 py-[1px] rounded font-bold uppercase shrink-0">MAX 5% CAP</span></div></div></div></div>
+
+<!-- VIEW 1: MONTE CARLO DRAWDOWN & VAR TELEMETRY (Prominently displayed) -->
+<script>function switchModalView(mode){const views={drawdown:document.getElementById('view-drawdown-container'),table:document.getElementById('view-table-container'),python:document.getElementById('view-python-container')};const tabs={drawdown:document.getElementById('tab-view-dd'),table:document.getElementById('tab-view-table'),python:document.getElementById('tab-view-python')};Object.keys(views).forEach(key=>{if(views[key]){if(key===mode){views[key].classList.remove('hidden');views[key].classList.add('flex');}else{views[key].classList.add('hidden');views[key].classList.remove('flex');}}if(tabs[key]){if(key===mode){tabs[key].className='px-space-md py-1 rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold flex items-center gap-1.5 transition-colors';}else{tabs[key].className='px-space-md py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-medium flex items-center gap-1.5 transition-colors';}}});}const sportVaRData={all:{title:'MONTE CARLO CUMULATIVE DRAWDOWN PROBABILITY CURVE [N=10,000 RUNS • ALL SPORTS]',badge:'ALL 28 LEDGER TICKETS',cvar:'-12.8%',maxdd:'-18.4%',ruin:'0.08%',kelly:'0.38f*',dd5:'54.2%',dd10:'14.2%',dd15:'6.8%',dd20:'3.1%',dd25:'0.9%',dd30:'0.2%',avgR:'r = +0.482',sharpe:'3.12 SHARPE',edge:'+11.4% AVG EV',tickets:'28 TOTAL TICKETS',breakdown:'4 Open • 16 Won • 7 Lost • 1 Void',p10:'P(DD > 10%) = 14.2%',p20:'P(DD > 20%) = 3.1%',p95:'95% CL MAX DD: 16.4%'},nba:{title:'MONTE CARLO CUMULATIVE DRAWDOWN PROBABILITY CURVE [N=10,000 RUNS • NBA PROPS & SGP]',badge:'NBA SLATE (14 TICKETS)',cvar:'-14.1%',maxdd:'-21.2%',ruin:'0.12%',kelly:'0.34f*',dd5:'59.6%',dd10:'18.4%',dd15:'9.2%',dd20:'4.6%',dd25:'1.5%',dd30:'0.4%',avgR:'r = +0.567',sharpe:'2.84 SHARPE',edge:'+14.2% AVG EV',tickets:'14 NBA TICKETS',breakdown:'2 Open • 9 Won • 3 Lost',p10:'P(DD > 10%) = 18.4%',p20:'P(DD > 20%) = 4.6%',p95:'95% CL MAX DD: 18.6%'},cfb:{title:'MONTE CARLO CUMULATIVE DRAWDOWN PROBABILITY CURVE [N=10,000 RUNS • CFB TOTALS & PARLAYS]',badge:'CFB SLATE (8 TICKETS)',cvar:'-10.4%',maxdd:'-15.6%',ruin:'0.04%',kelly:'0.42f*',dd5:'46.1%',dd10:'10.8%',dd15:'4.9%',dd20:'2.0%',dd25:'0.5%',dd30:'0.1%',avgR:'r = +0.315',sharpe:'3.45 SHARPE',edge:'+9.8% AVG EV',tickets:'8 CFB TICKETS',breakdown:'1 Open • 5 Won • 2 Lost',p10:'P(DD > 10%) = 10.8%',p20:'P(DD > 20%) = 2.0%',p95:'95% CL MAX DD: 13.9%'},nfl:{title:'MONTE CARLO CUMULATIVE DRAWDOWN PROBABILITY CURVE [N=10,000 RUNS • NFL STRAIGHT BETS]',badge:'NFL SLATE (6 TICKETS)',cvar:'-9.2%',maxdd:'-13.8%',ruin:'0.02%',kelly:'0.48f*',dd5:'41.3%',dd10:'8.5%',dd15:'3.6%',dd20:'1.4%',dd25:'0.3%',dd30:'0.0%',avgR:'r = +0.000',sharpe:'3.80 SHARPE',edge:'+8.2% AVG EV',tickets:'6 NFL TICKETS',breakdown:'1 Open • 2 Won • 2 Lost • 1 Void',p10:'P(DD > 10%) = 8.5%',p20:'P(DD > 20%) = 1.4%',p95:'95% CL MAX DD: 12.1%'}};function setModalSport(sport){const data=sportVaRData[sport]||sportVaRData.all;const titleEl=document.getElementById('chart-headline-title');if(titleEl)titleEl.textContent=data.title;const badgeEl=document.getElementById('modal-sport-badge');if(badgeEl)badgeEl.textContent=data.badge;const metaEl=document.getElementById('modal-scope-meta');if(metaEl)metaEl.textContent='ACTIVE FILTER: '+sport.toUpperCase()+' // N='+data.tickets+' // CLV +4.2c';const setText=(id,val)=>{const el=document.getElementById(id);if(el)el.textContent=val;};setText('var-cvar-val',data.cvar);setText('var-maxdd-val',data.maxdd);setText('var-ruin-val',data.ruin);setText('var-kelly-val',data.kelly);setText('tier-dd5',data.dd5);setText('tier-dd10',data.dd10);setText('tier-dd15',data.dd15);setText('tier-dd20',data.dd20);setText('tier-dd25',data.dd25);setText('tier-dd30',data.dd30);setText('metric-ticket-count',data.tickets);setText('metric-ticket-breakdown',data.breakdown);setText('metric-cov-avg',data.avgR);setText('metric-sharpe',data.sharpe);setText('metric-edge-pct',data.edge);setText('marker-10-text',data.p10);setText('marker-20-text',data.p20);setText('marker-95-text',data.p95);['all','nba','cfb','nfl'].forEach(s=>{const btn=document.getElementById('sport-filter-'+s);if(btn){if(s===sport){btn.className='px-2 py-1 rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors';}else{btn.className='px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold uppercase transition-colors';}}});}</script><div id="view-drawdown-container" class="flex flex-col gap-space-md">
+  <!-- Quantitative Risk Telemetry Badges & Stats -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs">
+    <div class="bg-surface-container-low p-space-sm rounded border border-surface-container-high flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">95% CVaR / EXP. SHORTFALL</span>
+        <span class="material-symbols-outlined text-[13px] text-secondary">shield</span>
+      </div>
+      <div class="mt-1 flex items-baseline justify-between">
+        <span id="var-cvar-val" class="font-headline-sm text-headline-sm font-bold text-secondary tracking-tight">-12.8%</span>
+        <span class="font-label-mono-micro text-label-mono-micro text-outline">95% CL</span>
+      </div>
+      <span id="var-cvar-desc" class="font-label-mono-micro text-label-mono-micro text-on-surface-variant mt-0.5">Tail loss when 5% breach occurs</span>
+    </div>
+    <div class="bg-surface-container-low p-space-sm rounded border border-surface-container-high flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">MAX DRAWDOWN (99th %tile)</span>
+        <span class="material-symbols-outlined text-[13px] text-error">crisis_alert</span>
+      </div>
+      <div class="mt-1 flex items-baseline justify-between">
+        <span id="var-maxdd-val" class="font-headline-sm text-headline-sm font-bold text-error tracking-tight">-18.4%</span>
+        <span class="font-label-mono-micro text-label-mono-micro text-error font-bold">99th %</span>
+      </div>
+      <span id="var-maxdd-desc" class="font-label-mono-micro text-label-mono-micro text-outline mt-0.5">Worst-case multi-leg sequence</span>
+    </div>
+    <div class="bg-surface-container-low p-space-sm rounded border border-surface-container-high flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">PROBABILITY OF RUIN</span>
+        <span class="material-symbols-outlined text-[13px] text-primary">verified</span>
+      </div>
+      <div class="mt-1 flex items-baseline justify-between">
+        <span id="var-ruin-val" class="font-headline-sm text-headline-sm font-bold text-primary tracking-tight">0.08%</span>
+        <span class="font-label-mono-micro text-label-mono-micro bg-primary/10 text-primary px-1 py-[1px] rounded font-bold">&lt; 0.1% Safe</span>
+      </div>
+      <span id="var-ruin-desc" class="font-label-mono-micro text-label-mono-micro text-on-surface-variant mt-0.5">Zero bankroll risk (N=10,000 runs)</span>
+    </div>
+    <div class="bg-surface-container-low p-space-sm rounded border border-surface-container-high flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">KELLY FRACTION RATIO</span>
+        <span class="material-symbols-outlined text-[13px] text-primary">analytics</span>
+      </div>
+      <div class="mt-1 flex items-baseline justify-between">
+        <span id="var-kelly-val" class="font-headline-sm text-headline-sm font-bold text-primary tracking-tight">0.38f*</span>
+        <span class="font-label-mono-micro text-label-mono-micro text-outline">Half-Kelly</span>
+      </div>
+      <span id="var-kelly-desc" class="font-label-mono-micro text-label-mono-micro text-primary mt-0.5">Optimal variance damping applied</span>
+    </div>
+  </div>
+
+  <!-- Visual Monte Carlo Drawdown Probability Chart -->
+  <div class="bg-surface-container-lowest p-space-md rounded border border-surface-container-high flex flex-col gap-space-sm">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+      <div class="flex items-center gap-space-sm">
+        <span class="w-5 h-5 rounded bg-primary/10 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined text-[14px]">area_chart</span>
+        </span>
+        <span id="chart-headline-title" class="font-label-mono-sm text-label-mono-sm uppercase text-on-surface font-bold tracking-wider">
+          MONTE CARLO CUMULATIVE DRAWDOWN PROBABILITY CURVE [N=10,000 RUNS]
+        </span>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap font-label-mono-micro text-label-mono-micro"><div class="flex items-center gap-1 bg-surface-container-low p-[2px] rounded border border-surface-container-high mr-1"><span class="text-outline text-[10px] uppercase px-1 font-semibold">CL:</span><button id="cl-toggle-90" onclick="setConfidenceInterval(90)" class="px-2 py-[2px] rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-semibold transition-colors">90% CL</button><button id="cl-toggle-95" onclick="setConfidenceInterval(95)" class="px-2 py-[2px] rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold transition-colors">95% CL</button><button id="cl-toggle-99" onclick="setConfidenceInterval(99)" class="px-2 py-[2px] rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-semibold transition-colors">99% CL</button></div><span class="flex items-center gap-1 text-on-surface-variant"><span class="w-2.5 h-1.5 rounded-sm bg-primary"></span> 0% - 10% (Normal)</span><span class="flex items-center gap-1 text-on-surface-variant"><span class="w-2.5 h-1.5 rounded-sm bg-secondary"></span> 10% - 20% (Tail)</span><span class="flex items-center gap-1 text-on-surface-variant"><span class="w-2.5 h-1.5 rounded-sm bg-error"></span> &gt; 20% (Extreme)</span></div>
+    </div>
+
+    <!-- Terminal SVG Chart Display -->
+    <div id="chart-interactive-container" class="relative w-full h-56 bg-surface-container-low rounded border border-surface-container-high/60 overflow-hidden flex flex-col justify-end p-2 cursor-crosshair" onmousemove="handleChartMouseMove(event)" onmouseleave="handleChartMouseLeave()">
+      <!-- Floating Interactive Tooltip HUD -->
+      <div id="mc-hover-tooltip" class="absolute z-30 pointer-events-none hidden bg-surface-container-lowest/95 border border-outline-variant/60 rounded-lg p-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.7)] backdrop-blur-md flex-col gap-1 text-[11px] font-label-mono-sm transition-all duration-75 min-w-[210px]">
+        <div class="flex items-center justify-between border-b border-surface-container-high pb-1">
+          <span id="tt-dd-depth" class="text-on-surface font-bold text-headline-sm">DD: -10.0%</span>
+          <span id="tt-risk-badge" class="px-1.5 py-[2px] rounded text-[9px] font-label-mono-micro font-bold uppercase bg-primary/15 text-primary border border-primary/30">NORMAL RISK</span>
+        </div>
+        <div class="flex items-center justify-between text-on-surface-variant pt-0.5">
+          <span class="text-outline text-[10px]">EXCEEDANCE PROB:</span>
+          <span id="tt-prob-val" class="text-primary font-bold text-body-md">14.2%</span>
+        </div>
+        <div class="flex items-center justify-between text-on-surface-variant">
+          <span class="text-outline text-[10px]">CONDITIONAL VaR:</span>
+          <span id="tt-cvar-val" class="text-secondary font-semibold">-12.8%</span>
+        </div>
+        <div class="flex items-center justify-between text-on-surface-variant">
+          <span class="text-outline text-[10px]">BREACH SIMULATIONS:</span>
+          <span id="tt-breach-runs" class="text-on-surface font-medium">1,420 / 10,000</span>
+        </div>
+        <div class="mt-1 pt-1 border-t border-surface-container-high/60 flex items-center justify-between text-[10px] text-outline font-label-mono-micro">
+          <span id="tt-sport-label" class="">PORTFOLIO: ALL SPORTS</span>
+          <span class="text-primary font-bold">GAUSSIAN COPULA</span>
+        </div>
+      </div>
+
+      <svg id="monte-carlo-svg" class="w-full h-full" viewBox="0 0 760 180" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="ddAreaGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#4edea3" stop-opacity="0.4"></stop>
+            <stop offset="30%" stop-color="#4edea3" stop-opacity="0.35"></stop>
+            <stop offset="60%" stop-color="#ffb95f" stop-opacity="0.35"></stop>
+            <stop offset="85%" stop-color="#ffb4ab" stop-opacity="0.45"></stop>
+            <stop offset="100%" stop-color="#ffb4ab" stop-opacity="0.55"></stop>
+          </linearGradient>
+          <linearGradient id="ddLineGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#4edea3"></stop>
+            <stop offset="40%" stop-color="#4edea3"></stop>
+            <stop offset="65%" stop-color="#ffb95f"></stop>
+            <stop offset="88%" stop-color="#ffb4ab"></stop>
+          </linearGradient>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"></feGaussianBlur>
+            <feMerge>
+              <feMergeNode in="blur"></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Horizontal Grid Lines -->
+        <line x1="40" y1="20" x2="740" y2="20" stroke="#272a32" stroke-dasharray="3 3" stroke-width="1"></line>
+        <text x="32" y="24" fill="#86948a" font-family="JetBrains Mono" font-size="9" text-anchor="end">100%</text>
+
+        <line x1="40" y1="55" x2="740" y2="55" stroke="#272a32" stroke-dasharray="3 3" stroke-width="1"></line>
+        <text x="32" y="59" fill="#86948a" font-family="JetBrains Mono" font-size="9" text-anchor="end">60%</text>
+
+        <line x1="40" y1="90" x2="740" y2="90" stroke="#272a32" stroke-dasharray="3 3" stroke-width="1"></line>
+        <text x="32" y="94" fill="#86948a" font-family="JetBrains Mono" font-size="9" text-anchor="end">30%</text>
+
+        <line x1="40" y1="125" x2="740" y2="125" stroke="#272a32" stroke-dasharray="3 3" stroke-width="1"></line>
+        <text x="32" y="129" fill="#86948a" font-family="JetBrains Mono" font-size="9" text-anchor="end">10%</text>
+
+        <line x1="40" y1="155" x2="740" y2="155" stroke="#32353d" stroke-width="1"></line>
+        <text x="32" y="158" fill="#86948a" font-family="JetBrains Mono" font-size="9" text-anchor="end">0%</text>
+
+        <!-- Vertical Grid / Drawdown Level Markers -->
+        <line x1="140" y1="10" x2="140" y2="155" stroke="#272a32" stroke-dasharray="2 2" stroke-width="1"></line>
+        <text x="140" y="170" fill="#86948a" font-family="JetBrains Mono" font-size="9" text-anchor="middle">5% DD</text>
+
+        <line x1="260" y1="10" x2="260" y2="155" stroke="#272a32" stroke-dasharray="2 2" stroke-width="1"></line>
+        <text x="260" y="170" fill="#86948a" font-family="JetBrains Mono" font-size="9" text-anchor="middle">10% DD</text>
+
+        <line x1="380" y1="10" x2="380" y2="155" stroke="#272a32" stroke-dasharray="2 2" stroke-width="1"></line>
+        <text x="380" y="170" fill="#86948a" font-family="JetBrains Mono" font-size="9" text-anchor="middle">15% DD</text>
+
+        <line x1="500" y1="10" x2="500" y2="155" stroke="#272a32" stroke-dasharray="2 2" stroke-width="1"></line>
+        <text x="500" y="170" fill="#ffb95f" font-family="JetBrains Mono" font-size="9" text-anchor="middle">20% DD</text>
+
+        <line x1="620" y1="10" x2="620" y2="155" stroke="#272a32" stroke-dasharray="2 2" stroke-width="1"></line>
+        <text x="620" y="170" fill="#ffb4ab" font-family="JetBrains Mono" font-size="9" text-anchor="middle">25% DD</text>
+
+        <line x1="710" y1="10" x2="710" y2="155" stroke="#272a32" stroke-dasharray="2 2" stroke-width="1"></line>
+        <text x="710" y="170" fill="#ffb4ab" font-family="JetBrains Mono" font-size="9" text-anchor="middle">30%+ DD</text>
+
+        <!-- Fill Area -->
+        <path id="chart-area-path" d="M 40 22 C 100 24, 140 42, 200 70 C 260 102, 320 128, 380 142 C 440 149, 500 152, 560 153.5 C 620 154.2, 680 154.6, 730 154.8 L 730 155 L 40 155 Z" fill="url(#ddAreaGradient)"></path>
+
+        <!-- Probability Line Curve -->
+        <path id="chart-line-path" d="M 40 22 C 100 24, 140 42, 200 70 C 260 102, 320 128, 380 142 C 440 149, 500 152, 560 153.5 C 620 154.2, 680 154.6, 730 154.8" fill="none" stroke="url(#ddLineGradient)" stroke-width="2.5"></path>
+
+        <!-- Key Callout Marker 1: 10% DD -->
+        <circle id="marker-10-dot" cx="260" cy="102" r="4" fill="#4edea3" stroke="#10131a" stroke-width="1.5"></circle>
+        <line x1="260" y1="66" x2="260" y2="98" stroke="#4edea3" stroke-width="1"></line>
+        <rect id="marker-10-box" x="206" y="46" width="108" height="20" rx="2" fill="#1d1f27" stroke="#4edea3" stroke-width="1"></rect>
+        <text id="marker-10-text" x="260" y="60" fill="#4edea3" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle">P(DD &gt; 10%) = 14.2%</text>
+
+        <!-- Key Callout Marker 2: 20% DD -->
+        <circle id="marker-20-dot" cx="500" cy="152" r="4" fill="#ffb95f" stroke="#10131a" stroke-width="1.5"></circle>
+        <line x1="500" y1="120" x2="500" y2="148" stroke="#ffb95f" stroke-width="1"></line>
+        <rect id="marker-20-box" x="450" y="102" width="100" height="20" rx="2" fill="#1d1f27" stroke="#ffb95f" stroke-width="1"></rect>
+        <text id="marker-20-text" x="500" y="116" fill="#ffb95f" font-family="JetBrains Mono" font-size="9" font-weight="bold" text-anchor="middle">P(DD &gt; 20%) = 3.1%</text>
+
+        <!-- Key Callout Marker 3: Max Expected DD 95% CL -->
+        <g id="dynamic-cl-marker-group"><line id="marker-95-line" x1="415" y1="20" x2="415" y2="155" stroke="#ffb4ab" stroke-dasharray="3 3" stroke-width="1.5"></line></g>
+        <rect id="marker-95-box" x="325" y="18" width="180" height="22" rx="2" fill="#10131a" stroke="#ffb4ab" stroke-width="1.5"></rect>
+        <text id="marker-95-text" x="415" y="33" fill="#ffb4ab" font-family="JetBrains Mono" font-size="8.5" font-weight="bold" text-anchor="middle">95% CL MAX DD: 16.4% [VaR 95%]</text>
+
+        <!-- Interactive Scrub Crosshair Line -->
+        <line id="crosshair-v-line" x1="0" y1="10" x2="0" y2="155" stroke="#4edea3" stroke-width="1.2" stroke-dasharray="3 3" class="hidden opacity-90"></line>
+        <circle id="crosshair-active-beacon" cx="0" cy="0" r="6" fill="#4edea3" stroke="#10131a" stroke-width="2" class="hidden" filter="url(#glow)"></circle>
+        <circle id="crosshair-active-pulse" cx="0" cy="0" r="10" fill="none" stroke="#4edea3" stroke-width="1.5" class="hidden opacity-75 animate-ping"></circle>
+
+        <!-- Interactive Curve Points Across Key Thresholds -->
+        <g id="curve-interactive-nodes" class="cursor-pointer">
+          <circle cx="80" cy="30" r="4.5" class="hover-node fill-primary/80 hover:fill-primary hover:r-6 transition-all" data-index="0" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="140" cy="42" r="5" class="hover-node fill-primary/90 hover:fill-primary hover:r-6 transition-all" data-index="1" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="200" cy="70" r="4.5" class="hover-node fill-primary/90 hover:fill-primary hover:r-6 transition-all" data-index="2" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="260" cy="102" r="5" class="hover-node fill-primary hover:r-6 transition-all" data-index="3" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="320" cy="128" r="4.5" class="hover-node fill-secondary/80 hover:fill-secondary hover:r-6 transition-all" data-index="4" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="380" cy="142" r="5" class="hover-node fill-secondary hover:r-6 transition-all" data-index="5" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="440" cy="149" r="4.5" class="hover-node fill-secondary hover:r-6 transition-all" data-index="6" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="500" cy="152" r="5" class="hover-node fill-secondary hover:r-6 transition-all" data-index="7" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="560" cy="153.5" r="4.5" class="hover-node fill-error/90 hover:fill-error hover:r-6 transition-all" data-index="8" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="620" cy="154.2" r="5" class="hover-node fill-error hover:r-6 transition-all" data-index="9" stroke="#10131a" stroke-width="1.5"></circle>
+          <circle cx="710" cy="154.8" r="5" class="hover-node fill-error hover:r-6 transition-all" data-index="10" stroke="#10131a" stroke-width="1.5"></circle>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Probability Tier Breakdown Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-6 gap-space-xs text-[11px] font-label-mono-sm">
+      <div class="bg-surface-container-low px-space-sm py-1 rounded border border-surface-container-high flex flex-col">
+        <span class="text-outline text-[10px]">P(DD &gt; 5%)</span>
+        <span id="tier-dd5" class="text-primary font-bold">54.2%</span>
+      </div>
+      <div class="bg-surface-container-low px-space-sm py-1 rounded border border-surface-container-high flex flex-col">
+        <span class="text-outline text-[10px]">P(DD &gt; 10%)</span>
+        <span id="tier-dd10" class="text-primary font-bold">14.2%</span>
+      </div>
+      <div class="bg-surface-container-low px-space-sm py-1 rounded border border-surface-container-high flex flex-col">
+        <span class="text-outline text-[10px]">P(DD &gt; 15%)</span>
+        <span id="tier-dd15" class="text-secondary font-bold">6.8%</span>
+      </div>
+      <div class="bg-surface-container-low px-space-sm py-1 rounded border border-surface-container-high flex flex-col">
+        <span class="text-outline text-[10px]">P(DD &gt; 20%)</span>
+        <span id="tier-dd20" class="text-secondary font-bold">3.1%</span>
+      </div>
+      <div class="bg-surface-container-low px-space-sm py-1 rounded border border-surface-container-high flex flex-col">
+        <span class="text-outline text-[10px]">P(DD &gt; 25%)</span>
+        <span id="tier-dd25" class="text-error font-bold">0.9%</span>
+      </div>
+      <div class="bg-surface-container-low px-space-sm py-1 rounded border border-surface-container-high flex flex-col">
+        <span class="text-outline text-[10px]">P(DD &gt; 30%+)</span>
+        <span id="tier-dd30" class="text-error font-bold">0.2%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW 2: COVARIANCE MATRIX TABLE -->
+<div id="view-table-container" class="hidden flex-col gap-space-sm">
+  <div class="bg-surface-container-lowest p-space-sm rounded border border-surface-container-high">
+    <div class="flex items-center justify-between mb-space-xs">
+      <span id="table-preview-title" class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-bold flex items-center gap-1">
+        <span class="material-symbols-outlined text-[13px] text-primary">table_chart</span>
+        BATCH MULTI-TICKET COVARIANCE LEDGER AUDIT (ALL SPORTS PREVIEW)
+      </span>
+      <span id="table-schema-label" class="font-label-mono-micro text-label-mono-micro text-on-surface-variant">Schema: RFC-4180 Multi-Ticket Flat CSV</span>
+    </div>
+    <div class="overflow-x-auto text-[11px] font-label-mono-sm">
+      <table class="w-full text-left text-on-surface-variant">
+        <thead>
+          <tr class="border-b border-surface-container-high text-outline text-[10px]">
+            <th class="py-1 pr-2">TICKET ID</th>
+            <th class="py-1 px-2">SPORT</th>
+            <th class="py-1 px-2">LEGS</th>
+            <th class="py-1 px-2">BOOKMAKER</th>
+            <th class="py-1 px-2">R_PAIRWISE_AVG</th>
+            <th class="py-1 px-2">IMPLIED</th>
+            <th class="py-1 px-2">TRUE PROB</th>
+            <th class="py-1 px-2">EDGE %</th>
+            <th class="py-1 px-2 text-right">STATUS</th>
+          </tr>
+        </thead>
+        <tbody id="table-preview-body">
+          <tr class="border-b border-surface-container-high/40">
+            <td class="py-1 pr-2 text-primary font-bold">#TK-84935</td>
+            <td class="py-1 px-2 text-secondary font-bold">NBA</td>
+            <td class="py-1 px-2">3 (SGP)</td>
+            <td class="py-1 px-2 text-on-surface">Circa/Pinnacle</td>
+            <td class="py-1 px-2 text-primary font-bold">+0.567</td>
+            <td class="py-1 px-2">15.1%</td>
+            <td class="py-1 px-2 text-primary font-bold">17.1%</td>
+            <td class="py-1 px-2 text-primary font-bold">+13.2%</td>
+            <td class="py-1 px-2 text-right text-primary font-semibold">OPEN (6/8 AST)</td>
+          </tr>
+          <tr class="border-b border-surface-container-high/40">
+            <td class="py-1 pr-2 text-primary font-bold">#TK-84920</td>
+            <td class="py-1 px-2 text-primary/70 font-bold">CFB</td>
+            <td class="py-1 px-2">2 (Parlay)</td>
+            <td class="py-1 px-2 text-on-surface">Circa Sports</td>
+            <td class="py-1 px-2 text-secondary font-bold">+0.210</td>
+            <td class="py-1 px-2">24.4%</td>
+            <td class="py-1 px-2 text-primary font-bold">27.8%</td>
+            <td class="py-1 px-2 text-primary font-bold">+13.9%</td>
+            <td class="py-1 px-2 text-right text-secondary font-semibold">1-LEG PENDING</td>
+          </tr>
+          <tr class="border-b border-surface-container-high/40">
+            <td class="py-1 pr-2 text-on-surface font-bold">#TK-84918</td>
+            <td class="py-1 px-2 text-outline font-bold">NFL</td>
+            <td class="py-1 px-2">1 (Straight)</td>
+            <td class="py-1 px-2 text-on-surface">Pinnacle Live</td>
+            <td class="py-1 px-2 text-outline">0.000</td>
+            <td class="py-1 px-2">53.5%</td>
+            <td class="py-1 px-2 text-primary font-bold">58.2%</td>
+            <td class="py-1 px-2 text-primary font-bold">+8.8%</td>
+            <td class="py-1 px-2 text-right text-outline">PRE-LOCK</td>
+          </tr>
+          <tr class="border-b border-surface-container-high/40">
+            <td class="py-1 pr-2 text-primary font-bold">#TK-84882</td>
+            <td class="py-1 px-2 text-secondary font-bold">NBA</td>
+            <td class="py-1 px-2">2 (SGP)</td>
+            <td class="py-1 px-2 text-on-surface">DraftKings</td>
+            <td class="py-1 px-2 text-primary font-bold">+0.380</td>
+            <td class="py-1 px-2">31.2%</td>
+            <td class="py-1 px-2 text-primary font-bold">36.5%</td>
+            <td class="py-1 px-2 text-primary font-bold">+16.9%</td>
+            <td class="py-1 px-2 text-right text-primary font-semibold">SETTLED WON</td>
+          </tr>
+          <tr>
+            <td class="py-1 pr-2 text-on-surface-variant font-bold">#TK-84871</td>
+            <td class="py-1 px-2 text-outline font-bold">NFL</td>
+            <td class="py-1 px-2">1 (Straight)</td>
+            <td class="py-1 px-2 text-on-surface">Circa Sports</td>
+            <td class="py-1 px-2 text-outline">0.000</td>
+            <td class="py-1 px-2">52.4%</td>
+            <td class="py-1 px-2">50.1%</td>
+            <td class="py-1 px-2 text-outline">-4.4%</td>
+            <td class="py-1 px-2 text-right text-error font-semibold">SETTLED LOST</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW 3: PYTHON COPULA SCRIPT PREVIEW -->
+<div id="view-python-container" class="hidden flex-col gap-space-sm">
+  <div class="bg-surface-container-lowest p-space-sm rounded border border-surface-container-high flex flex-col gap-space-xs">
+    <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
+      <span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-bold flex items-center gap-1">
+        <span class="material-symbols-outlined text-[13px] text-primary">terminal</span>
+        liveintel_monte_carlo_drawdown_copula.py
+      </span>
+      <button onclick="copyBacktestCode()" class="px-2 py-[2px] rounded bg-surface-container-high hover:bg-surface-container-highest text-primary font-label-mono-micro text-label-mono-micro flex items-center gap-1">
+        <span class="material-symbols-outlined text-[12px]">content_copy</span>
+        <span id="copy-text" class="">COPY SCRIPT</span>
+      </button>
+    </div>
+    <pre id="python-code-block" class="text-[11px] font-label-mono-micro text-primary overflow-x-auto p-2 bg-surface-container-low rounded"><code>import numpy as np
+import scipy.stats as stats
+
+# =====================================================================
+# LIVEINTEL TERMINAL // CORRELATED SGP &amp; MIDDLE HEDGE BACKTEST ENGINE
+# KELLY CRITERION SIZING PARAMETERS &amp; COPULA JOINT DISTRIBUTION MODEL
+# =====================================================================
+KELLY_FRACTION = 0.5           # Half-Kelly multiplier (0.125 to 1.0)
+BANKROLL_BASE = 10480.00       # Synced ledger starting capital
+MAX_STAKE_PCT = 0.05           # Cap single leg at 5% max exposure
+CORRIDOR_PROB_THRESHOLD = 0.15 # Minimum 15% joint middle probability
+HEDGE_OPTIMIZATION_MODE = 'MAX_GROWTH'  # Options: MAX_GROWTH, ZERO_LOSS, EQUAL_PAYOFF
+
+def calculate_kelly_hedge_allocation(prob_a, odds_a, prob_b, odds_b, correlation_rho, kelly_fraction=KELLY_FRACTION):
+    """Model synthetic bivariate normal joint distribution, dual-leg Kelly fraction calculation,
+    guaranteed floor risk, and double-hit sweet spot payoff."""
+    dec_a = (odds_a / 100.0 + 1.0) if odds_a &gt; 0 else (100.0 / abs(odds_a) + 1.0)
+    dec_b = (odds_b / 100.0 + 1.0) if odds_b &gt; 0 else (100.0 / abs(odds_b) + 1.0)
+    b_a = dec_a - 1.0
+    b_b = dec_b - 1.0
+    
+    # Bivariate Gaussian Copula joint middle / corridor probability
+    z_a = stats.norm.ppf(prob_a)
+    z_b = stats.norm.ppf(prob_b)
+    joint_middle_prob = stats.multivariate_normal.cdf([z_a, z_b], mean=[0, 0], cov=[[1.0, correlation_rho], [correlation_rho, 1.0]])
+    
+    # Optimal dual-leg Kelly staking with correlation attenuation
+    kelly_raw_a = (prob_a * b_a - (1.0 - prob_a)) / b_a
+    kelly_raw_b = (prob_b * b_b - (1.0 - prob_b)) / b_b
+    corr_shrinkage = 1.0 - (abs(correlation_rho) * 0.35)
+    
+    stake_pct_a = min(MAX_STAKE_PCT, max(0.0, kelly_raw_a * kelly_fraction * corr_shrinkage))
+    stake_pct_b = min(MAX_STAKE_PCT, max(0.0, kelly_raw_b * kelly_fraction * corr_shrinkage))
+    stake_a = round(BANKROLL_BASE * stake_pct_a, 2)
+    stake_b = round(BANKROLL_BASE * stake_pct_b, 2)
+    
+    # Settlement payoff state spaces
+    win_a_only = (stake_a * b_a) - stake_b
+    win_b_only = (stake_b * b_b) - stake_a
+    double_hit_win = (stake_a * b_a) + (stake_b * b_b)
+    both_lose = -(stake_a + stake_b)
+    zero_loss_floor = min(win_a_only, win_b_only)
+    
+    return {
+        'stake_leg_a': stake_a,
+        'stake_leg_b': stake_b,
+        'joint_corridor_prob': round(joint_middle_prob, 4),
+        'guaranteed_floor': round(zero_loss_floor, 2),
+        'double_dip_payoff': round(double_hit_win, 2),
+        'opt_mode': HEDGE_OPTIMIZATION_MODE
+    }
+
+def simulate_monte_carlo_drawdown(n_sims=10000, n_slates=100):
+    np.random.seed(42)
+    alloc = calculate_kelly_hedge_allocation(0.535, 108, 0.512, -102, 0.567)
+    daily_returns = np.random.normal(loc=0.0182, scale=0.046, size=(n_sims, n_slates))
+    cumulative_pnl = np.cumprod(1.0 + daily_returns * KELLY_FRACTION, axis=1)
+    running_max = np.maximum.accumulate(cumulative_pnl, axis=1)
+    drawdowns = (cumulative_pnl - running_max) / running_max
+    max_dd = np.abs(np.min(drawdowns, axis=1))
+    return alloc, np.percentile(max_dd, 95), np.percentile(max_dd, 99)
+
+if __name__ == '__main__':
+    hedge_spec, cvar95, mdd99 = simulate_monte_carlo_drawdown()
+    print(f"=== LIVEINTEL KELLY DUAL-LEG MIDDLE HEDGE SPECIFICATION ===")
+    print(f"Mode: {hedge_spec['opt_mode']} | Kelly Mult: {KELLY_FRACTION}x | Base: ${BANKROLL_BASE:,.2f}")
+    print(f"Leg A Stake: ${hedge_spec['stake_leg_a']} | Leg B Stake: ${hedge_spec['stake_leg_b']}")
+    print(f"Joint Corridor Prob: {hedge_spec['joint_corridor_prob']*100:.2f}%")
+    print(f"Zero-Loss Floor: +${hedge_spec['guaranteed_floor']} | Double-Hit Win: +${hedge_spec['double_dip_payoff']}")
+    print(f"Monte Carlo VaR(95%): -{cvar95*100:.2f}% | Max DD(99%): -{mdd99*100:.2f}%")</code></pre>
+  </div>
+</div><div id="view-r-container" class="hidden flex-col gap-space-sm"><div class="bg-surface-container-lowest p-space-sm rounded border border-surface-container-high flex flex-col gap-space-xs"><div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-bold flex items-center gap-1"><span class="material-symbols-outlined text-[13px] text-primary">data_object</span>liveintel_kelly_middle_hedge_backtest.R</span><button onclick="copyRCode()" class="px-2 py-[2px] rounded bg-surface-container-high hover:bg-surface-container-highest text-primary font-label-mono-micro text-label-mono-micro flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">content_copy</span><span id="copy-r-text" class="">COPY R SCRIPT</span></button></div><pre id="r-code-block" class="text-[11px] font-label-mono-micro text-primary overflow-x-auto p-2 bg-surface-container-low rounded"><code># =====================================================================
+# LIVEINTEL TERMINAL // R QUANTITATIVE BACKTEST SCRIPT
+# KELLY CRITERION SIZING &amp; JOINT MIDDLE HEDGE MODEL
+# =====================================================================
+library(mvtnorm)
+
+# Synced Ledger Parameters
+kelly_fraction &lt;- 0.5              # Half-Kelly multiplier
+bankroll_base &lt;- 10480.00          # Synced starting ledger bankroll
+max_stake_pct &lt;- 0.05              # 5% max single leg risk cap
+corridor_prob_threshold &lt;- 0.15    # 15% joint sweet-spot threshold
+hedge_optimization_mode &lt;- "MAX_GROWTH"
+
+calc_kelly_middle_hedge &lt;- function(prob_a = 0.535, odds_a = 108,
+                                     prob_b = 0.512, odds_b = -102,
+                                     correlation_rho = 0.567,
+                                     k_frac = kelly_fraction,
+                                     b_base = bankroll_base) {
+  dec_a &lt;- if (odds_a &gt; 0) (odds_a / 100 + 1) else (100 / abs(odds_a) + 1)
+  dec_b &lt;- if (odds_b &gt; 0) (odds_b / 100 + 1) else (100 / abs(odds_b) + 1)
+  b_a &lt;- dec_a - 1
+  b_b &lt;- dec_b - 1
+  
+  # Bivariate Joint Normal Corridor Probability
+  sigma &lt;- matrix(c(1.0, correlation_rho, correlation_rho, 1.0), nrow = 2)
+  joint_prob &lt;- pmvnorm(lower = c(-Inf, -Inf), upper = qnorm(c(prob_a, prob_b)), sigma = sigma)[1]
+  
+  # Correlated Kelly Stake Calculations
+  k_raw_a &lt;- (prob_a * b_a - (1 - prob_a)) / b_a
+  k_raw_b &lt;- (prob_b * b_b - (1 - prob_b)) / b_b
+  shrinkage &lt;- 1.0 - (abs(correlation_rho) * 0.35)
+  
+  stake_a &lt;- round(b_base * min(max_stake_pct, max(0, k_raw_a * k_frac * shrinkage)), 2)
+  stake_b &lt;- round(b_base * min(max_stake_pct, max(0, k_raw_b * k_frac * shrinkage)), 2)
+  
+  # Sweet spot payoff calculation
+  floor_lock &lt;- min((stake_a * b_a) - stake_b, (stake_b * b_b) - stake_a)
+  double_dip &lt;- (stake_a * b_a) + (stake_b * b_b)
+  
+  list(
+    stake_leg_a = stake_a,
+    stake_leg_b = stake_b,
+    corridor_prob = round(joint_prob, 4),
+    guaranteed_floor = floor_lock,
+    sweet_spot_win = double_dip,
+    optimization_mode = hedge_optimization_mode
+  )
+}
+
+# Monte Carlo Simulation (N = 10,000 runs)
+run_simulations &lt;- function(n_runs = 10000, n_slates = 100) {
+  set.seed(42)
+  hedge &lt;- calc_kelly_middle_hedge()
+  returns &lt;- matrix(rnorm(n_runs * n_slates, mean = 0.0182, sd = 0.046), nrow = n_runs)
+  pnl_paths &lt;- t(apply(1 + returns * kelly_fraction, 1, cumprod))
+  run_max &lt;- t(apply(pnl_paths, 1, cummax))
+  dd &lt;- (pnl_paths - run_max) / run_max
+  max_dd &lt;- apply(abs(dd), 1, max)
+  
+  cat("=== LIVEINTEL R BACKTEST RESULTS ===\n")
+  cat(sprintf("Leg A Stake: $%.2f | Leg B Hedge: $%.2f\n", hedge$stake_leg_a, hedge$stake_leg_b))
+  cat(sprintf("Guaranteed Floor Lock: +$%.2f | Double-Dip Win: +$%.2f\n", hedge$guaranteed_floor, hedge$sweet_spot_win))
+  cat(sprintf("95%% VaR: -%.2f%% | 99%% Max DD: -%.2f%%\n", quantile(max_dd, 0.95) * 100, quantile(max_dd, 0.99) * 100))
+}
+
+run_simulations()</code></pre></div></div></div><div class="bg-surface-container-high px-space-md py-space-sm border-t border-surface-container-highest flex flex-col sm:flex-row items-center justify-between gap-space-sm shrink-0"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary text-[18px]">download_for_offline</span><div class="flex flex-col"><span id="modal-download-filename-label" class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">EXPORT FILENAME: liveintel_batch_all_sports_covariance_audit.csv</span><span class="font-label-mono-micro text-label-mono-micro text-outline">RFC-4180 COMPLIANT // COVARIANCE MATRIX &amp; HISTORICAL CLV AUDIT</span></div></div><div class="flex items-center gap-space-xs flex-wrap"><button id="btn-modal-download-csv" onclick="downloadCovarianceCSV()" class="flex items-center gap-1.5 px-space-md py-space-xs rounded bg-primary text-on-primary font-label-mono-sm text-label-mono-sm font-bold shadow-sm hover:opacity-90 transition-opacity"><span class="material-symbols-outlined text-[15px]">table_view</span><span id="btn-modal-csv-text" class="">EXPORT AUDIT CSV (ALL SPORTS)</span></button><button id="btn-modal-download-py" onclick="downloadPythonBacktest()" class="flex items-center gap-1.5 px-space-md py-space-xs rounded bg-surface-container-highest hover:bg-surface-bright text-primary border border-primary/20 font-label-mono-sm text-label-mono-sm font-semibold transition-colors"><span class="material-symbols-outlined text-[15px]">terminal</span><span id="btn-modal-py-text" class="">DOWNLOAD .PY (KELLY)</span></button><button id="btn-modal-download-r" onclick="downloadRBacktest()" class="flex items-center gap-1.5 px-space-md py-space-xs rounded bg-surface-container-highest hover:bg-surface-bright text-secondary border border-secondary/30 font-label-mono-sm text-label-mono-sm font-semibold transition-colors"><span class="material-symbols-outlined text-[15px]">data_object</span><span class="">DOWNLOAD .R SCRIPT</span></button><button onclick="closeBacktestModal()" class="px-space-md py-space-xs rounded bg-surface-container text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm transition-colors">CLOSE</button></div></div></div></div><script class="">function openBacktestModal(type){const modal=document.getElementById('backtest-export-modal');if(modal){modal.classList.remove('hidden');if(type==='csv'){console.log('Opened with CSV focus');}}}function closeBacktestModal(){const modal=document.getElementById('backtest-export-modal');if(modal)modal.classList.add('hidden');}document.addEventListener('keydown',(e)=>{if(e.key==='Escape')closeBacktestModal();});const modalEl=document.getElementById('backtest-export-modal');if(modalEl){modalEl.addEventListener('click',(e)=>{if(e.target===modalEl)closeBacktestModal();});}function downloadCovarianceCSV(){const csvContent="ticket_id,timestamp_utc,sport,leg_1,leg_2,leg_3,r_leg1_leg2,r_leg2_leg3,r_leg1_leg3,r_avg_shrinkage,implied_prob,model_true_prob,model_edge_pct,clv_delta,status\n"+"#TK-84935,2024-10-31T20:15:00Z,NBA,Ball_AST_Over_7.5,Game_Total_Over_228.5,White_3PM_Over_2.5,0.640,0.590,0.470,0.567,0.151,0.171,+13.20%,+4.2c,IN_PLAY\n"+"#TK-84920,2024-10-31T19:42:00Z,MULTI,MIZ_Total_Over_28.5,White_3PM_Over_2.5,NA,0.210,NA,NA,0.210,0.244,0.278,+13.90%,+3.8c,IN_PLAY\n"+"#TK-84882,2024-10-30T22:45:00Z,NBA,Ball_AST_Over_7.5,Wiggins_3PA_Over_4.5,NA,0.380,NA,NA,0.380,0.312,0.365,+16.90%,+5.1c,SETTLED_WON\n";const blob=new Blob([csvContent],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.setAttribute('href',url);link.setAttribute('download','liveintel_sgp_covariance_audit_'+new Date().toISOString().slice(0,10)+'.csv');document.body.appendChild(link);link.click();document.body.removeChild(link);URL.revokeObjectURL(url);}function downloadPythonBacktest(){const scriptContent=`"""LiveIntel Terminal // SGP Covariance & Copula Backtest EngineFramework for multi-leg correlated prop bets, Gaussian Copula modeling, and CLV audit."""\nimport numpy as np\nimport pandas as pd\nfrom scipy import stats\n\ndef load_covariance_matrix():\n    # Correlation Matrix derived from live telemetry feed\n    corr = np.array([[1.00, 0.64, 0.47], [0.64, 1.00, 0.59], [0.47, 0.59, 1.00]])\n    return corr\n\ndef run_monte_carlo_copula(n_sims=50000, seed=42):\n    np.random.seed(seed)\n    corr = load_covariance_matrix()\n    L = np.linalg.cholesky(corr)\n    Z = np.random.normal(size=(n_sims, 3))\n    correlated_draws = np.dot(Z, L.T)\n    u = stats.norm.cdf(correlated_draws)\n    marginal_probs = np.array([0.535, 0.524, 0.488])\n    hits = u < marginal_probs\n    joint_hit = np.all(hits, axis=1)\n    true_joint_prob = np.mean(joint_hit)\n    implied_odds_prob = 1.0 / (5.60 + 1.0)\n    edge = (true_joint_prob - implied_odds_prob) / implied_odds_prob\n    return true_joint_prob, implied_odds_prob, edge\n\nif __name__ == '__main__':\n    prob, implied, edge = run_monte_carlo_copula()\n    print(f'=== LiveIntel SGP Backtest Run ===')\n    print(f'Joint True Probability: {prob:.4f} ({prob*100:.2f}%)')\n    print(f'Market Implied Prob:     {implied:.4f} ({implied*100:.2f}%)')\n    print(f'Expected Model Edge:    {edge*100:+.2f}%')\n`;const blob=new Blob([scriptContent],{type:'text/x-python;charset=utf-8;'});const url=URL.createObjectURL(blob);const link=document.createElement('a');link.setAttribute('href',url);link.setAttribute('download','liveintel_sgp_copula_backtest.py');document.body.appendChild(link);link.click();document.body.removeChild(link);URL.revokeObjectURL(url);}function copyBacktestCode(){const code=document.getElementById('python-code-block');const copyTextSpan=document.getElementById('copy-text');if(code&&navigator.clipboard){navigator.clipboard.writeText(code.innerText).then(()=>{if(copyTextSpan){copyTextSpan.innerText='COPIED!';setTimeout(()=>{copyTextSpan.innerText='COPY SCRIPT';},2000);}});}}</script></main><footer class="w-full bg-surface-container-lowest py-space-md mt-auto"><div class="w-full px-gutter flex flex-col md:flex-row items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">© 2024 LIVEINTEL TERMINAL SYSTEM</span><span class="font-label-mono-micro text-label-mono-micro text-outline">•</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">INSTITUTIONAL ODDS ENGINE</span></div><div class="flex items-center gap-space-lg"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SOCKET: <span class="text-primary">CONNECTED</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">LATENCY: <span class="text-on-surface">14MS</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SYS HOLD: <span class="text-secondary">2.41%</span></span></div></div></footer>
+
+
+
+
+
+<script class="">let activeConfidenceLevel=95;const clThresholdData={90:{x:310,label:'90% CL MAX DD: 12.2% [VaR 90%]',boxWidth:180,cvar:'-9.8%',color:'#ffb95f'},95:{x:415,label:'95% CL MAX DD: 16.4% [VaR 95%]',boxWidth:180,cvar:'-12.8%',color:'#ffb4ab'},99:{x:570,label:'99% CL MAX DD: 21.8% [VaR 99%]',boxWidth:180,cvar:'-17.5%',color:'#ffb4ab'}};function setConfidenceInterval(cl){activeConfidenceLevel=cl;[90,95,99].forEach(lvl=>{const btn=document.getElementById('cl-toggle-'+lvl);if(btn){if(lvl===cl){btn.className='px-2 py-[2px] rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold transition-colors';}else{btn.className='px-2 py-[2px] rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant font-label-mono-micro text-label-mono-micro font-semibold transition-colors';}}});renderCLTelemetry();}function renderCLTelemetry(){const conf=clThresholdData[activeConfidenceLevel]||clThresholdData[95];const lineEl=document.getElementById('marker-95-line');const boxEl=document.getElementById('marker-95-box');const textEl=document.getElementById('marker-95-text');if(lineEl){lineEl.setAttribute('x1',conf.x);lineEl.setAttribute('x2',conf.x);lineEl.setAttribute('stroke',conf.color);}if(boxEl){boxEl.setAttribute('x',conf.x-conf.boxWidth/2);boxEl.setAttribute('width',conf.boxWidth);boxEl.setAttribute('stroke',conf.color);}if(textEl){textEl.setAttribute('x',conf.x);textEl.textContent=conf.label;textEl.setAttribute('fill',conf.color);}const cvarEl=document.getElementById('var-cvar-val');if(cvarEl){cvarEl.textContent=conf.cvar;}}</script>
+
+<script>let activeKellyFraction = 0.5; let activeHedgeMode = 'MAX_GROWTH'; const baseBankroll = 10480.00;
+function updateKellyFraction(val) { activeKellyFraction = val; ['025', '05', '10'].forEach(k => { const btn = document.getElementById('btn-kelly-' + k); if (btn) { const isMatch = (k === '025' && val === 0.25) || (k === '05' && val === 0.5) || (k === '10' && val === 1.0); btn.className = isMatch ? 'flex-1 py-1 rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold transition-colors shadow-sm' : 'flex-1 py-1 rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors'; } }); const label = document.getElementById('active-kelly-label'); if (label) label.textContent = val + 'x (' + (val === 0.25 ? 'QUARTER' : (val === 0.5 ? 'HALF-KELLY' : 'FULL')) + ')'; refreshKellyBadge(); }
+function updateHedgeMode(mode) { activeHedgeMode = mode; const modes = { 'MAX_GROWTH': 'btn-opt-growth', 'ZERO_LOSS': 'btn-opt-zero', 'EQUAL_PAYOFF': 'btn-opt-equal' }; Object.keys(modes).forEach(m => { const btn = document.getElementById(modes[m]); if (btn) { btn.className = (m === mode) ? 'flex-1 py-1 rounded bg-secondary text-on-secondary font-label-mono-micro text-label-mono-micro font-bold transition-colors shadow-sm' : 'flex-1 py-1 rounded bg-surface-container hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors'; } }); const label = document.getElementById('active-opt-mode-label'); if (label) label.textContent = mode; refreshKellyBadge(); }
+function refreshKellyBadge() { const badge = document.getElementById('kelly-badge-summary'); if (badge) badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> KELLY PARAMETERS INCLUDED // ' + activeKellyFraction + 'x MULTIPLIER • $' + baseBankroll.toLocaleString() + ' BASE • ' + activeHedgeMode; }
+const origSwitchModalView = window.switchModalView;
+window.switchModalView = function(mode) { const views = { drawdown: document.getElementById('view-drawdown-container'), table: document.getElementById('view-table-container'), python: document.getElementById('view-python-container'), r: document.getElementById('view-r-container') }; const tabs = { drawdown: document.getElementById('tab-view-dd'), table: document.getElementById('tab-view-table'), python: document.getElementById('tab-view-python'), r: document.getElementById('tab-view-r') }; Object.keys(views).forEach(key => { if (views[key]) { if (key === mode) { views[key].classList.remove('hidden'); views[key].classList.add('flex'); } else { views[key].classList.add('hidden'); views[key].classList.remove('flex'); } } if (tabs[key]) { tabs[key].className = (key === mode) ? 'px-space-md py-1 rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold flex items-center gap-1.5 transition-colors' : 'px-space-md py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-medium flex items-center gap-1.5 transition-colors'; } }); };
+function copyRCode() { const code = document.getElementById('r-code-block'); const btnText = document.getElementById('copy-r-text'); if (code && navigator.clipboard) { navigator.clipboard.writeText(code.innerText).then(() => { if (btnText) { btnText.innerText = 'COPIED R SCRIPT!'; setTimeout(() => { btnText.innerText = 'COPY R SCRIPT'; }, 2000); } }); } }
+function downloadRBacktest() { const codeEl = document.getElementById('r-code-block'); const content = codeEl ? codeEl.innerText : 'library(mvtnorm)\n'; const blob = new Blob([content], { type: 'text/plain;charset=utf-8;' }); const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.setAttribute('href', url); link.setAttribute('download', 'liveintel_kelly_middle_hedge_backtest.R'); document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url); }</script></body></html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><title>LiveIntel // Sports Intelligence Terminal</title><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-surface":"#e1e2ec","surface-container-highest":"#32353d","surface":"#10131a","surface-container-high":"#272a32","outline":"#86948a","secondary-fixed-dim":"#ffb95f","secondary-container":"#ee9800","inverse-on-surface":"#2d3038","tertiary-fixed":"#ffdad7","error-container":"#93000a","on-secondary":"#472a00","on-tertiary":"#68000a","secondary":"#ffb95f","primary":"#4edea3","surface-container":"#1d1f27","on-primary-container":"#00422b","secondary-fixed":"#ffddb8","surface-container-lowest":"#0b0e15","on-tertiary-container":"#79000e","tertiary-container":"#ff7a73","on-error":"#690005","primary-fixed":"#6ffbbe","surface-tint":"#4edea3","on-secondary-container":"#5b3800","on-primary":"#003824","tertiary-fixed-dim":"#ffb3ad","inverse-primary":"#006c49","surface-variant":"#32353d","on-tertiary-fixed-variant":"#930013","primary-fixed-dim":"#4edea3","tertiary":"#ffb3ad","on-primary-fixed-variant":"#005236","on-error-container":"#ffdad6","error":"#ffb4ab","background":"#10131a","on-secondary-fixed":"#2a1700","inverse-surface":"#e1e2ec","surface-dim":"#10131a","on-tertiary-fixed":"#410004","on-secondary-fixed-variant":"#653e00","surface-bright":"#363941","on-background":"#e1e2ec","primary-container":"#10b981","on-surface-variant":"#bbcabf","on-primary-fixed":"#002113","surface-container-low":"#191b23","outline-variant":"#3c4a42"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-xs":"0.25rem","space-lg":"1rem","gutter":"0.75rem","space-sm":"0.375rem","margin":"1rem","space-md":"0.625rem","space-xl":"1.5rem"},"fontFamily":{"headline-xl-mobile":["Inter"],"label-mono-micro":["JetBrains Mono"],"label-mono-md":["JetBrains Mono"],"headline-sm":["Inter"],"label-mono-sm":["JetBrains Mono"],"headline-xl":["Inter"],"label-mono-lg":["JetBrains Mono"],"table-header":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"]},"fontSize":{"headline-xl-mobile":["22px",{"lineHeight":"28px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-mono-micro":["10px",{"lineHeight":"12px","letterSpacing":"0.04em","fontWeight":"600"}],"label-mono-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-sm":["15px",{"lineHeight":"20px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-mono-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}],"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.025em","fontWeight":"700"}],"label-mono-lg":["14px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"600"}],"table-header":["11px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"26px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="h-14 w-full px-gutter flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-lg shrink-0"><div class="flex items-center gap-space-sm cursor-pointer select-none"><div class="w-7 h-7 rounded bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">insights</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface leading-none">LiveIntel</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-widest">Terminal v2.4</span></div></div><div class="hidden xl:flex items-center px-space-sm py-space-xs bg-surface-container-high rounded gap-space-xs"><span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold tracking-wider">LIVE SLATE • OCT 31</span></div></div><nav class="hidden lg:flex items-center gap-space-xs h-9" data-active-classes="bg-surface-container-highest text-on-surface font-semibold"><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="live" href="#">LIVE</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="players" href="#">PLAYERS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="heats-on" href="#">HEAT'S ON</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="math-lab" href="#">MATH LAB</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="watch-5" href="#">WATCH 5</a><a aria-current="page" class="px-space-md py-space-xs rounded uppercase transition-colors bg-surface-container-highest text-on-surface font-semibold" data-path="picks" href="#">PICKS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="tickets" href="#">TICKETS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="intelligence" href="#">INTELLIGENCE</a></nav><div class="flex items-center gap-space-md shrink-0"><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-low rounded"><span class="material-symbols-outlined text-[14px] text-primary animate-spin">sync</span><span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">FEED LIVE</span><span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">18ms</span></div><div class="flex items-center px-space-md py-space-xs bg-surface-container rounded gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">ROLL</span><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">$100.00</span></div><div class="w-px h-6 bg-surface-container-highest"></div><div class="flex flex-col"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">P/L</span><span class="font-label-mono-sm text-label-mono-sm text-primary font-semibold">+$0.00</span></div></div><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest rounded text-on-surface hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[16px] text-secondary">receipt_long</span><span class="font-label-mono-sm text-label-mono-sm hidden md:inline uppercase">SLIP (0)</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-surface min-h-[calc(100vh-3.5rem)] flex flex-col"><div class="flex flex-col w-full">
+<!-- Command Strip / Ticker Header -->
+<div class="w-full bg-surface-container-lowest px-gutter py-space-sm flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container rounded">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold tracking-wider">SYNC PROTOCOL ACTIVE</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-wider hidden sm:inline">CYCLE #42.8 // ORACLE CLUSTER LINKED</span>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs font-label-mono-micro text-label-mono-micro text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-secondary">memory</span>
+<span class="uppercase">SYNAPSE DRIFT:</span>
+<span class="text-on-surface font-semibold">0.04%</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-mono-micro text-label-mono-micro text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-primary">verified</span>
+<span class="uppercase">ZERO-KNOWLEDGE AUDIT:</span>
+<span class="text-primary font-semibold">PASSED</span>
+</div>
+</div>
+</div>
+<div class="w-full px-gutter py-space-lg flex flex-col gap-space-lg">
+<!-- Screen Headline Block -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs mb-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high font-label-mono-micro text-label-mono-micro uppercase text-on-surface-variant tracking-widest">TERMINAL WORKSPACE</span>
+<span class="text-outline font-label-mono-micro text-label-mono-micro">•</span>
+<span class="font-label-mono-micro text-label-mono-micro text-secondary uppercase font-bold tracking-wider">COMPETITION ARENA</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight uppercase">YOUR GAME-DAY DESK // PICKS &amp; POSITIONS</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Your tickets alongside three independent algorithmic specialists.</p>
+</div>
+<!-- Action / Ledger Bar -->
+<div class="flex flex-wrap items-center gap-space-sm bg-surface-container-low p-space-xs rounded shadow-sm">
+<div class="px-space-md py-space-xs bg-surface-container-highest rounded flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">flag</span>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-wider">CHALLENGE SPRINT</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">DAY 42 OF 100</span>
+</div>
+</div>
+<div class="px-space-md py-space-xs bg-surface-container-highest rounded flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[16px]">savings</span>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-wider">GOAL CAP</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">$10,000 BANKROLL</span>
+</div>
+</div>
+<button class="px-space-md py-space-sm bg-primary hover:bg-primary-fixed-dim text-on-primary font-label-mono-sm text-label-mono-sm font-bold uppercase rounded flex items-center gap-space-xs transition-colors shadow-sm" id="ledgerModalTrigger">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span class="">VERIFIED CHALLENGE LEDGER</span>
+</button>
+</div>
+</div>
+<!-- Active Competition Micro-HUD Strip -->
+<div class="w-full bg-surface-container-low rounded p-space-md flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md flex-wrap">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">hub</span>
+<span class="font-headline-sm text-headline-sm text-on-surface uppercase">FOUR HORSEMEN RUNNER INDEX</span>
+</div>
+<div class="h-4 w-px bg-surface-container-highest hidden sm:block"></div>
+<span class="font-label-mono-micro text-label-mono-micro uppercase text-outline">AGGREGATE RECORD: <span class="text-on-surface font-semibold">115-63-1 (64.2%)</span></span>
+<div class="h-4 w-px bg-surface-container-highest hidden sm:block"></div>
+<span class="font-label-mono-micro text-label-mono-micro uppercase text-outline">COMBINED BANKROLL: <span class="text-primary font-bold">$9,490.00</span></span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold uppercase">PACER: CFB AI (+34.2%)</span>
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+</div>
+</div>
+<!-- 4-Desk Side-by-Side Comparison Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg"><div class="lg:col-span-4 bg-surface-container-low rounded p-space-md flex flex-col justify-between shadow-sm border border-secondary/30 relative overflow-hidden"><div class="absolute top-0 left-0 right-0 h-1 bg-secondary"></div><div class="flex flex-col gap-space-md"><div class="flex items-start justify-between pb-space-xs border-b border-surface-container-highest"><div class="flex flex-col"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary text-[18px]">account_circle</span><h2 class="font-headline-sm text-headline-sm uppercase text-on-surface">OWNER POSITION &amp; TICKETS</h2></div><span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold uppercase tracking-wider mt-0.5">BOBBY (MANUAL DESK) • PROPRIETARY CAPITAL</span></div><span class="px-space-xs py-0.5 rounded bg-secondary/15 text-secondary font-label-mono-micro text-label-mono-micro font-bold uppercase">OWNER</span></div><div class="bg-surface-container-lowest p-space-sm rounded flex flex-col gap-space-xs"><div class="flex justify-between items-baseline"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">OWNER BANKROLL</span><span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant">SPRINT TARGET: $10,000</span></div><div class="flex items-baseline justify-between"><span class="font-headline-xl text-headline-xl text-on-surface font-bold">$1,240.00</span><span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">+$145.00 TODAY</span></div><div class="w-full h-1.5 bg-surface-container rounded overflow-hidden mt-1"><div class="h-full bg-secondary rounded" style="width: 12.4%"></div></div><div class="flex justify-between text-label-mono-micro font-label-mono-micro text-outline pt-0.5"><span class="">12.4% OF $10K GOAL</span><span class="">VERIFIED RECORD: 18-9-1</span></div></div><div class="grid grid-cols-2 gap-space-xs"><div class="bg-surface-container p-space-xs rounded flex flex-col"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">TOTAL EXPOSURE</span><span class="font-label-mono-md text-label-mono-md text-secondary font-bold">$150.00</span></div><div class="bg-surface-container p-space-xs rounded flex flex-col"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">OPEN TICKETS</span><span class="font-label-mono-md text-label-mono-md text-on-surface font-bold">2 ACTIVE SLIPS</span></div></div><div class="bg-surface-container p-space-sm rounded flex flex-col gap-space-xs"><div class="flex items-center justify-between pb-1 border-b border-surface-container-highest/60"><div class="flex items-center gap-1"><span class="material-symbols-outlined text-primary text-[14px]">receipt</span><span class="font-label-mono-micro text-label-mono-micro uppercase text-on-surface font-bold">ACTIVE TICKET // #OWN-2041</span></div><span class="px-1.5 py-0.5 rounded bg-primary-container/20 text-primary font-label-mono-micro text-label-mono-micro font-bold uppercase">IN-FLIGHT</span></div><div class="flex flex-col gap-1 py-1"><div class="flex justify-between items-center text-label-mono-sm font-label-mono-sm"><span class="text-on-surface truncate">Leg 1: CFB Tigers TT Over 28.5</span><span class="font-bold text-on-surface">-110</span></div><div class="flex justify-between items-center text-label-mono-sm font-label-mono-sm"><span class="text-on-surface truncate">Leg 2: Derrick White Over 2.5 3PM</span><span class="font-bold text-primary">+115</span></div></div><div class="grid grid-cols-3 gap-1 pt-1 border-t border-surface-container-highest/60 text-label-mono-micro font-label-mono-micro"><div><span class="text-outline block">STAKE</span><span class="text-on-surface font-bold">$50.00</span></div><div><span class="text-outline block">ODDS</span><span class="text-on-surface font-bold">+310 PARLAY</span></div><div class="text-right"><span class="text-outline block">PAYOUT</span><span class="text-primary font-bold">+$155.00</span></div></div></div></div><div class="pt-space-md mt-auto"><button class="w-full py-space-sm px-space-md bg-surface-container-highest hover:bg-surface-variant text-on-surface font-label-mono-sm text-label-mono-sm font-semibold uppercase rounded flex items-center justify-center gap-space-xs transition-colors"><span class="material-symbols-outlined text-[16px]">visibility</span><span class="">VIEW OWNER SLIP DETAILS</span></button></div></div><div class="lg:col-span-8 flex flex-col gap-space-sm"><div class="flex items-center justify-between px-space-xs"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[18px]">smart_toy</span><h2 class="font-headline-sm text-headline-sm uppercase text-on-surface">AI COMPETITORS // SUBMITTED TICKETS &amp; ENTRIES</h2></div><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">1 SLIP SUBMITTED PER MODEL • VERIFIED PROTOCOL</span></div><div class="grid grid-cols-1 md:grid-cols-3 gap-space-md"><div class="bg-surface-container-low rounded p-space-md flex flex-col justify-between shadow-sm border border-surface-container-highest relative overflow-hidden group hover:border-primary/50 transition-colors"><div class="absolute top-0 left-0 right-0 h-1 bg-primary"></div><div class="flex flex-col gap-space-md"><div class="flex items-start justify-between"><div class="flex flex-col"><div class="flex items-center gap-1"><span class="material-symbols-outlined text-primary text-[16px]">sports_basketball</span><span class="font-headline-sm text-headline-sm uppercase text-on-surface font-bold">BASKETBALL AI</span></div><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase mt-0.5">MODEL #2 • AUDITED</span></div><span class="px-space-xs py-0.5 rounded bg-primary-container/20 text-primary font-label-mono-micro text-label-mono-micro font-bold uppercase shrink-0">VERIFIED</span></div><div class="bg-surface-container-lowest p-space-xs rounded flex flex-col gap-1"><div class="flex justify-between items-baseline"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">BANKROLL</span><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">$2,850.00</span></div><div class="flex justify-between text-label-mono-micro font-label-mono-micro"><span class="text-outline">GOAL $10,000 (28.5%)</span><span class="text-primary font-bold">RECORD: 34-19</span></div></div><div class="bg-surface-container p-space-sm rounded flex flex-col gap-space-xs"><div class="flex items-center justify-between pb-1 border-b border-surface-container-highest/60"><div class="flex items-center gap-1"><span class="font-label-mono-micro text-label-mono-micro uppercase text-primary font-bold">AI TICKET SUBMISSION</span><span class="text-outline text-label-mono-micro">[SAMPLE DATA]</span></div><span class="px-1 py-0.5 rounded bg-primary-container/20 text-primary font-label-mono-micro text-label-mono-micro font-bold uppercase">SUBMITTED</span></div><div class="flex flex-col gap-1"><div class="font-body-md text-body-md text-on-surface font-bold">Derrick White (BOS)</div><div class="grid grid-cols-2 gap-1 text-label-mono-micro font-label-mono-micro text-on-surface-variant"><span class="truncate">MARKET: 3PT Made</span><span class="truncate">LINE: Over 2.5</span><span class="truncate">ODDS: <strong class="text-primary font-bold">+115</strong></span><span class="truncate">STAKE: $50.00</span></div><div class="pt-1 border-t border-surface-container-highest/60 flex justify-between items-center text-label-mono-micro font-label-mono-micro"><span class="text-outline uppercase">POTENTIAL PAYOUT</span><span class="text-primary font-bold">+$57.50 ($107.50 Total)</span></div><div class="flex justify-between items-center text-label-mono-micro font-label-mono-micro"><span class="text-outline uppercase">RESULT</span><span class="text-on-surface font-semibold">PENDING TIP-OFF</span></div></div></div></div><div class="pt-space-md"><button class="w-full py-space-sm px-space-md bg-surface-container-highest hover:bg-primary hover:text-on-primary text-primary font-label-mono-sm text-label-mono-sm font-bold uppercase rounded flex items-center justify-center gap-space-xs transition-colors" onclick="cosignPick('Basketball AI', 'Derrick White Over 2.5 3PM (+115)', this)"><span class="material-symbols-outlined text-[16px]">add_task</span><span class="">CO-SIGN TICKET</span></button></div></div><div class="bg-surface-container-low rounded p-space-md flex flex-col justify-between shadow-sm border border-secondary-container/40 relative overflow-hidden group hover:border-secondary-container transition-colors"><div class="absolute top-0 left-0 right-0 h-1 bg-secondary-container"></div><div class="flex flex-col gap-space-md"><div class="flex items-start justify-between"><div class="flex flex-col"><div class="flex items-center gap-1"><span class="material-symbols-outlined text-secondary text-[16px]">speed</span><span class="font-headline-sm text-headline-sm uppercase text-on-surface font-bold">CFB AI</span></div><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase mt-0.5">LEADER #1 • TEMPO SPEC</span></div><span class="px-space-xs py-0.5 rounded bg-secondary-container/20 text-secondary font-label-mono-micro text-label-mono-micro font-bold uppercase shrink-0">VERIFIED</span></div><div class="bg-surface-container-lowest p-space-xs rounded flex flex-col gap-1"><div class="flex justify-between items-baseline"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">BANKROLL</span><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">$3,420.00</span></div><div class="flex justify-between text-label-mono-micro font-label-mono-micro"><span class="text-outline">GOAL $10,000 (34.2%)</span><span class="text-secondary font-bold">RECORD: 41-21</span></div></div><div class="bg-surface-container p-space-sm rounded flex flex-col gap-space-xs"><div class="flex items-center justify-between pb-1 border-b border-surface-container-highest/60"><div class="flex items-center gap-1"><span class="font-label-mono-micro text-label-mono-micro uppercase text-secondary font-bold">AI TICKET SUBMISSION</span><span class="text-outline text-label-mono-micro">[SAMPLE DATA]</span></div><span class="px-1 py-0.5 rounded bg-primary-container/20 text-primary font-label-mono-micro text-label-mono-micro font-bold uppercase">SUBMITTED</span></div><div class="flex flex-col gap-1"><div class="font-body-md text-body-md text-on-surface font-bold">Missouri Tigers</div><div class="grid grid-cols-2 gap-1 text-label-mono-micro font-label-mono-micro text-on-surface-variant"><span class="truncate">MARKET: Team Total</span><span class="truncate">LINE: Over 28.5</span><span class="truncate">ODDS: <strong class="text-on-surface font-bold">-110</strong></span><span class="truncate">STAKE: $55.00</span></div><div class="pt-1 border-t border-surface-container-highest/60 flex justify-between items-center text-label-mono-micro font-label-mono-micro"><span class="text-outline uppercase">POTENTIAL PAYOUT</span><span class="text-primary font-bold">+$50.00 ($105.00 Total)</span></div><div class="flex justify-between items-center text-label-mono-micro font-label-mono-micro"><span class="text-outline uppercase">RESULT</span><span class="text-on-surface font-semibold">PENDING KICKOFF</span></div></div></div></div><div class="pt-space-md"><button class="w-full py-space-sm px-space-md bg-surface-container-highest hover:bg-secondary hover:text-on-secondary text-secondary font-label-mono-sm text-label-mono-sm font-bold uppercase rounded flex items-center justify-center gap-space-xs transition-colors" onclick="cosignPick('CFB AI', 'Missouri Tigers TT Over 28.5 (-110)', this)"><span class="material-symbols-outlined text-[16px]">add_task</span><span class="">CO-SIGN TICKET</span></button></div></div><div class="bg-surface-container-low rounded p-space-md flex flex-col justify-between shadow-sm border border-surface-container-highest relative overflow-hidden group hover:border-outline transition-colors"><div class="absolute top-0 left-0 right-0 h-1 bg-outline"></div><div class="flex flex-col gap-space-md"><div class="flex items-start justify-between"><div class="flex flex-col"><div class="flex items-center gap-1"><span class="material-symbols-outlined text-outline text-[16px]">sports_football</span><span class="font-headline-sm text-headline-sm uppercase text-on-surface font-bold">NFL AI</span></div><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase mt-0.5">MODEL #3 • GRIDIRON QUANT</span></div><span class="px-space-xs py-0.5 rounded bg-surface-container-highest text-outline font-label-mono-micro text-label-mono-micro font-bold uppercase shrink-0">VERIFIED</span></div><div class="bg-surface-container-lowest p-space-xs rounded flex flex-col gap-1"><div class="flex justify-between items-baseline"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">BANKROLL</span><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">$1,980.00</span></div><div class="flex justify-between text-label-mono-micro font-label-mono-micro"><span class="text-outline">GOAL $10,000 (19.8%)</span><span class="text-on-surface-variant font-bold">RECORD: 22-14</span></div></div><div class="bg-surface-container p-space-sm rounded flex flex-col gap-space-xs"><div class="flex items-center justify-between pb-1 border-b border-surface-container-highest/60"><div class="flex items-center gap-1"><span class="font-label-mono-micro text-label-mono-micro uppercase text-on-surface-variant font-bold">AI TICKET SUBMISSION</span></div><span class="px-1 py-0.5 rounded bg-surface-container-highest text-outline font-label-mono-micro text-label-mono-micro font-bold uppercase">NO TICKET</span></div><div class="flex flex-col items-center justify-center py-5 text-center gap-1"><span class="material-symbols-outlined text-outline text-[22px]">do_not_disturb_on</span><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold uppercase">NO QUALIFIED CURRENT OPPORTUNITY</span><span class="font-body-sm text-body-sm text-outline max-w-[200px]">Model requires min +4.0% closing line edge before ticket commitment.</span></div></div></div><div class="pt-space-md"><button class="w-full py-space-sm px-space-md bg-surface-container text-outline font-label-mono-sm text-label-mono-sm font-bold uppercase rounded flex items-center justify-center gap-space-xs cursor-pointer hover:bg-surface-container-highest" disabled=""><span class="material-symbols-outlined text-[16px]">hourglass_empty</span><span class="">AWAITING QUALIFIED TICKET</span></button></div></div></div></div></div>
+<!-- Cross-Specialist Correlation & Overlap Banner -->
+<div class="w-full bg-surface-container-low rounded p-space-lg flex flex-col gap-space-lg shadow-sm" id="historicalWinRateSuite">
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md pb-space-sm border-b border-surface-container-highest">
+    <div class="flex flex-col gap-0.5">
+      <div class="flex items-center gap-space-xs">
+        <span class="material-symbols-outlined text-primary text-[20px]">query_stats</span>
+        <h2 class="font-headline-sm text-headline-sm uppercase text-on-surface tracking-tight">HISTORICAL WIN RATE &amp; ROI BENCHMARKS PER SPORT AI</h2>
+        <span class="px-space-xs py-0.5 rounded bg-primary-container/20 font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase shrink-0">AUDITED DATASET</span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">Backtested against closing line value (CLV) hurdle of 52.4% standard -110 juice break-even benchmark.</p>
+    </div>
+    <div class="flex flex-wrap items-center gap-space-xs bg-surface-container p-space-xs rounded">
+      <button id="tabBtnCumul" class="px-space-sm py-1 rounded bg-primary text-on-primary font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors flex items-center gap-1" onclick="switchWinRateTab('cumulative')">
+        <span class="material-symbols-outlined text-[13px]">show_chart</span>
+        <span class="">CUMULATIVE WIN RATE (%)</span>
+      </button>
+      <button id="tabBtnRolling" class="px-space-sm py-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors flex items-center gap-1" onclick="switchWinRateTab('rolling')">
+        <span class="material-symbols-outlined text-[13px]">ssid_chart</span>
+        <span class="">ROLLING 10-GAME HIT RATE</span>
+      </button>
+      <button id="tabBtnMarket" class="px-space-sm py-1 rounded hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors flex items-center gap-1" onclick="switchWinRateTab('market')">
+        <span class="material-symbols-outlined text-[13px]">pie_chart</span>
+        <span class="">MARKET TYPE BREAKDOWN</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm">
+    <div class="bg-surface-container p-space-sm rounded flex flex-col gap-0.5 border-l-2 border-secondary-container">
+      <div class="flex justify-between items-center">
+        <span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold uppercase">CFB AI (PACER #1)</span>
+        <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+28.4% ROI</span>
+      </div>
+      <div class="flex items-baseline justify-between mt-1">
+        <span class="font-headline-lg text-headline-lg font-bold text-on-surface">66.1%</span>
+        <span class="font-label-mono-sm text-label-mono-sm text-outline">41-21 RECORD</span>
+      </div>
+      <div class="flex items-center justify-between text-label-mono-micro font-label-mono-micro text-outline pt-1 border-t border-surface-container-highest/60">
+        <span class="">CLV BEAT: <strong class="text-primary">78.2%</strong></span>
+        <span class="">MAX STREAK: <strong class="text-secondary">W8</strong></span>
+      </div>
+    </div>
+
+    <div class="bg-surface-container p-space-sm rounded flex flex-col gap-0.5 border-l-2 border-primary">
+      <div class="flex justify-between items-center">
+        <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase">BASKETBALL AI</span>
+        <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+22.1% ROI</span>
+      </div>
+      <div class="flex items-baseline justify-between mt-1">
+        <span class="font-headline-lg text-headline-lg font-bold text-on-surface">64.1%</span>
+        <span class="font-label-mono-sm text-label-mono-sm text-outline">34-19 RECORD</span>
+      </div>
+      <div class="flex items-center justify-between text-label-mono-micro font-label-mono-micro text-outline pt-1 border-t border-surface-container-highest/60">
+        <span class="">CLV BEAT: <strong class="text-primary">75.5%</strong></span>
+        <span class="">MAX STREAK: <strong class="text-primary">W6</strong></span>
+      </div>
+    </div>
+
+    <div class="bg-surface-container p-space-sm rounded flex flex-col gap-0.5 border-l-2 border-outline">
+      <div class="flex justify-between items-center">
+        <span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant font-bold uppercase">NFL AI QUANT</span>
+        <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+18.5% ROI</span>
+      </div>
+      <div class="flex items-baseline justify-between mt-1">
+        <span class="font-headline-lg text-headline-lg font-bold text-on-surface">61.1%</span>
+        <span class="font-label-mono-sm text-label-mono-sm text-outline">22-14 RECORD</span>
+      </div>
+      <div class="flex items-center justify-between text-label-mono-micro font-label-mono-micro text-outline pt-1 border-t border-surface-container-highest/60">
+        <span class="">CLV BEAT: <strong class="text-primary">71.0%</strong></span>
+        <span class="">MAX STREAK: <strong class="text-on-surface">W5</strong></span>
+      </div>
+    </div>
+
+    <div class="bg-surface-container p-space-sm rounded flex flex-col gap-0.5 border-l-2 border-secondary-fixed-dim">
+      <div class="flex justify-between items-center">
+        <span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold uppercase">WNBA AI SPECIALIST</span>
+        <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+24.7% ROI</span>
+      </div>
+      <div class="flex items-baseline justify-between mt-1">
+        <span class="font-headline-lg text-headline-lg font-bold text-on-surface">63.8%</span>
+        <span class="font-label-mono-sm text-label-mono-sm text-outline">30-17 RECORD</span>
+      </div>
+      <div class="flex items-center justify-between text-label-mono-micro font-label-mono-micro text-outline pt-1 border-t border-surface-container-highest/60">
+        <span class="">CLV BEAT: <strong class="text-primary">72.4%</strong></span>
+        <span class="">MAX STREAK: <strong class="text-secondary">W7</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <div id="viewCumulative" class="w-full flex flex-col gap-space-md">
+    <div class="bg-surface-container-lowest p-space-md rounded flex flex-col gap-space-sm relative overflow-hidden">
+      <div class="flex flex-wrap items-center justify-between gap-space-sm">
+        <div class="flex items-center gap-space-sm">
+          <span class="font-label-mono-sm text-label-mono-sm text-on-surface uppercase font-bold">SPORT AI HISTORICAL TRAJECTORY VS BREAK-EVEN HURDLE</span>
+          <span class="font-label-mono-micro text-label-mono-micro text-outline">(OVER 42 SLATE DAYS)</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-space-md font-label-mono-micro text-label-mono-micro">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-1 bg-secondary-container rounded-full"></span>
+            <span class="text-on-surface-variant uppercase">CFB AI (66.1%)</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-1 bg-primary rounded-full"></span>
+            <span class="text-on-surface-variant uppercase">BASKETBALL AI (64.1%)</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-1 bg-secondary rounded-full"></span>
+            <span class="text-on-surface-variant uppercase">WNBA AI (63.8%)</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-1 bg-outline rounded-full"></span>
+            <span class="text-on-surface-variant uppercase">NFL AI (61.1%)</span>
+          </div>
+          <div class="flex items-center gap-1.5 pl-2 border-l border-surface-container-highest">
+            <span class="w-3 h-0.5 border-t border-dashed border-error inline-block"></span>
+            <span class="text-error font-bold uppercase">52.4% BREAK-EVEN</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full relative pt-2">
+        <div class="flex justify-between text-outline font-label-mono-micro text-label-mono-micro mb-1">
+          <span class="">75.0% WIN</span>
+          <span class="">PEAK SURGE (OCT 15)</span>
+          <span class="">CURRENT SLATE (OCT 31)</span>
+        </div>
+        <svg class="w-full h-44 overflow-visible" preserveAspectRatio="none" viewBox="0 0 800 160">
+          <line class="text-surface-container-highest/50" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="0" x2="800" y1="16" y2="16"></line>
+          <line class="text-surface-container-highest/50" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="0" x2="800" y1="52" y2="52"></line>
+          <line class="text-surface-container-highest/50" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="0" x2="800" y1="88" y2="88"></line>
+          <line class="text-error/70" stroke="currentColor" stroke-dasharray="4 4" stroke-width="1.5" x1="0" x2="800" y1="118" y2="118"></line>
+          <text class="fill-error font-mono text-[9px] font-bold" x="8" y="114">52.4% BREAK-EVEN HURDLE (-110 JUS)</text>
+          <line class="text-surface-container-highest/50" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="0" x2="800" y1="145" y2="145"></line>
+
+          <path class="text-secondary-container" d="M0,130 C120,110 240,65 380,50 C520,38 660,45 800,32" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+          <path class="text-primary" d="M0,128 C130,118 260,82 400,68 C540,56 670,52 800,42" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+          <path class="text-secondary" d="M0,132 C140,115 270,88 420,74 C560,64 680,58 800,48" fill="none" stroke="currentColor" stroke-dasharray="3 2" stroke-width="2"></path>
+          <path class="text-outline" d="M0,135 C150,125 300,98 440,88 C580,78 690,72 800,64" fill="none" stroke="currentColor" stroke-width="2"></path>
+
+          <circle class="fill-secondary-container" cx="800" cy="32" r="4"></circle>
+          <circle class="fill-primary" cx="800" cy="42" r="4"></circle>
+          <circle class="fill-secondary" cx="800" cy="48" r="3.5"></circle>
+          <circle class="fill-outline" cx="800" cy="64" r="3.5"></circle>
+        </svg>
+        <div class="flex justify-between text-outline font-label-mono-micro text-label-mono-micro mt-2">
+          <span class="">DAY 1 (48.0% PRE-LOCK)</span>
+          <span class="">DAY 14 (58.2%)</span>
+          <span class="">DAY 28 (62.9%)</span>
+          <span class="text-primary font-bold">DAY 42 (66.1% CFB / 64.1% NBA)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="viewRolling" class="w-full flex-col gap-space-md hidden">
+    <div class="bg-surface-container-lowest p-space-md rounded flex flex-col gap-space-sm">
+      <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-highest">
+        <span class="font-label-mono-sm text-label-mono-sm text-on-surface uppercase font-bold">ROLLING 10-GAME HIT RATE VELOCITY</span>
+        <span class="font-label-mono-micro text-label-mono-micro text-outline">WINDOW SIZE: N=10 COMPLETED PICKS</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-sm py-space-xs">
+        <div class="bg-surface-container p-space-sm rounded flex flex-col gap-space-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold uppercase">CFB AI</span>
+            <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">8/10 (80.0%)</span>
+          </div>
+          <div class="flex gap-1 h-5 items-end bg-surface-container-lowest p-1 rounded">
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+          </div>
+          <span class="font-label-mono-micro text-label-mono-micro text-outline text-right">CURRENT WINDOW: 8-2</span>
+        </div>
+
+        <div class="bg-surface-container p-space-sm rounded flex flex-col gap-space-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase">BASKETBALL AI</span>
+            <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">7/10 (70.0%)</span>
+          </div>
+          <div class="flex gap-1 h-5 items-end bg-surface-container-lowest p-1 rounded">
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+          </div>
+          <span class="font-label-mono-micro text-label-mono-micro text-outline text-right">CURRENT WINDOW: 7-3</span>
+        </div>
+
+        <div class="bg-surface-container p-space-sm rounded flex flex-col gap-space-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant font-bold uppercase">NFL AI</span>
+            <span class="font-label-mono-micro text-label-mono-micro text-on-surface font-bold">6/10 (60.0%)</span>
+          </div>
+          <div class="flex gap-1 h-5 items-end bg-surface-container-lowest p-1 rounded">
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+          </div>
+          <span class="font-label-mono-micro text-label-mono-micro text-outline text-right">CURRENT WINDOW: 6-4</span>
+        </div>
+
+        <div class="bg-surface-container p-space-sm rounded flex flex-col gap-space-xs">
+          <div class="flex items-center justify-between">
+            <span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold uppercase">WNBA AI</span>
+            <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">7/10 (70.0%)</span>
+          </div>
+          <div class="flex gap-1 h-5 items-end bg-surface-container-lowest p-1 rounded">
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+            <div class="w-full bg-error h-2 rounded-xs"></div>
+            <div class="w-full bg-primary h-full rounded-xs"></div>
+          </div>
+          <span class="font-label-mono-micro text-label-mono-micro text-outline text-right">CURRENT WINDOW: 7-3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="viewMarket" class="w-full flex-col gap-space-md hidden">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md">
+      <div class="bg-surface-container-lowest p-space-md rounded flex flex-col gap-space-sm">
+        <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-highest">
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-[15px] text-secondary">speed</span>
+            <span class="font-label-mono-sm text-label-mono-sm text-on-surface uppercase font-bold">CFB AI MARKETS</span>
+          </div>
+          <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+28.4% ROI</span>
+        </div>
+        <div class="flex flex-col gap-space-xs">
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">Team Totals</span>
+              <span class="text-primary font-bold">71.4% (15-6)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-primary rounded" style="width: 71.4%"></div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">1H Spreads</span>
+              <span class="text-primary font-bold">65.0% (13-7)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-primary rounded" style="width: 65.0%"></div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">Full Game Sides</span>
+              <span class="text-secondary font-bold">62.5% (13-8)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-secondary rounded" style="width: 62.5%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest p-space-md rounded flex flex-col gap-space-sm">
+        <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-highest">
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-[15px] text-primary">smart_toy</span>
+            <span class="font-label-mono-sm text-label-mono-sm text-on-surface uppercase font-bold">NBA PROPS</span>
+          </div>
+          <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+22.1% ROI</span>
+        </div>
+        <div class="flex flex-col gap-space-xs">
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">3-Pointers Made</span>
+              <span class="text-primary font-bold">68.2% (15-7)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-primary rounded" style="width: 68.2%"></div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">Player Points</span>
+              <span class="text-primary font-bold">62.5% (10-6)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-primary rounded" style="width: 62.5%"></div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">Rebounds Props</span>
+              <span class="text-secondary font-bold">61.0% (9-6)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-secondary rounded" style="width: 61.0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest p-space-md rounded flex flex-col gap-space-sm">
+        <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-highest">
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-[15px] text-outline">sports_football</span>
+            <span class="font-label-mono-sm text-label-mono-sm text-on-surface uppercase font-bold">NFL QUANT</span>
+          </div>
+          <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+18.5% ROI</span>
+        </div>
+        <div class="flex flex-col gap-space-xs">
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">Game Spreads</span>
+              <span class="text-primary font-bold">63.6% (7-4)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-primary rounded" style="width: 63.6%"></div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">Weather Totals</span>
+              <span class="text-secondary font-bold">60.0% (9-6)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-secondary rounded" style="width: 60.0%"></div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">Passing Props</span>
+              <span class="text-secondary font-bold">58.8% (6-4)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-outline rounded" style="width: 58.8%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest p-space-md rounded flex flex-col gap-space-sm">
+        <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-highest">
+          <div class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-[15px] text-secondary">sports_basketball</span>
+            <span class="font-label-mono-sm text-label-mono-sm text-on-surface uppercase font-bold">WNBA / SUMMER</span>
+          </div>
+          <span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+24.7% ROI</span>
+        </div>
+        <div class="flex flex-col gap-space-xs">
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">1H Over/Under</span>
+              <span class="text-primary font-bold">67.5% (12-6)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-primary rounded" style="width: 67.5%"></div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">Assists Props</span>
+              <span class="text-primary font-bold">63.2% (10-6)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-primary rounded" style="width: 63.2%"></div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-0.5">
+            <div class="flex justify-between text-label-mono-micro font-label-mono-micro">
+              <span class="text-on-surface">Moneyline Upsets</span>
+              <span class="text-secondary font-bold">60.0% (8-5)</span>
+            </div>
+            <div class="w-full h-1.5 bg-surface-container rounded overflow-hidden">
+              <div class="h-full bg-secondary rounded" style="width: 60.0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-surface-container-lowest p-space-xs rounded flex flex-wrap items-center justify-between gap-space-xs text-outline font-label-mono-micro text-label-mono-micro">
+    <span class="">CLOSING LINE VALUE (CLV) BEAT RATE: <strong class="text-primary font-bold">+74.2% OVERALL</strong></span>
+    <span class="">AGGREGATE SHARPE: <strong class="text-secondary font-bold">2.84</strong></span>
+    <span class="">BENCHMARK: <strong class="text-error font-bold">52.4% BREAK-EVEN MINIMUM</strong></span>
+  </div>
+</div><div class="w-full bg-secondary/10 border-l-4 border-secondary p-space-md rounded flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-start sm:items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5 sm:mt-0">troubleshoot</span>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-mono-sm text-label-mono-sm text-secondary font-bold uppercase tracking-wider">CROSS-SPECIALIST CORRELATION ALERT</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">HIGH CONFIDENCE SYNDICATE CONSENSUS</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-0.5">
+            High overlap detected on Boston vs Charlotte perimeter props across <span class="font-semibold text-secondary">Bobby</span> &amp; <span class="font-semibold text-primary">Basketball AI</span>. Joint expected win probability modeled at <span class="font-label-mono-sm text-label-mono-sm font-bold text-primary">71.2%</span>.
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<button class="px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-sm text-label-mono-sm rounded uppercase font-semibold transition-colors">
+          AUDIT CORRELATION MATRIX
+        </button>
+</div>
+</div>
+<!-- Bottom Section: Real-Time Performance & Bankroll Growth Trend -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Growth Curve Visual Panel (8 Cols) -->
+<div class="lg:col-span-8 bg-surface-container-low rounded p-space-md flex flex-col justify-between shadow-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm border-b border-surface-container-highest">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">stacked_line_chart</span>
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">CUMULATIVE BANKROLL VELOCITY // DAY 1 TO 42</span>
+</div>
+<!-- Legend Toggles -->
+<div class="flex items-center gap-space-md font-label-mono-micro text-label-mono-micro">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-1 bg-secondary rounded-full"></span>
+<span class="text-on-surface-variant uppercase">BOBBY</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-1 bg-primary rounded-full"></span>
+<span class="text-on-surface-variant uppercase">BASKETBALL AI</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-1 bg-outline rounded-full"></span>
+<span class="text-on-surface-variant uppercase">NFL AI</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-1 bg-secondary-fixed-dim rounded-full"></span>
+<span class="text-on-surface-variant uppercase">CFB AI</span>
+</div>
+</div>
+</div>
+<!-- Inline Visual Chart (SVG Vector Bankroll Trajectory) -->
+<div class="py-space-md w-full relative">
+<div class="flex justify-between text-outline font-label-mono-micro text-label-mono-micro mb-1">
+<span class="">$4,000</span>
+<span class="">DAY 20: MID-SPRINT CHECKPOINT</span>
+<span class="">CURRENT (DAY 42)</span>
+</div>
+<svg class="w-full h-44 overflow-visible" preserveAspectRatio="none" viewBox="0 0 700 160">
+<!-- Grid Lines -->
+<line class="text-surface-container-highest/60" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="0" x2="700" y1="10" y2="10"></line>
+<line class="text-surface-container-highest/60" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="0" x2="700" y1="50" y2="50"></line>
+<line class="text-surface-container-highest/60" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="0" x2="700" y1="90" y2="90"></line>
+<line class="text-surface-container-highest/60" stroke="currentColor" stroke-dasharray="2 4" stroke-width="1" x1="0" x2="700" y1="130" y2="130"></line>
+<line class="text-surface-container-highest" stroke="currentColor" stroke-width="1" x1="0" x2="700" y1="155" y2="155"></line>
+<!-- CFB AI Line ($3,420) -->
+<path class="text-secondary" d="M0,140 Q120,128 240,110 T450,60 T700,24" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+<!-- Basketball AI Line ($2,850) -->
+<path class="text-primary" d="M0,140 Q150,135 280,105 T490,75 T700,45" fill="none" stroke="currentColor" stroke-width="2.5"></path>
+<!-- NFL AI Line ($1,980) -->
+<path class="text-outline" d="M0,140 Q160,138 310,122 T510,100 T700,80" fill="none" stroke="currentColor" stroke-width="2"></path>
+<!-- Bobby Line ($1,240) -->
+<path class="text-secondary" d="M0,140 Q130,145 290,138 T500,120 T700,108" fill="none" stroke="currentColor" stroke-dasharray="4 2" stroke-width="2"></path>
+<!-- End Cap Markers -->
+<circle class="fill-secondary" cx="700" cy="24" r="3.5"></circle>
+<circle class="fill-primary" cx="700" cy="45" r="3.5"></circle>
+<circle class="fill-outline" cx="700" cy="80" r="3.5"></circle>
+<circle class="fill-secondary" cx="700" cy="108" r="3.5"></circle>
+</svg>
+<div class="flex justify-between text-outline font-label-mono-micro text-label-mono-micro mt-2">
+<span class="">START: $500.00</span>
+<span class="">DAY 14</span>
+<span class="">DAY 28</span>
+<span class="text-primary font-bold">DAY 42 (TODAY)</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-xs rounded flex flex-wrap items-center justify-between gap-space-xs text-outline font-label-mono-micro text-label-mono-micro">
+<span class="">RUNNER REGRESSION COEFFICIENT: <span class="text-on-surface">R² = 0.941</span></span>
+<span class="">AVERAGE POSITIVE DRIFT: <span class="text-primary">+$182.20 / WK</span></span>
+<span class="">SHARPE EQUIVALENT: <span class="text-secondary">2.84</span></span>
+</div>
+</div>
+<!-- Live Ledger Telemetry & Active Syndicate Audit (4 Cols) -->
+<div class="lg:col-span-4 bg-surface-container-low rounded p-space-md flex flex-col justify-between shadow-sm">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container-highest">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[18px]">history_toggle_off</span>
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">PROVABLE LEDGER HASHES</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold">ZK-LOGGED</span>
+</div>
+<!-- Ledger Entries Stream -->
+<div class="flex flex-col gap-space-xs py-space-sm overflow-hidden">
+<div class="bg-surface-container p-space-xs rounded flex flex-col gap-0.5">
+<div class="flex items-center justify-between font-label-mono-micro text-label-mono-micro">
+<span class="text-secondary font-bold">CFB AI // SIG-8841</span>
+<span class="text-outline">14m ago</span>
+</div>
+<div class="flex justify-between items-center text-label-mono-sm font-label-mono-sm">
+<span class="text-on-surface truncate">Mizzou TT Over 28.5</span>
+<span class="text-primary font-bold">+$100.00</span>
+</div>
+<span class="text-outline font-label-mono-micro text-label-mono-micro truncate">0x9c3d...fa29b6 (EVM Polygon Verified)</span>
+</div>
+<div class="bg-surface-container p-space-xs rounded flex flex-col gap-0.5">
+<div class="flex items-center justify-between font-label-mono-micro text-label-mono-micro">
+<span class="text-primary font-bold">BASKETBALL AI // SIG-8839</span>
+<span class="text-outline">32m ago</span>
+</div>
+<div class="flex justify-between items-center text-label-mono-sm font-label-mono-sm">
+<span class="text-on-surface truncate">Derrick White 3PM Over 2.5</span>
+<span class="text-primary font-bold">+$75.00</span>
+</div>
+<span class="text-outline font-label-mono-micro text-label-mono-micro truncate">0x44b1...e073c1 (EVM Polygon Verified)</span>
+</div>
+<div class="bg-surface-container p-space-xs rounded flex flex-col gap-0.5">
+<div class="flex items-center justify-between font-label-mono-micro text-label-mono-micro">
+<span class="text-secondary font-bold">BOBBY // DESK-SLIP-09</span>
+<span class="text-outline">1h 12m ago</span>
+</div>
+<div class="flex justify-between items-center text-label-mono-sm font-label-mono-sm">
+<span class="text-on-surface truncate">2-Leg Synergy Ticket</span>
+<span class="text-secondary font-bold">$150.00 IN-PLAY</span>
+</div>
+<span class="text-outline font-label-mono-micro text-label-mono-micro truncate">0x78ab...10cd99 (Direct Engine Stamped)</span>
+</div>
+</div>
+<!-- Telemetry Audit Button -->
+<button class="w-full py-space-xs px-space-md bg-surface-container hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-label-mono-micro text-label-mono-micro uppercase tracking-wider rounded flex items-center justify-center gap-space-xs transition-colors">
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+<span class="">EXPLORE PUBLIC ORACLE REPOSITORY</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Verified Ledger Slide-in / Modal Backdrop -->
+<div class="fixed inset-0 z-50 bg-surface-container-lowest/80 backdrop-blur-sm hidden flex items-center justify-center p-gutter" id="ledgerModal">
+<div class="bg-surface-container-low max-w-2xl w-full rounded p-space-lg flex flex-col gap-space-md shadow-2xl relative">
+<div class="flex items-center justify-between border-b border-surface-container-highest pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px]">verified</span>
+<div>
+<h2 class="font-headline-sm text-headline-sm uppercase text-on-surface">CRYPTOGRAPHIC CHALLENGE LEDGER</h2>
+<p class="font-label-mono-micro text-label-mono-micro text-outline">TIME-STAMPED SHA-256 IMMUTABLE MODEL RECORD</p>
+</div>
+</div>
+<button class="w-7 h-7 rounded bg-surface-container flex items-center justify-center text-outline hover:text-on-surface transition-colors" id="closeLedgerModal">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-space-sm font-label-mono-sm text-label-mono-sm">
+<div class="flex justify-between p-space-xs bg-surface-container rounded">
+<span class="text-outline uppercase">CHALLENGE CONTRACT:</span>
+<span class="text-primary font-mono truncate max-w-[280px]">0x99248F25C7b40AcE5912a7aB60</span>
+</div>
+<div class="flex justify-between p-space-xs bg-surface-container rounded">
+<span class="text-outline uppercase">ACTIVE AUDITOR:</span>
+<span class="text-on-surface">CHAINLINK DECENTRALIZED ORACLE NETWORK</span>
+</div>
+<div class="flex justify-between p-space-xs bg-surface-container rounded">
+<span class="text-outline uppercase">CURRENT VERIFICATION BLOCK:</span>
+<span class="text-secondary">#21,094,188 (+0 BLOCKS PENDING)</span>
+</div>
+<div class="flex justify-between p-space-xs bg-surface-container rounded">
+<span class="text-outline uppercase">CONSENSUS INTEGRITY:</span>
+<span class="text-primary font-bold">100.0% COHERENT</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded flex items-center justify-between text-on-surface-variant font-label-mono-micro text-label-mono-micro">
+<span class="">ALL PICKS ARE PRE-COMMITTED BEFORE KICKOFF/TIP-OFF</span>
+<button class="px-space-md py-space-xs bg-primary text-on-primary rounded font-bold uppercase" id="closeLedgerModalBtn">DISMISS</button>
+</div>
+</div>
+</div>
+<!-- Notification Toast Container -->
+<div class="fixed bottom-space-lg right-space-lg z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none" id="toastNotification">
+<div class="bg-surface-container-highest px-space-md py-space-sm rounded shadow-2xl flex items-center gap-space-sm border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary text-[20px]">task_alt</span>
+<div class="flex flex-col">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold uppercase" id="toastTitle">PICK CO-SIGNED</span>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant" id="toastDesc">Ticket appended to execution buffer.</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple micro-interactions for Co-Signing Picks and Modal viewing
+  function cosignPick(modelName, pickLabel, btnElement) {
+    const originalText = btnElement.innerHTML;
+    btnElement.innerHTML = `<span class="material-symbols-outlined text-[16px] text-primary animate-spin">sync</span><span>SYNCING...</span>`;
+    btnElement.disabled = true;
+
+    setTimeout(() => {
+      btnElement.innerHTML = `<span class="material-symbols-outlined text-[16px] text-primary">check</span><span>CO-SIGNED</span>`;
+      btnElement.classList.add('bg-primary-container/20', 'text-primary');
+
+      // Toast feedback
+      const toast = document.getElementById('toastNotification');
+      const title = document.getElementById('toastTitle');
+      const desc = document.getElementById('toastDesc');
+      if (toast && title && desc) {
+        title.innerText = `${modelName} CO-SIGNED`;
+        desc.innerText = `${pickLabel} copied to your active slip.`;
+        toast.classList.remove('translate-y-16', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+
+        setTimeout(() => {
+          toast.classList.remove('translate-y-0', 'opacity-100');
+          toast.classList.add('translate-y-16', 'opacity-0');
+        }, 3200);
+      }
+    }, 600);
+  }
+
+  // Ledger Modal Toggle Logic
+  const modal = document.getElementById('ledgerModal');
+  const openTrigger = document.getElementById('ledgerModalTrigger');
+  const closeIcon = document.getElementById('closeLedgerModal');
+  const closeBtn = document.getElementById('closeLedgerModalBtn');
+
+  if (openTrigger && modal) {
+    openTrigger.addEventListener('click', () => modal.classList.remove('hidden'));
+  }
+  if (closeIcon && modal) {
+    closeIcon.addEventListener('click', () => modal.classList.add('hidden'));
+  }
+  if (closeBtn && modal) {
+    closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+  }
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.add('hidden');
+    });
+  }
+</script></main><footer class="w-full bg-surface-container-lowest py-space-md mt-auto"><div class="w-full px-gutter flex flex-col md:flex-row items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">© 2024 LIVEINTEL TERMINAL SYSTEM</span><span class="font-label-mono-micro text-label-mono-micro text-outline">•</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">INSTITUTIONAL ODDS ENGINE</span></div><div class="flex items-center gap-space-lg"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SOCKET: <span class="text-primary">CONNECTED</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">LATENCY: <span class="text-on-surface">14MS</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SYS HOLD: <span class="text-secondary">2.41%</span></span></div></div></footer>
+
+</body></html>

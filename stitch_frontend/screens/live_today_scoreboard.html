@@ -1,0 +1,613 @@
+<!DOCTYPE html><html class="dark" lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><title>LiveIntel // Sports Intelligence Terminal</title><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-surface":"#e1e2ec","surface-container-highest":"#32353d","surface":"#10131a","surface-container-high":"#272a32","outline":"#86948a","secondary-fixed-dim":"#ffb95f","secondary-container":"#ee9800","inverse-on-surface":"#2d3038","tertiary-fixed":"#ffdad7","error-container":"#93000a","on-secondary":"#472a00","on-tertiary":"#68000a","secondary":"#ffb95f","primary":"#4edea3","surface-container":"#1d1f27","on-primary-container":"#00422b","secondary-fixed":"#ffddb8","surface-container-lowest":"#0b0e15","on-tertiary-container":"#79000e","tertiary-container":"#ff7a73","on-error":"#690005","primary-fixed":"#6ffbbe","surface-tint":"#4edea3","on-secondary-container":"#5b3800","on-primary":"#003824","tertiary-fixed-dim":"#ffb3ad","inverse-primary":"#006c49","surface-variant":"#32353d","on-tertiary-fixed-variant":"#930013","primary-fixed-dim":"#4edea3","tertiary":"#ffb3ad","on-primary-fixed-variant":"#005236","on-error-container":"#ffdad6","error":"#ffb4ab","background":"#10131a","on-secondary-fixed":"#2a1700","inverse-surface":"#e1e2ec","surface-dim":"#10131a","on-tertiary-fixed":"#410004","on-secondary-fixed-variant":"#653e00","surface-bright":"#363941","on-background":"#e1e2ec","primary-container":"#10b981","on-surface-variant":"#bbcabf","on-primary-fixed":"#002113","surface-container-low":"#191b23","outline-variant":"#3c4a42"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-xs":"0.25rem","space-lg":"1rem","gutter":"0.75rem","space-sm":"0.375rem","margin":"1rem","space-md":"0.625rem","space-xl":"1.5rem"},"fontFamily":{"headline-xl-mobile":["Inter"],"label-mono-micro":["JetBrains Mono"],"label-mono-md":["JetBrains Mono"],"headline-sm":["Inter"],"label-mono-sm":["JetBrains Mono"],"headline-xl":["Inter"],"label-mono-lg":["JetBrains Mono"],"table-header":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"]},"fontSize":{"headline-xl-mobile":["22px",{"lineHeight":"28px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-mono-micro":["10px",{"lineHeight":"12px","letterSpacing":"0.04em","fontWeight":"600"}],"label-mono-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-sm":["15px",{"lineHeight":"20px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-mono-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}],"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.025em","fontWeight":"700"}],"label-mono-lg":["14px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"600"}],"table-header":["11px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"26px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="h-14 w-full px-gutter flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-lg shrink-0"><div class="flex items-center gap-space-sm cursor-pointer select-none"><div class="w-7 h-7 rounded bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">insights</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface leading-none">LiveIntel</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-widest">Terminal v2.4</span></div></div><div class="hidden xl:flex items-center px-space-sm py-space-xs bg-surface-container-high rounded gap-space-xs"><span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold tracking-wider">LIVE SLATE • OCT 31</span></div></div><nav class="hidden lg:flex items-center gap-space-xs h-9" data-active-classes="bg-surface-container-highest text-on-surface font-semibold"><a aria-current="page" class="px-space-md py-space-xs rounded uppercase transition-colors bg-surface-container-highest text-on-surface font-semibold cursor-pointer" data-path="live" href="#" title="Live Slate Execution Matrix">LIVE</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" data-path="players" href="#" title="Player Props &amp; Realtime Insights">PLAYERS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" data-path="heats-on" href="#" title="Heat Index &amp; Sudden Line Momentum">HEAT'S ON</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" data-path="math-lab" href="#" title="Quantitative Betting Models &amp; Calculators">MATH LAB</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" data-path="watch-5" href="#" title="High-Priority Watchlist (Top 5)">WATCH 5</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" data-path="picks" href="#" title="Verified Algorithmic Picks Slate">PICKS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" data-path="tickets" href="#" title="Active Bet Tickets &amp; Performance Tracking">TICKETS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors cursor-pointer" data-path="intelligence" href="#" title="Deep Market Intelligence &amp; Public/Sharp Flow">INTELLIGENCE</a></nav><div class="flex items-center gap-space-md shrink-0"><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-low rounded"><span class="material-symbols-outlined text-[14px] text-primary animate-spin">sync</span><span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">FEED LIVE</span><span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">18ms</span></div><div class="flex items-center px-space-md py-space-xs bg-surface-container rounded gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">ROLL</span><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">$100.00</span></div><div class="w-px h-6 bg-surface-container-highest"></div><div class="flex flex-col"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">P/L</span><span class="font-label-mono-sm text-label-mono-sm text-primary font-semibold">+$0.00</span></div></div><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest rounded text-on-surface hover:text-on-surface transition-colors cursor-pointer" title="View Active Bet Slip &amp; Staged Bets"><span class="material-symbols-outlined text-[16px] text-secondary">receipt_long</span><span class="font-label-mono-sm text-label-mono-sm hidden md:inline uppercase">SLIP (0)</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-surface min-h-[calc(100vh-3.5rem)] flex flex-col"><div class="flex flex-col w-full">
+<div class="w-full bg-surface-container-lowest px-gutter py-space-md shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-mono-micro text-label-mono-micro uppercase tracking-widest text-primary font-bold">REALTIME EXECUTION MATRIX</span>
+<span class="text-surface-container-highest">•</span>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">GLOBAL SLATE IN-PLAY</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight mt-space-xs">Live &amp; today</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Follow today's games from tip-off to the final whistle with institutional line variance</p>
+</div>
+<div class="flex flex-wrap items-center gap-space-md shrink-0">
+<div class="flex items-center bg-surface-container p-space-xs rounded gap-space-xs">
+<button class="sport-btn px-space-md py-space-xs rounded bg-surface-container-highest text-on-surface font-label-mono-sm text-label-mono-sm font-semibold transition-all flex items-center gap-space-xs shadow-sm" data-sport-filter="all">
+<span class="">ALL</span>
+<span class="px-1 py-0.5 bg-surface-container-lowest text-primary rounded text-label-mono-micro font-bold">15</span>
+</button>
+<button class="sport-btn px-space-md py-space-xs rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high font-label-mono-sm text-label-mono-sm font-semibold transition-all flex items-center gap-space-xs" data-sport-filter="cfb">
+<span class="">CFB</span>
+<span class="px-1 py-0.5 bg-surface-container-lowest text-outline rounded text-label-mono-micro">6</span>
+</button>
+<button class="sport-btn px-space-md py-space-xs rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high font-label-mono-sm text-label-mono-sm font-semibold transition-all flex items-center gap-space-xs" data-sport-filter="nba">
+<span class="">NBA</span>
+<span class="px-1 py-0.5 bg-surface-container-lowest text-outline rounded text-label-mono-micro">5</span>
+</button>
+<button class="sport-btn px-space-md py-space-xs rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high font-label-mono-sm text-label-mono-sm font-semibold transition-all flex items-center gap-space-xs" data-sport-filter="nhl">
+<span class="">NHL</span>
+<span class="px-1 py-0.5 bg-surface-container-lowest text-outline rounded text-label-mono-micro">4</span>
+</button>
+</div>
+<div class="flex items-center gap-space-sm bg-surface-container-high px-space-md py-space-xs rounded shadow-inner">
+<span class="material-symbols-outlined text-[15px] text-primary animate-spin">refresh</span>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline leading-tight uppercase">AUTO-POLL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold leading-tight tabular-nums" id="syncTimer">01s</span>
+</div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse ml-1"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between gap-space-lg mt-space-md pt-space-xs overflow-x-auto scrollbar-none">
+<div class="flex items-center gap-space-lg text-outline font-label-mono-micro text-label-mono-micro shrink-0 uppercase tracking-wider">
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-primary"></span> +EV ARB DISCOVERY</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-secondary"></span> STEAM &gt; 1.5 PTS</span>
+<span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-tertiary-container"></span> HIGH LEVERAGE Q4</span>
+</div>
+<div class="flex items-center gap-space-md shrink-0 font-label-mono-micro text-label-mono-micro text-on-surface-variant">
+<span class="">BOOKMAKERS: PINNACLE / CRIS / CIRCA</span>
+<span class="text-surface-container-highest">|</span>
+<span class="">LATENCY: <strong class="text-primary font-bold">11ms</strong></span>
+</div>
+</div>
+</div>
+<div class="w-full px-gutter py-space-lg grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-space-md">
+<div class="matchup-card flex flex-col bg-surface-container rounded p-space-md shadow-sm hover:shadow-md transition-shadow" data-sport="cfb">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-on-surface font-bold uppercase">CFB</span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">SEC W10</span>
+</div>
+<div class="flex items-center gap-space-xs bg-primary/10 px-space-xs py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase tracking-wider">3RD QTR 4:12</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded p-space-sm mb-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-secondary font-bold">#21</div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Missouri Tigers</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-primary font-bold tabular-nums">24</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-outline font-bold">AR</div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Arkansas Razorbacks</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold tabular-nums">21</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mb-space-sm font-label-mono-micro text-label-mono-micro">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE SPREAD</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">MIZ -2.5 (-115)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE TOTAL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">O 54.5 (-110)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">POSSESSION</span>
+<span class="font-label-mono-sm text-label-mono-sm text-secondary font-bold">ARK 2nd &amp; 4</span>
+</div>
+</div>
+<div class="mt-auto pt-space-xs flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-1 font-label-mono-micro text-label-mono-micro text-outline">
+<span class="material-symbols-outlined text-[13px] text-primary">trending_up</span>
+<span class="">SHARP: 68% VOL</span>
+</div>
+<button class="relative group overflow-hidden px-space-md py-1 bg-surface-container-highest hover:bg-surface-bright rounded text-on-surface font-label-mono-sm text-label-mono-sm font-semibold flex items-center gap-space-xs transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="">GAMECAST</span>
+<span class="material-symbols-outlined text-[14px] text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="matchup-card flex flex-col bg-surface-container rounded p-space-md shadow-sm hover:shadow-md transition-shadow" data-sport="cfb">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-on-surface font-bold uppercase">CFB</span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">SEC W10</span>
+</div>
+<div class="flex items-center gap-space-xs bg-primary/10 px-space-xs py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase tracking-wider">2ND QTR 1:45</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded p-space-sm mb-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-outline font-bold">MS</div>
+<span class="font-headline-sm text-headline-sm text-on-surface-variant">Mississippi State</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold tabular-nums">10</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-secondary font-bold">#5</div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Texas Longhorns</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-primary font-bold tabular-nums">28</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mb-space-sm font-label-mono-micro text-label-mono-micro">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE SPREAD</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">TEX -24.5 (-108)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE TOTAL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-secondary font-bold">U 58.5 (-115)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">REDZONE</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">TEX 1st &amp; GL</span>
+</div>
+</div>
+<div class="mt-auto pt-space-xs flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-1 font-label-mono-micro text-label-mono-micro text-outline">
+<span class="material-symbols-outlined text-[13px] text-secondary">bolt</span>
+<span class="">STEAM ON UNDER</span>
+</div>
+<button class="relative group overflow-hidden px-space-md py-1 bg-surface-container-highest hover:bg-surface-bright rounded text-on-surface font-label-mono-sm text-label-mono-sm font-semibold flex items-center gap-space-xs transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="">GAMECAST</span>
+<span class="material-symbols-outlined text-[14px] text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="matchup-card flex flex-col bg-surface-container rounded p-space-md shadow-sm hover:shadow-md transition-shadow" data-sport="cfb">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-on-surface font-bold uppercase">CFB</span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">ACC W10</span>
+</div>
+<div class="flex items-center gap-space-xs bg-tertiary-container/15 px-space-xs py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container animate-pulse"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-tertiary-fixed-dim font-bold uppercase tracking-wider">4TH QTR 8:30</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded p-space-sm mb-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-secondary font-bold">#14</div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Clemson Tigers</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-primary font-bold tabular-nums">21</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-outline font-bold">FS</div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Florida State</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold tabular-nums">20</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mb-space-sm font-label-mono-micro text-label-mono-micro">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE SPREAD</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">CLEM -1.5 (-102)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE ML</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">FSU +120</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">WIN PROB</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">CLEM 57.2%</span>
+</div>
+</div>
+<div class="mt-auto pt-space-xs flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-1 font-label-mono-micro text-label-mono-micro text-tertiary">
+<span class="material-symbols-outlined text-[13px]">warning</span>
+<span class="">HIGH LEVERAGE DRIVE</span>
+</div>
+<button class="relative group overflow-hidden px-space-md py-1 bg-surface-container-highest hover:bg-surface-bright rounded text-on-surface font-label-mono-sm text-label-mono-sm font-semibold flex items-center gap-space-xs transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="">GAMECAST</span>
+<span class="material-symbols-outlined text-[14px] text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="matchup-card flex flex-col bg-surface-container rounded p-space-md shadow-sm hover:shadow-md transition-shadow" data-sport="cfb">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-on-surface font-bold uppercase">CFB</span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">BIG 12</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-high px-space-xs py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline font-bold uppercase tracking-wider">FINAL</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded p-space-sm mb-space-sm opacity-85">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-outline font-bold">OK</div>
+<span class="font-headline-sm text-headline-sm text-on-surface-variant">Oklahoma State</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface-variant font-bold tabular-nums">17</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-secondary font-bold">#18</div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Iowa State Cyclones</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold tabular-nums">24</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mb-space-sm font-label-mono-micro text-label-mono-micro opacity-85">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">CLOSING SPREAD</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface">ISU -6.5 (COVER)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">CLOSING TOTAL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface">49.5 (UNDER)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">SETTLED</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">COMPLETE</span>
+</div>
+</div>
+<div class="mt-auto pt-space-xs flex items-center justify-between gap-space-xs">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">BOX SCORE ARCHIVED</span>
+<button class="px-space-md py-1 bg-surface-container-high hover:bg-surface-container-highest rounded text-on-surface-variant hover:text-on-surface font-label-mono-sm text-label-mono-sm font-semibold flex items-center gap-space-xs transition-colors">
+<span class="">RECAP &amp; LOG</span>
+</button>
+</div>
+</div>
+<div class="matchup-card flex flex-col bg-surface-container rounded p-space-md shadow-sm hover:shadow-md transition-shadow" data-sport="nba">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase">NBA</span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">EAST / WEST</span>
+</div>
+<div class="flex items-center gap-space-xs bg-primary/10 px-space-xs py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase tracking-wider">3RD QTR 2:10</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded p-space-sm mb-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-secondary">LAL</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">LA Lakers</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-micro text-label-mono-micro text-outline tabular-nums">26|29|24</span>
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold tabular-nums">79</span>
+</div>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-primary">BOS</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Boston Celtics</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-micro text-label-mono-micro text-outline tabular-nums">31|33|21</span>
+<span class="font-label-mono-lg text-label-mono-lg text-primary font-bold tabular-nums">85</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mb-space-sm font-label-mono-micro text-label-mono-micro">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE SPREAD</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">BOS -5.5 (-112)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE TOTAL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">O 223.5 (-110)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">PACE FACTOR</span>
+<span class="font-label-mono-sm text-label-mono-sm text-secondary font-bold">103.4 (FAST)</span>
+</div>
+</div>
+<div class="mt-auto pt-space-xs flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-1 font-label-mono-micro text-label-mono-micro text-primary">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+<span class="">+3.8% EV EDGE ON BOS</span>
+</div>
+<button class="relative group overflow-hidden px-space-md py-1 bg-surface-container-highest hover:bg-surface-bright rounded text-on-surface font-label-mono-sm text-label-mono-sm font-semibold flex items-center gap-space-xs transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="">GAMECAST</span>
+<span class="material-symbols-outlined text-[14px] text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="matchup-card flex flex-col bg-surface-container rounded p-space-md shadow-sm hover:shadow-md transition-shadow" data-sport="nba">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase">NBA</span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">PACIFIC</span>
+</div>
+<div class="flex items-center gap-space-xs bg-primary/10 px-space-xs py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase tracking-wider">1ST QTR 6:40</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded p-space-sm mb-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-secondary">GSW</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Golden State</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-micro text-label-mono-micro text-outline tabular-nums">18</span>
+<span class="font-label-mono-lg text-label-mono-lg text-primary font-bold tabular-nums">18</span>
+</div>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-outline">PHX</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Phoenix Suns</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-micro text-label-mono-micro text-outline tabular-nums">14</span>
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold tabular-nums">14</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mb-space-sm font-label-mono-micro text-label-mono-micro">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE SPREAD</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">GSW -2.5 (-108)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE TOTAL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">O 229.5 (-115)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">SHOT QUALITY</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">61.4% eFG%</span>
+</div>
+</div>
+<div class="mt-auto pt-space-xs flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-1 font-label-mono-micro text-label-mono-micro text-secondary">
+<span class="material-symbols-outlined text-[13px]">trending_up</span>
+<span class="">CURRY 11 PTS (4/4 FG)</span>
+</div>
+<button class="relative group overflow-hidden px-space-md py-1 bg-surface-container-highest hover:bg-surface-bright rounded text-on-surface font-label-mono-sm text-label-mono-sm font-semibold flex items-center gap-space-xs transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="">GAMECAST</span>
+<span class="material-symbols-outlined text-[14px] text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="matchup-card flex flex-col bg-surface-container rounded p-space-md shadow-sm hover:shadow-md transition-shadow" data-sport="cfb">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-on-surface font-bold uppercase">CFB</span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">ACC COASTAL</span>
+</div>
+<div class="flex items-center gap-space-xs bg-primary/10 px-space-xs py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase tracking-wider">HALFTIME</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded p-space-sm mb-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-outline font-bold">GT</div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Georgia Tech</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold tabular-nums">14</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-secondary font-bold">#20</div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Pittsburgh Panthers</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-primary font-bold tabular-nums">17</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mb-space-sm font-label-mono-micro text-label-mono-micro">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">2H SPREAD</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">PITT -3.5 (-105)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">2H TOTAL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">O 24.5 (-115)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">TURNOVERS</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-bold">GT 2 - PITT 0</span>
+</div>
+</div>
+<div class="mt-auto pt-space-xs flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-1 font-label-mono-micro text-label-mono-micro text-outline">
+<span class="material-symbols-outlined text-[13px] text-primary">schedule</span>
+<span class="">RESTART IN 04:30</span>
+</div>
+<button class="relative group overflow-hidden px-space-md py-1 bg-surface-container-highest hover:bg-surface-bright rounded text-on-surface font-label-mono-sm text-label-mono-sm font-semibold flex items-center gap-space-xs transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="">GAMECAST</span>
+<span class="material-symbols-outlined text-[14px] text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="matchup-card flex flex-col bg-surface-container rounded p-space-md shadow-sm hover:shadow-md transition-shadow" data-sport="cfb">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-on-surface font-bold uppercase">CFB</span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">ACC SHOWDOWN</span>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-high px-space-xs py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold uppercase tracking-wider">UPCOMING 8:00 PM</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded p-space-sm mb-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-secondary font-bold">#6</div>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">Miami Hurricanes</span>
+</div>
+<span class="font-label-mono-sm text-label-mono-sm text-outline font-semibold">8-0</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<div class="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center font-label-mono-micro text-outline font-bold">NC</div>
+<span class="font-headline-sm text-headline-sm text-on-surface">North Carolina Tar Heels</span>
+</div>
+<span class="font-label-mono-sm text-label-mono-sm text-outline font-semibold">4-4</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mb-space-sm font-label-mono-micro text-label-mono-micro">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">CONSENSUS</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">MIA -16.5</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">TOTAL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">O/U 62.5</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">WEATHER</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface">64°F CLR</span>
+</div>
+</div>
+<div class="mt-auto pt-space-xs flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-1 font-label-mono-micro text-label-mono-micro text-outline">
+<span class="material-symbols-outlined text-[13px] text-secondary">show_chart</span>
+<span class="">LINE MOVED -14.5 → -16.5</span>
+</div>
+<button class="px-space-md py-1 bg-surface-container-highest hover:bg-surface-bright rounded text-on-surface font-label-mono-sm text-label-mono-sm font-semibold flex items-center gap-space-xs transition-colors">
+<span class="">PREVIEW</span>
+<span class="material-symbols-outlined text-[14px] text-outline">query_stats</span>
+</button>
+</div>
+</div>
+<div class="matchup-card flex flex-col bg-surface-container rounded p-space-md shadow-sm hover:shadow-md transition-shadow" data-sport="nhl">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-on-surface font-bold uppercase">NHL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-outline">EASTERN CONF</span>
+</div>
+<div class="flex items-center gap-space-xs bg-primary/10 px-space-xs py-0.5 rounded">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase tracking-wider">2ND PER 11:02</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest rounded p-space-sm mb-space-sm">
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-outline">TOR</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Toronto Maple Leafs</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-primary font-bold tabular-nums">3</span>
+</div>
+<div class="flex items-center justify-between py-1">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-mono-sm text-label-mono-sm font-bold text-outline">NYR</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">NY Rangers</span>
+</div>
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold tabular-nums">1</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mb-space-sm font-label-mono-micro text-label-mono-micro">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">PUCK LINE</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">TOR -1.5 (+140)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">LIVE TOTAL</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">O 6.5 (-105)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col text-center">
+<span class="text-outline uppercase">SOG</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface">TOR 22 - NYR 14</span>
+</div>
+</div>
+<div class="mt-auto pt-space-xs flex items-center justify-between gap-space-xs">
+<div class="flex items-center gap-1 font-label-mono-micro text-label-mono-micro text-primary">
+<span class="material-symbols-outlined text-[13px]">power</span>
+<span class="">POWER PLAY: TOR (1:12)</span>
+</div>
+<button class="relative group overflow-hidden px-space-md py-1 bg-surface-container-highest hover:bg-surface-bright rounded text-on-surface font-label-mono-sm text-label-mono-sm font-semibold flex items-center gap-space-xs transition-colors">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="">GAMECAST</span>
+<span class="material-symbols-outlined text-[14px] text-outline group-hover:text-primary transition-colors">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="w-full px-gutter pb-space-lg">
+<div class="bg-surface-container rounded p-space-md flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-md shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">QUANT LIVE EDGE RADAR</span>
+<span class="px-space-xs py-0.5 rounded bg-primary/20 text-primary font-label-mono-micro text-label-mono-micro font-bold">ACTIVE SCAN</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Real-time discrepancy detected across 3 market books: MIZ @ ARK live moneyline arbitrage at +2.14% margin.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full lg:w-auto">
+<button class="flex-1 lg:flex-initial px-space-md py-space-xs bg-surface-container-highest hover:bg-surface-bright text-on-surface rounded font-label-mono-sm text-label-mono-sm transition-colors uppercase font-semibold">
+          DISMISS ALERT
+        </button>
+<button class="flex-1 lg:flex-initial px-space-md py-space-xs bg-primary text-on-primary rounded font-label-mono-sm text-label-mono-sm transition-colors uppercase font-bold flex items-center justify-center gap-space-xs shadow-sm hover:brightness-110">
+<span class="material-symbols-outlined text-[16px]">terminal</span>
+<span class="">EXECUTE EDGE ROUTE</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+    (function () {
+      const syncElem = document.getElementById('syncTimer');
+      let countdown = 3;
+
+      setInterval(() => {
+        countdown--;
+        if (countdown < 0) {
+          countdown = 3;
+          if (syncElem) {
+            syncElem.classList.add('text-secondary');
+            setTimeout(() => syncElem.classList.remove('text-secondary'), 350);
+          }
+        }
+        if (syncElem) {
+          syncElem.textContent = '0' + countdown + 's';
+        }
+      }, 1000);
+
+      const sportButtons = document.querySelectorAll('.sport-btn');
+      const cards = document.querySelectorAll('.matchup-card');
+
+      sportButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-sport-filter');
+          sportButtons.forEach(b => {
+            b.classList.remove('bg-surface-container-highest', 'text-on-surface');
+            b.classList.add('text-on-surface-variant');
+          });
+          btn.classList.add('bg-surface-container-highest', 'text-on-surface');
+          btn.classList.remove('text-on-surface-variant');
+
+          cards.forEach(card => {
+            const cardSport = card.getAttribute('data-sport');
+            if (filter === 'all' || cardSport === filter) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest py-space-md mt-auto"><div class="w-full px-gutter flex flex-col md:flex-row items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">© 2024 LIVEINTEL TERMINAL SYSTEM</span><span class="font-label-mono-micro text-label-mono-micro text-outline">•</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">INSTITUTIONAL ODDS ENGINE</span></div><div class="flex items-center gap-space-lg"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SOCKET: <span class="text-primary">CONNECTED</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">LATENCY: <span class="text-on-surface">14MS</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SYS HOLD: <span class="text-secondary">2.41%</span></span></div></div></footer>
+
+</body></html>

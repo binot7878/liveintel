@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>LiveIntel // Sports Intelligence Terminal</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-surface":"#e1e2ec","surface-container-highest":"#32353d","surface":"#10131a","surface-container-high":"#272a32","outline":"#86948a","secondary-fixed-dim":"#ffb95f","secondary-container":"#ee9800","inverse-on-surface":"#2d3038","tertiary-fixed":"#ffdad7","error-container":"#93000a","on-secondary":"#472a00","on-tertiary":"#68000a","secondary":"#ffb95f","primary":"#4edea3","surface-container":"#1d1f27","on-primary-container":"#00422b","secondary-fixed":"#ffddb8","surface-container-lowest":"#0b0e15","on-tertiary-container":"#79000e","tertiary-container":"#ff7a73","on-error":"#690005","primary-fixed":"#6ffbbe","surface-tint":"#4edea3","on-secondary-container":"#5b3800","on-primary":"#003824","tertiary-fixed-dim":"#ffb3ad","inverse-primary":"#006c49","surface-variant":"#32353d","on-tertiary-fixed-variant":"#930013","primary-fixed-dim":"#4edea3","tertiary":"#ffb3ad","on-primary-fixed-variant":"#005236","on-error-container":"#ffdad6","error":"#ffb4ab","background":"#10131a","on-secondary-fixed":"#2a1700","inverse-surface":"#e1e2ec","surface-dim":"#10131a","on-tertiary-fixed":"#410004","on-secondary-fixed-variant":"#653e00","surface-bright":"#363941","on-background":"#e1e2ec","primary-container":"#10b981","on-surface-variant":"#bbcabf","on-primary-fixed":"#002113","surface-container-low":"#191b23","outline-variant":"#3c4a42"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-xs":"0.25rem","space-lg":"1rem","gutter":"0.75rem","space-sm":"0.375rem","margin":"1rem","space-md":"0.625rem","space-xl":"1.5rem"},"fontFamily":{"headline-xl-mobile":["Inter"],"label-mono-micro":["JetBrains Mono"],"label-mono-md":["JetBrains Mono"],"headline-sm":["Inter"],"label-mono-sm":["JetBrains Mono"],"headline-xl":["Inter"],"label-mono-lg":["JetBrains Mono"],"table-header":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"]},"fontSize":{"headline-xl-mobile":["22px",{"lineHeight":"28px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-mono-micro":["10px",{"lineHeight":"12px","letterSpacing":"0.04em","fontWeight":"600"}],"label-mono-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-sm":["15px",{"lineHeight":"20px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-mono-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}],"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.025em","fontWeight":"700"}],"label-mono-lg":["14px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"600"}],"table-header":["11px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"26px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="h-14 w-full px-gutter flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-lg shrink-0"><div class="flex items-center gap-space-sm cursor-pointer select-none"><div class="w-7 h-7 rounded bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">insights</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface leading-none">LiveIntel</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-widest">Terminal v2.4</span></div></div><div class="hidden xl:flex items-center px-space-sm py-space-xs bg-surface-container-high rounded gap-space-xs"><span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold tracking-wider">LIVE SLATE • OCT 31</span></div></div><nav class="hidden lg:flex items-center gap-space-xs h-9" data-active-classes="bg-surface-container-highest text-on-surface font-semibold"><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="live" href="#">LIVE</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="players" href="#">PLAYERS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="heats-on" href="#">HEAT'S ON</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="math-lab" href="#">MATH LAB</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="watch-5" href="#">WATCH 5</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="picks" href="#">PICKS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="tickets" href="#">TICKETS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="intelligence" href="#">INTELLIGENCE</a></nav><div class="flex items-center gap-space-md shrink-0"><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-low rounded"><span class="material-symbols-outlined text-[14px] text-primary animate-spin">sync</span><span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">FEED LIVE</span><span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">18ms</span></div><div class="flex items-center px-space-md py-space-xs bg-surface-container rounded gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">ROLL</span><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">$100.00</span></div><div class="w-px h-6 bg-surface-container-highest"></div><div class="flex flex-col"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">P/L</span><span class="font-label-mono-sm text-label-mono-sm text-primary font-semibold">+$0.00</span></div></div><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest rounded text-on-surface hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[16px] text-secondary">receipt_long</span><span class="font-label-mono-sm text-label-mono-sm hidden md:inline uppercase">SLIP (0)</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-surface min-h-[calc(100vh-3.5rem)] flex flex-col"><div class="flex flex-col w-full">
+<!-- Quick Banner Notification / Terminal Status Ribbon -->
+<div class="w-full bg-surface-container-lowest px-gutter py-space-xs flex flex-wrap items-center justify-between gap-space-sm text-outline">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold tracking-wider">RADAR BUFFER SYNCHRONIZED</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">|</span>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">CYCLE: 500MS REFRESH</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">|</span>
+<span class="font-label-mono-micro text-label-mono-micro text-secondary uppercase font-semibold">2 STEAM EVENTS DETECTED</span>
+</div>
+<div class="flex items-center gap-space-lg">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">PINNACLE FEED: <span class="text-primary font-bold">12ms</span></span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">CIRCA FEED: <span class="text-primary font-bold">16ms</span></span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">ENGINE LOAD: <span class="text-on-surface font-bold">14.2%</span></span>
+</div>
+</div>
+<!-- Header + Global Telemetry Ribbon -->
+<div class="w-full px-gutter pt-space-md pb-space-lg flex flex-col gap-space-md">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm flex-wrap">
+<div class="px-space-xs py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro uppercase tracking-wider font-bold">
+            RESTRICTED REGISTER
+          </div>
+<span class="font-headline-lg text-headline-lg uppercase text-on-surface tracking-tight">WATCH 5 // HIGH-CONVICTION RADAR</span>
+<div class="flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold">SLOTS: 5 / 5 ACTIVE</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-3xl">
+          Dedicated owner execution queue. Real-time telemetry, line drift, and delta tracking for up to 5 prioritized high-stakes targets. Instant slip routing active.
+        </p>
+</div>
+<!-- Quick Action Cluster -->
+<div class="flex items-center gap-space-sm flex-wrap shrink-0">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface transition-colors font-label-mono-sm text-label-mono-sm uppercase">
+<span class="material-symbols-outlined text-[15px] text-outline">swap_vert</span>
+          REORDER SLOTS
+        </button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-secondary transition-colors font-label-mono-sm text-label-mono-sm uppercase">
+<span class="material-symbols-outlined text-[15px]">notification_add</span>
+          ADD CUSTOM ALERT
+        </button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container hover:bg-error/20 hover:text-error text-outline transition-colors font-label-mono-sm text-label-mono-sm uppercase" id="clearAllBtn">
+<span class="material-symbols-outlined text-[15px]">clear_all</span>
+          FLUSH RADAR
+        </button>
+</div>
+</div>
+<!-- Metrics Bar / Terminal Strip -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-sm w-full">
+<div class="bg-surface-container p-space-md rounded flex flex-col gap-1 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-wider">MONITORED EXPOSURE</span>
+<span class="material-symbols-outlined text-[14px] text-primary">account_balance_wallet</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold">$275.00</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary">3 TICKETS</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">Weighted liability across slate</span>
+</div>
+<div class="bg-surface-container p-space-md rounded flex flex-col gap-1 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-wider">LIVE SLATE TRIGGERS</span>
+<span class="material-symbols-outlined text-[14px] text-secondary">bolt</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-secondary font-bold">3 IN-PLAY</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">2 PRE-LOCK</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant">Next event starts 20:00 EST</span>
+</div>
+<div class="bg-surface-container p-space-md rounded flex flex-col gap-1 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-wider">TOTAL TARGET EDGE</span>
+<span class="material-symbols-outlined text-[14px] text-primary">trending_up</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-primary font-bold">+5.4%</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary">AVG EV</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">Quant model vs sharp consensus</span>
+</div>
+<div class="bg-surface-container p-space-md rounded flex flex-col gap-1 shadow-sm">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-wider">RAPID STEAM ALERTS</span>
+<span class="material-symbols-outlined text-[14px] text-secondary animate-pulse">local_fire_department</span>
+</div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-secondary font-bold">2 ACTIVE</span>
+<span class="font-label-mono-micro text-label-mono-micro text-secondary">&lt;5M DELTA</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">Heavy offshore steam in C.J. Stroud</span>
+</div>
+</div>
+</div>
+<!-- Main 5 Watchlist Cards (Dense Modular Viewports) -->
+<div class="w-full px-gutter flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-table-header text-table-header uppercase text-outline tracking-wider">PRIORITIZED ENTITY MATRICES [01 - 05]</span>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">GREEN = IN-MONEY REACH</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">AMBER = CRITICAL DRIFT</span>
+</div>
+</div>
+</div>
+<!-- Responsive Card Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-5 md:grid-cols-2 gap-space-md">
+<!-- SLOT 01: DERRICK WHITE -->
+<div class="bg-surface-container rounded flex flex-col justify-between overflow-hidden shadow-md group hover:bg-surface-container-high transition-colors">
+<!-- Top Status Bar -->
+<div class="p-space-md flex flex-col gap-space-sm bg-surface-container-low">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface font-label-mono-micro text-label-mono-micro text-primary font-bold">SLOT 01</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline font-bold">NBA</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase">IN-PLAY // 3Q 06:12</span>
+</div>
+</div>
+<div class="flex items-start justify-between gap-space-xs">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold uppercase tracking-tight">D. WHITE</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">BOS • PG/SG</span>
+</div>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">BOS 85 @ CHA 79</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-primary/20 text-primary font-label-mono-micro text-label-mono-micro font-bold uppercase">+6.2% EDGE</span>
+</div>
+</div>
+<!-- Prop Progress & Analytics -->
+<div class="p-space-md flex flex-col gap-space-md flex-1">
+<!-- Main Prop Line Box -->
+<div class="p-space-sm bg-surface-container-lowest rounded flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-semibold">3-POINTERS MADE</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">LINE: 2.5 @ +115</span>
+</div>
+<div class="flex items-baseline justify-between mt-1">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-primary font-bold leading-none">2</span>
+<span class="font-label-mono-md text-label-mono-md text-outline">/ 3 MADE</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold">1 AWAY FROM HIT</span>
+</div>
+<!-- Visual Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded overflow-hidden mt-1">
+<div class="bg-primary h-full rounded transition-all duration-500" style="width: 66.6%;"></div>
+</div>
+</div>
+<!-- Micro Metas -->
+<div class="grid grid-cols-2 gap-space-xs text-left">
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">ROTATION</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">24 MINS • 5 3PA</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">USAGE DELTA</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-semibold">+3.8% BUMP</span>
+</div>
+</div>
+<!-- Line Drift / Steam Signal -->
+<div class="flex items-center justify-between p-space-xs rounded bg-secondary/10 text-secondary">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">trending_up</span>
+<span class="font-label-mono-micro text-label-mono-micro font-bold uppercase">STEAM DRIFT: +105 → +115</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro font-bold">+10c</span>
+</div>
+<!-- Mini Sparkline Simulation -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-outline font-label-mono-micro text-label-mono-micro uppercase">
+<span>HIT PROBABILITY</span>
+<span class="text-primary font-bold">78.4% QUANT WIN</span>
+</div>
+<div class="w-full h-8 bg-surface-container-lowest rounded flex items-end p-1 gap-1">
+<div class="w-1/6 bg-primary/40 h-2 rounded"></div>
+<div class="w-1/6 bg-primary/50 h-3 rounded"></div>
+<div class="w-1/6 bg-primary/60 h-4 rounded"></div>
+<div class="w-1/6 bg-primary/70 h-5 rounded"></div>
+<div class="w-1/6 bg-primary/90 h-6 rounded"></div>
+<div class="w-1/6 bg-primary h-7 rounded"></div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="p-space-sm bg-surface-container-low flex flex-col gap-space-xs">
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="py-space-xs px-space-xs rounded bg-primary hover:bg-primary-container text-on-primary font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors text-center">
+              OPEN PROPS
+            </button>
+<button class="py-space-xs px-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-secondary font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors text-center">
+              HEDGE SLIP
+            </button>
+</div>
+<button class="text-outline hover:text-error font-label-mono-micro text-label-mono-micro uppercase tracking-wider py-0.5 text-center transition-colors">
+            DROP TARGET
+          </button>
+</div>
+</div>
+<!-- SLOT 02: MISSOURI TIGERS -->
+<div class="bg-surface-container rounded flex flex-col justify-between overflow-hidden shadow-md group hover:bg-surface-container-high transition-colors">
+<!-- Top Status Bar -->
+<div class="p-space-md flex flex-col gap-space-sm bg-surface-container-low">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface font-label-mono-micro text-label-mono-micro text-primary font-bold">SLOT 02</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline font-bold">CFB</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase">IN-PLAY // 3Q 04:18</span>
+</div>
+</div>
+<div class="flex items-start justify-between gap-space-xs">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold uppercase tracking-tight">#21 MISSOURI</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">NCAA • SEC</span>
+</div>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">MIZZ 24 VS ARK 21</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-primary/20 text-primary font-label-mono-micro text-label-mono-micro font-bold uppercase">+4.8% FLOW</span>
+</div>
+</div>
+<!-- Prop Progress & Analytics -->
+<div class="p-space-md flex flex-col gap-space-md flex-1">
+<!-- Main Target Box -->
+<div class="p-space-sm bg-surface-container-lowest rounded flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-semibold">TEAM TOTAL OVER</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">LINE: 28.5 @ -110</span>
+</div>
+<div class="flex items-baseline justify-between mt-1">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-primary font-bold leading-none">24</span>
+<span class="font-label-mono-md text-label-mono-md text-outline">/ 29 PTS</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">4.5 PTS REQ (19:42 REM)</span>
+</div>
+<!-- Visual Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded overflow-hidden mt-1">
+<div class="bg-primary h-full rounded transition-all duration-500" style="width: 82.7%;"></div>
+</div>
+</div>
+<!-- Micro Metas -->
+<div class="grid grid-cols-2 gap-space-xs text-left">
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">2H PACE DELTA</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-semibold">+18% FAST DELTA</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">REDZONE CONV</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">3 / 3 (100%)</span>
+</div>
+</div>
+<!-- Math Lab Telemetry Signal -->
+<div class="flex items-center justify-between p-space-xs rounded bg-surface-container-lowest text-on-surface-variant">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">functions</span>
+<span class="font-label-mono-micro text-label-mono-micro uppercase">MATH LAB PACE: 34.2 EXP</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+5.7 PTS</span>
+</div>
+<!-- Mini Sparkline Simulation -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-outline font-label-mono-micro text-label-mono-micro uppercase">
+<span>DRIVE SUCCESS RATE</span>
+<span class="text-primary font-bold">68.2% 3Q AVG</span>
+</div>
+<div class="w-full h-8 bg-surface-container-lowest rounded flex items-end p-1 gap-1">
+<div class="w-1/6 bg-primary/30 h-2 rounded"></div>
+<div class="w-1/6 bg-primary/40 h-4 rounded"></div>
+<div class="w-1/6 bg-primary/70 h-6 rounded"></div>
+<div class="w-1/6 bg-primary/50 h-3 rounded"></div>
+<div class="w-1/6 bg-primary/80 h-7 rounded"></div>
+<div class="w-1/6 bg-primary h-6 rounded"></div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="p-space-sm bg-surface-container-low flex flex-col gap-space-xs">
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="py-space-xs px-space-xs rounded bg-primary hover:bg-primary-container text-on-primary font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors text-center">
+              ADD TICKET
+            </button>
+<button class="py-space-xs px-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors text-center">
+              GAMECAST
+            </button>
+</div>
+<button class="text-outline hover:text-error font-label-mono-micro text-label-mono-micro uppercase tracking-wider py-0.5 text-center transition-colors">
+            DROP TARGET
+          </button>
+</div>
+</div>
+<!-- SLOT 03: LAMELO BALL -->
+<div class="bg-surface-container rounded flex flex-col justify-between overflow-hidden shadow-md group hover:bg-surface-container-high transition-colors">
+<!-- Top Status Bar -->
+<div class="p-space-md flex flex-col gap-space-sm bg-surface-container-low">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface font-label-mono-micro text-label-mono-micro text-primary font-bold">SLOT 03</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline font-bold">NBA</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold uppercase">IN-PLAY // 3Q 06:12</span>
+</div>
+</div>
+<div class="flex items-start justify-between gap-space-xs">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold uppercase tracking-tight">L. BALL</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">CHA • PG</span>
+</div>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">CHA 79 VS BOS 85</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-primary/20 text-primary font-label-mono-micro text-label-mono-micro font-bold uppercase">10/10 STREAK</span>
+</div>
+</div>
+<!-- Prop Progress & Analytics -->
+<div class="p-space-md flex flex-col gap-space-md flex-1">
+<!-- Main Prop Line Box -->
+<div class="p-space-sm bg-surface-container-lowest rounded flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-semibold">OVER 7.5 ASSISTS</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">LINE: 7.5 @ -125</span>
+</div>
+<div class="flex items-baseline justify-between mt-1">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-primary font-bold leading-none">7</span>
+<span class="font-label-mono-md text-label-mono-md text-outline">/ 8 AST</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold">1 AWAY FROM CASH</span>
+</div>
+<!-- Visual Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded overflow-hidden mt-1">
+<div class="bg-primary h-full rounded transition-all duration-500" style="width: 87.5%;"></div>
+</div>
+</div>
+<!-- Micro Metas -->
+<div class="grid grid-cols-2 gap-space-xs text-left">
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">USAGE RATE</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">28.5% TEAM USG</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">MINS PROJECTION</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">34 MPG RUNTIME</span>
+</div>
+</div>
+<!-- Heat Alert Callout -->
+<div class="flex items-center justify-between p-space-xs rounded bg-secondary/10 text-secondary">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">local_fire_department</span>
+<span class="font-label-mono-micro text-label-mono-micro font-bold uppercase">HIT IN 10 CONSECUTIVE</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro font-bold">100%</span>
+</div>
+<!-- Mini Sparkline Simulation -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-outline font-label-mono-micro text-label-mono-micro uppercase">
+<span>POTENTIAL ASSISTS</span>
+<span class="text-primary font-bold">14 CREATED</span>
+</div>
+<div class="w-full h-8 bg-surface-container-lowest rounded flex items-end p-1 gap-1">
+<div class="w-1/6 bg-primary/40 h-3 rounded"></div>
+<div class="w-1/6 bg-primary/60 h-5 rounded"></div>
+<div class="w-1/6 bg-primary/80 h-6 rounded"></div>
+<div class="w-1/6 bg-primary h-7 rounded"></div>
+<div class="w-1/6 bg-primary h-6 rounded"></div>
+<div class="w-1/6 bg-primary h-7 rounded"></div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="p-space-sm bg-surface-container-low flex flex-col gap-space-xs">
+<div class="w-full py-space-xs px-space-xs rounded bg-surface-container-highest text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase text-center flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">lock</span>
+            LOCKED IN TICKET #84882
+          </div>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="py-space-xs px-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors text-center">
+              HEAT LOG
+            </button>
+<button class="text-outline hover:text-error font-label-mono-micro text-label-mono-micro uppercase tracking-wider py-0.5 text-center transition-colors">
+              DROP TARGET
+            </button>
+</div>
+</div>
+</div>
+<!-- SLOT 04: C.J. STROUD -->
+<div class="bg-surface-container rounded flex flex-col justify-between overflow-hidden shadow-md group hover:bg-surface-container-high transition-colors">
+<!-- Top Status Bar -->
+<div class="p-space-md flex flex-col gap-space-sm bg-surface-container-low">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface font-label-mono-micro text-label-mono-micro text-secondary font-bold">SLOT 04</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline font-bold">NFL</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-secondary font-bold uppercase">PRE-LOCK // 20:15 EST</span>
+</div>
+</div>
+<div class="flex items-start justify-between gap-space-xs">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold uppercase tracking-tight">C.J. STROUD</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">HOU • QB</span>
+</div>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">HOU @ NYJ (METLIFE)</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-secondary/20 text-secondary font-label-mono-micro text-label-mono-micro font-bold uppercase">WEATHER HIT</span>
+</div>
+</div>
+<!-- Prop Progress & Analytics -->
+<div class="p-space-md flex flex-col gap-space-md flex-1">
+<!-- Main Prop Line Box -->
+<div class="p-space-sm bg-surface-container-lowest rounded flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-semibold">PASS YARDS UNDER</span>
+<span class="font-label-mono-sm text-label-mono-sm text-secondary font-bold">LINE: 228.5 @ -115</span>
+</div>
+<div class="flex items-baseline justify-between mt-1">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-secondary font-bold leading-none">228.5</span>
+<span class="font-label-mono-md text-label-mono-md text-outline">SHARP CEILING</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-secondary uppercase font-bold">+24.0 YD ADVANTAGE</span>
+</div>
+<!-- Visual Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded overflow-hidden mt-1">
+<div class="bg-secondary h-full rounded transition-all duration-500" style="width: 32%;"></div>
+</div>
+</div>
+<!-- Micro Metas -->
+<div class="grid grid-cols-2 gap-space-xs text-left">
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">METLIFE TELEMETRY</span>
+<span class="font-label-mono-sm text-label-mono-sm text-secondary font-semibold">18MPH CROSSWIND</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">VOLUME IMPACT</span>
+<span class="font-label-mono-sm text-label-mono-sm text-error font-semibold">-12.8% PASS VOL</span>
+</div>
+</div>
+<!-- Line Drift / Steam Signal -->
+<div class="flex items-center justify-between p-space-xs rounded bg-secondary/10 text-secondary">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px]">south</span>
+<span class="font-label-mono-micro text-label-mono-micro font-bold uppercase">CRASH: 235.5 → 228.5</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro font-bold">-7.0 YDS</span>
+</div>
+<!-- Mini Sparkline Simulation -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-outline font-label-mono-micro text-label-mono-micro uppercase">
+<span>SHARP ACTION STEAM</span>
+<span class="text-secondary font-bold">82% MONEY ON UNDER</span>
+</div>
+<div class="w-full h-8 bg-surface-container-lowest rounded flex items-end p-1 gap-1">
+<div class="w-1/6 bg-secondary/30 h-6 rounded"></div>
+<div class="w-1/6 bg-secondary/50 h-5 rounded"></div>
+<div class="w-1/6 bg-secondary/70 h-4 rounded"></div>
+<div class="w-1/6 bg-secondary/80 h-3 rounded"></div>
+<div class="w-1/6 bg-secondary/90 h-2 rounded"></div>
+<div class="w-1/6 bg-secondary h-1 rounded"></div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="p-space-sm bg-surface-container-low flex flex-col gap-space-xs">
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="py-space-xs px-space-xs rounded bg-secondary hover:bg-secondary-container text-on-secondary font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors text-center">
+              DISPATCH
+            </button>
+<button class="py-space-xs px-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors text-center">
+              WEATHER
+            </button>
+</div>
+<button class="text-outline hover:text-error font-label-mono-micro text-label-mono-micro uppercase tracking-wider py-0.5 text-center transition-colors">
+            DROP TARGET
+          </button>
+</div>
+</div>
+<!-- SLOT 05: CHET HOLMGREN -->
+<div class="bg-surface-container rounded flex flex-col justify-between overflow-hidden shadow-md group hover:bg-surface-container-high transition-colors">
+<!-- Top Status Bar -->
+<div class="p-space-md flex flex-col gap-space-sm bg-surface-container-low">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-surface font-label-mono-micro text-label-mono-micro text-primary font-bold">SLOT 05</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline font-bold">NBA</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-outline"></span>
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant font-bold uppercase">PRE-LOCK // 20:00 EST</span>
+</div>
+</div>
+<div class="flex items-start justify-between gap-space-xs">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold uppercase tracking-tight">C. HOLMGREN</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">OKC • C/PF</span>
+</div>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">OKC @ MEM</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-primary/20 text-primary font-label-mono-micro text-label-mono-micro font-bold uppercase">+5.1% EDGE</span>
+</div>
+</div>
+<!-- Prop Progress & Analytics -->
+<div class="p-space-md flex flex-col gap-space-md flex-1">
+<!-- Main Prop Line Box -->
+<div class="p-space-sm bg-surface-container-lowest rounded flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase font-semibold">OVER 7.5 REBOUNDS</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-bold">LINE: 7.5 @ -112</span>
+</div>
+<div class="flex items-baseline justify-between mt-1">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-headline-xl text-headline-xl text-primary font-bold leading-none">9.6</span>
+<span class="font-label-mono-md text-label-mono-md text-outline">L5 AVG</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold">4 OF LAST 5 HIT</span>
+</div>
+<!-- Visual Bar -->
+<div class="w-full bg-surface-container-high h-2 rounded overflow-hidden mt-1">
+<div class="bg-primary h-full rounded transition-all duration-500" style="width: 80%;"></div>
+</div>
+</div>
+<!-- Micro Metas -->
+<div class="grid grid-cols-2 gap-space-xs text-left">
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">OPP MATCHUP</span>
+<span class="font-label-mono-sm text-label-mono-sm text-primary font-semibold">EDEY OUT (RIM VAC)</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container-lowest flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">L5 LOG</span>
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">11, 9, 14, 8, 6</span>
+</div>
+</div>
+<!-- Quant Signal Callout -->
+<div class="flex items-center justify-between p-space-xs rounded bg-surface-container-lowest text-on-surface-variant">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">analytics</span>
+<span class="font-label-mono-micro text-label-mono-micro uppercase">PROJ: 9.2 REB (+21%)</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">+5.1% EV</span>
+</div>
+<!-- Mini Sparkline Simulation -->
+<div class="flex flex-col gap-1">
+<div class="flex justify-between items-center text-outline font-label-mono-micro text-label-mono-micro uppercase">
+<span>REBOUND CHANCE CHUNKS</span>
+<span class="text-primary font-bold">14.8 PER 32M</span>
+</div>
+<div class="w-full h-8 bg-surface-container-lowest rounded flex items-end p-1 gap-1">
+<div class="w-1/6 bg-primary/70 h-5 rounded"></div>
+<div class="w-1/6 bg-primary/50 h-4 rounded"></div>
+<div class="w-1/6 bg-primary h-7 rounded"></div>
+<div class="w-1/6 bg-primary/80 h-5 rounded"></div>
+<div class="w-1/6 bg-primary/40 h-3 rounded"></div>
+<div class="w-1/6 bg-primary h-6 rounded"></div>
+</div>
+</div>
+</div>
+<!-- Action Bar -->
+<div class="p-space-sm bg-surface-container-low flex flex-col gap-space-xs">
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="py-space-xs px-space-xs rounded bg-primary hover:bg-primary-container text-on-primary font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors text-center">
+              ADD TICKET
+            </button>
+<button class="py-space-xs px-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors text-center">
+              COMPARE
+            </button>
+</div>
+<button class="text-outline hover:text-error font-label-mono-micro text-label-mono-micro uppercase tracking-wider py-0.5 text-center transition-colors">
+            DROP TARGET
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Auxiliary Analytical Section: Rapid Multi-Bookmaker Arbitrage Ledger -->
+<div class="w-full px-gutter pt-space-xl pb-space-lg flex flex-col gap-space-md">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">table_chart</span>
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface tracking-wider">WATCH 5 RAPID DRIFT &amp; ARBITRAGE LEDGER</span>
+<span class="font-label-mono-micro text-label-mono-micro px-space-xs py-0.5 rounded bg-surface-container-high text-outline">AUTO-POLLING PINNACLE/CIRCA</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">COLOR KEY: <span class="text-primary font-bold">BEST EXECUTION</span> • <span class="text-secondary font-bold">RAPID STEAM</span></span>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="w-full bg-surface-container rounded overflow-x-auto shadow-md">
+<table class="w-full text-left border-collapse min-w-[760px]">
+<thead>
+<tr class="bg-surface-container-low text-outline font-table-header text-table-header uppercase">
+<th class="py-space-sm px-space-md">SLOT / TARGET ENTITY</th>
+<th class="py-space-sm px-space-md">MARKET SPEC</th>
+<th class="py-space-sm px-space-md text-center">PINNACLE (SHARP)</th>
+<th class="py-space-sm px-space-md text-center">CIRCA (SHARP)</th>
+<th class="py-space-sm px-space-md text-center">DRAFTKINGS</th>
+<th class="py-space-sm px-space-md text-center">FANDUEL</th>
+<th class="py-space-sm px-space-md text-right">MODEL DEV</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-label-mono-sm text-label-mono-sm text-on-surface">
+<!-- Row 1: Derrick White -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-bold text-primary font-label-mono-micro text-label-mono-micro">[01]</span>
+<span class="font-bold">Derrick White</span>
+<span class="text-outline font-label-mono-micro text-label-mono-micro">BOS</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-on-surface-variant font-mono">Over 2.5 3PTM</td>
+<td class="py-space-sm px-space-md text-center bg-primary/10 text-primary font-bold">+115 (Pin)</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">+110</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">+105</td>
+<td class="py-space-sm px-space-md text-center text-on-surface-variant">+100</td>
+<td class="py-space-sm px-space-md text-right text-primary font-bold">+6.2% EV</td>
+</tr>
+<!-- Row 2: Missouri -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-bold text-primary font-label-mono-micro text-label-mono-micro">[02]</span>
+<span class="font-bold">Missouri Tigers</span>
+<span class="text-outline font-label-mono-micro text-label-mono-micro">SEC</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-on-surface-variant font-mono">Team Total O 28.5</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">-112</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">-114</td>
+<td class="py-space-sm px-space-md text-center bg-primary/10 text-primary font-bold">-108</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">-115</td>
+<td class="py-space-sm px-space-md text-right text-primary font-bold">+4.8% EV</td>
+</tr>
+<!-- Row 3: LaMelo Ball -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-bold text-primary font-label-mono-micro text-label-mono-micro">[03]</span>
+<span class="font-bold">LaMelo Ball</span>
+<span class="text-outline font-label-mono-micro text-label-mono-micro">CHA</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-on-surface-variant font-mono">Over 7.5 Assists</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">-128</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">-130</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">-125</td>
+<td class="py-space-sm px-space-md text-center bg-primary/10 text-primary font-bold">-120</td>
+<td class="py-space-sm px-space-md text-right text-primary font-bold">+3.9% EV</td>
+</tr>
+<!-- Row 4: C.J. Stroud -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-bold text-secondary font-label-mono-micro text-label-mono-micro">[04]</span>
+<span class="font-bold">C.J. Stroud</span>
+<span class="text-outline font-label-mono-micro text-label-mono-micro">HOU</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-on-surface-variant font-mono">Under 228.5 Pass Yds</td>
+<td class="py-space-sm px-space-md text-center bg-secondary/15 text-secondary font-bold">228.5 (-115) ↓</td>
+<td class="py-space-sm px-space-md text-center bg-secondary/15 text-secondary font-bold">228.0 (-118) ↓</td>
+<td class="py-space-sm px-space-md text-center text-primary font-bold">231.5 (-110) [LAG]</td>
+<td class="py-space-sm px-space-md text-center text-primary font-bold">230.5 (-114) [LAG]</td>
+<td class="py-space-sm px-space-md text-right text-secondary font-bold">+24.0 YDS</td>
+</tr>
+<!-- Row 5: Chet Holmgren -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-sm px-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-bold text-primary font-label-mono-micro text-label-mono-micro">[05]</span>
+<span class="font-bold">Chet Holmgren</span>
+<span class="text-outline font-label-mono-micro text-label-mono-micro">OKC</span>
+</div>
+</td>
+<td class="py-space-sm px-space-md text-on-surface-variant font-mono">Over 7.5 Rebounds</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">-116</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">-115</td>
+<td class="py-space-sm px-space-md text-center bg-primary/10 text-primary font-bold">-110</td>
+<td class="py-space-sm px-space-md text-center text-on-surface">-112</td>
+<td class="py-space-sm px-space-md text-right text-primary font-bold">+5.1% EV</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Quick Target Replacer / Command Bar -->
+<div class="w-full bg-surface-container p-space-md rounded flex flex-col md:flex-row items-center justify-between gap-space-md mt-space-sm">
+<div class="flex items-center gap-space-sm w-full md:w-auto">
+<span class="material-symbols-outlined text-[18px] text-outline">add_circle</span>
+<span class="font-label-mono-sm text-label-mono-sm uppercase text-on-surface font-semibold shrink-0">ADD / SWAP WATCH TARGET:</span>
+<div class="relative w-full md:w-80">
+<input class="w-full h-8 bg-surface-container-lowest px-space-md py-space-xs rounded text-on-surface placeholder:text-outline font-label-mono-sm text-label-mono-sm outline-none focus:ring-1 focus:ring-primary" placeholder="Type player, team, or ticket ID..." type="text"/>
+<span class="absolute right-2 top-2 text-outline font-label-mono-micro text-label-mono-micro">[ESC]</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm shrink-0 w-full md:w-auto justify-end">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">KEY SHORTCUT: [1-5] QUICK EXPAND</span>
+<button class="px-space-md py-space-xs rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-sm text-label-mono-sm uppercase transition-colors">
+          EXPORT TELEMETRY
+        </button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple interactive micro-state for dropping/clearing cards
+  document.addEventListener('DOMContentLoaded', () => {
+    const dropBtns = document.querySelectorAll('button:has-text, button');
+    dropBtns.forEach(btn => {
+      if (btn.innerText && btn.innerText.includes('DROP TARGET')) {
+        btn.addEventListener('click', (e) => {
+          const card = e.target.closest('.group');
+          if (card) {
+            card.classList.add('opacity-40', 'pointer-events-none');
+            setTimeout(() => {
+              btn.innerText = 'SLOT EMPTY';
+            }, 100);
+          }
+        });
+      }
+    });
+
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    if (clearAllBtn) {
+      clearAllBtn.addEventListener('click', () => {
+        const cards = document.querySelectorAll('.grid > .group');
+        cards.forEach(card => card.classList.toggle('opacity-50'));
+      });
+    }
+  });
+</script></main><footer class="w-full bg-surface-container-lowest py-space-md mt-auto"><div class="w-full px-gutter flex flex-col md:flex-row items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">© 2024 LIVEINTEL TERMINAL SYSTEM</span><span class="font-label-mono-micro text-label-mono-micro text-outline">•</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">INSTITUTIONAL ODDS ENGINE</span></div><div class="flex items-center gap-space-lg"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SOCKET: <span class="text-primary">CONNECTED</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">LATENCY: <span class="text-on-surface">14MS</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SYS HOLD: <span class="text-secondary">2.41%</span></span></div></div></footer></body></html>

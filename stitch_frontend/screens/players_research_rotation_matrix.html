@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>LiveIntel // Sports Intelligence Terminal</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"on-surface":"#e1e2ec","surface-container-highest":"#32353d","surface":"#10131a","surface-container-high":"#272a32","outline":"#86948a","secondary-fixed-dim":"#ffb95f","secondary-container":"#ee9800","inverse-on-surface":"#2d3038","tertiary-fixed":"#ffdad7","error-container":"#93000a","on-secondary":"#472a00","on-tertiary":"#68000a","secondary":"#ffb95f","primary":"#4edea3","surface-container":"#1d1f27","on-primary-container":"#00422b","secondary-fixed":"#ffddb8","surface-container-lowest":"#0b0e15","on-tertiary-container":"#79000e","tertiary-container":"#ff7a73","on-error":"#690005","primary-fixed":"#6ffbbe","surface-tint":"#4edea3","on-secondary-container":"#5b3800","on-primary":"#003824","tertiary-fixed-dim":"#ffb3ad","inverse-primary":"#006c49","surface-variant":"#32353d","on-tertiary-fixed-variant":"#930013","primary-fixed-dim":"#4edea3","tertiary":"#ffb3ad","on-primary-fixed-variant":"#005236","on-error-container":"#ffdad6","error":"#ffb4ab","background":"#10131a","on-secondary-fixed":"#2a1700","inverse-surface":"#e1e2ec","surface-dim":"#10131a","on-tertiary-fixed":"#410004","on-secondary-fixed-variant":"#653e00","surface-bright":"#363941","on-background":"#e1e2ec","primary-container":"#10b981","on-surface-variant":"#bbcabf","on-primary-fixed":"#002113","surface-container-low":"#191b23","outline-variant":"#3c4a42"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-xs":"0.25rem","space-lg":"1rem","gutter":"0.75rem","space-sm":"0.375rem","margin":"1rem","space-md":"0.625rem","space-xl":"1.5rem"},"fontFamily":{"headline-xl-mobile":["Inter"],"label-mono-micro":["JetBrains Mono"],"label-mono-md":["JetBrains Mono"],"headline-sm":["Inter"],"label-mono-sm":["JetBrains Mono"],"headline-xl":["Inter"],"label-mono-lg":["JetBrains Mono"],"table-header":["Inter"],"body-sm":["Inter"],"body-md":["Inter"],"headline-lg":["Inter"]},"fontSize":{"headline-xl-mobile":["22px",{"lineHeight":"28px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-mono-micro":["10px",{"lineHeight":"12px","letterSpacing":"0.04em","fontWeight":"600"}],"label-mono-md":["12px",{"lineHeight":"16px","fontWeight":"500"}],"headline-sm":["15px",{"lineHeight":"20px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-mono-sm":["11px",{"lineHeight":"14px","fontWeight":"500"}],"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.025em","fontWeight":"700"}],"label-mono-lg":["14px",{"lineHeight":"18px","letterSpacing":"-0.01em","fontWeight":"600"}],"table-header":["11px",{"lineHeight":"14px","letterSpacing":"0.05em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"26px","letterSpacing":"-0.02em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.5)]"><div class="h-14 w-full px-gutter flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-lg shrink-0"><div class="flex items-center gap-space-sm cursor-pointer select-none"><div class="w-7 h-7 rounded bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">insights</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface leading-none">LiveIntel</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase tracking-widest">Terminal v2.4</span></div></div><div class="hidden xl:flex items-center px-space-sm py-space-xs bg-surface-container-high rounded gap-space-xs"><span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-mono-micro text-label-mono-micro text-primary uppercase font-bold tracking-wider">LIVE SLATE • OCT 31</span></div></div><nav class="hidden lg:flex items-center gap-space-xs h-9" data-active-classes="bg-surface-container-highest text-on-surface font-semibold"><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="live" href="#">LIVE</a><a aria-current="page" class="px-space-md py-space-xs rounded uppercase transition-colors bg-surface-container-highest text-on-surface font-semibold" data-path="players" href="#">PLAYERS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="heats-on" href="#">HEAT'S ON</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="math-lab" href="#">MATH LAB</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="watch-5" href="#">WATCH 5</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="picks" href="#">PICKS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="tickets" href="#">TICKETS</a><a class="px-space-md py-space-xs rounded font-table-header text-table-header uppercase text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="intelligence" href="#">INTELLIGENCE</a></nav><div class="flex items-center gap-space-md shrink-0"><div class="hidden sm:flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-low rounded"><span class="material-symbols-outlined text-[14px] text-primary animate-spin">sync</span><span class="font-label-mono-micro text-label-mono-micro text-on-surface-variant uppercase">FEED LIVE</span><span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">18ms</span></div><div class="flex items-center px-space-md py-space-xs bg-surface-container rounded gap-space-sm"><div class="flex flex-col text-right"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">ROLL</span><span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">$100.00</span></div><div class="w-px h-6 bg-surface-container-highest"></div><div class="flex flex-col"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">P/L</span><span class="font-label-mono-sm text-label-mono-sm text-primary font-semibold">+$0.00</span></div></div><button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest rounded text-on-surface hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[16px] text-secondary">receipt_long</span><span class="font-label-mono-sm text-label-mono-sm hidden md:inline uppercase">SLIP (0)</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-14 bg-surface min-h-[calc(100vh-3.5rem)] flex flex-col"><div class="flex flex-col w-full">
+<div class="w-full bg-surface-container-lowest px-gutter py-space-sm shadow-md">
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-sm mb-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface">THE PLAYER ROOM // RESEARCH &amp; ROTATION MATRIX</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-outline font-label-mono-micro text-label-mono-micro uppercase">PRO QUANT V4</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Search and evaluate player role profiles, usage delta, and game-by-game log metrics.</p>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="relative w-full sm:w-72">
+<span class="material-symbols-outlined absolute left-2 top-2 text-[16px] text-outline">search</span>
+<input class="w-full h-8 pl-7 pr-16 bg-surface-container-low rounded font-label-mono-md text-label-mono-md text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container" id="player-filter-input" placeholder="Search player, team, or prop..." type="text"/>
+<div class="absolute right-1.5 top-1.5 px-1 py-0.5 rounded bg-surface-container-highest font-label-mono-micro text-label-mono-micro text-outline uppercase select-none">⌘K</div>
+</div>
+<div class="hidden sm:flex items-center gap-1 bg-surface-container-low p-0.5 rounded">
+<button class="px-2 py-1 rounded bg-surface-container-high text-primary font-label-mono-micro text-label-mono-micro font-bold uppercase">LIVE LOGS</button>
+<button class="px-2 py-1 rounded text-outline hover:text-on-surface font-label-mono-micro text-label-mono-micro uppercase transition-colors">CORRELATIONS</button>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex flex-wrap items-center gap-space-xs">
+<div class="flex items-center bg-surface-container-low p-0.5 rounded">
+<button class="px-2.5 py-1 rounded bg-surface-container-highest text-primary font-label-mono-sm text-label-mono-sm font-semibold">NBA</button>
+<button class="px-2.5 py-1 rounded text-outline hover:text-on-surface font-label-mono-sm text-label-mono-sm transition-colors">WNBA</button>
+<button class="px-2.5 py-1 rounded text-outline hover:text-on-surface font-label-mono-sm text-label-mono-sm transition-colors">NFL</button>
+<button class="px-2.5 py-1 rounded text-outline hover:text-on-surface font-label-mono-sm text-label-mono-sm transition-colors">CFB</button>
+</div>
+<div class="h-4 w-px bg-surface-container-highest mx-1 hidden sm:block"></div>
+<div class="flex items-center gap-1 overflow-x-auto">
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-mono-sm text-label-mono-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-bold text-on-surface">BOS @ CHA</span>
+<span class="text-outline">7:00 PM</span>
+</button>
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors font-label-mono-sm text-label-mono-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>OKC @ MEM</span>
+<span class="text-outline">8:00 PM</span>
+</button>
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors font-label-mono-sm text-label-mono-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>PHX @ GSW</span>
+<span class="text-outline">10:00 PM</span>
+</button>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-space-xs">
+<div class="flex items-center bg-surface-container-low p-0.5 rounded">
+<span class="px-2 text-outline font-label-mono-micro text-label-mono-micro uppercase">ROLE:</span>
+<button class="px-2 py-1 rounded bg-surface-container text-on-surface font-label-mono-micro text-label-mono-micro">ALL</button>
+<button class="px-2 py-1 rounded text-outline hover:text-on-surface font-label-mono-micro text-label-mono-micro">STARTERS</button>
+<button class="px-2 py-1 rounded text-outline hover:text-on-surface font-label-mono-micro text-label-mono-micro">BENCH</button>
+<button class="px-2 py-1 rounded text-outline hover:text-on-surface font-label-mono-micro text-label-mono-micro">ROTATION</button>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px] text-outline">sort</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SORT:</span>
+<select class="bg-transparent font-label-mono-micro text-label-mono-micro text-primary uppercase focus:outline-none cursor-pointer">
+<option class="bg-surface-container-lowest text-on-surface">PROP HEAT (+EV)</option>
+<option class="bg-surface-container-lowest text-on-surface">USAGE RATE (USG%)</option>
+<option class="bg-surface-container-lowest text-on-surface">MINUTES SHIFT</option>
+<option class="bg-surface-container-lowest text-on-surface">L5 HIT RATE</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<div class="p-gutter space-y-space-md">
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-md">
+<div class="xl:col-span-5 bg-surface-container-low rounded p-space-md flex flex-col justify-between relative overflow-hidden shadow-sm">
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-sm">
+<div class="flex items-center gap-space-md">
+<div class="relative w-14 h-14 rounded bg-surface-container flex items-center justify-center shrink-0 overflow-hidden shadow">
+<img class="w-full h-full object-cover grayscale contrast-125" data-alt="High-contrast black-and-white editorial portrait photograph of NBA basketball player Derrick White in Boston Celtics jersey looking focused in arena lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT5EoCUwXCAnExMxGwJu-GsIG8YQXHRwfYghousJ4cMy882OUowp0jRPFTyMEgqDUEIwH99aTXusUEdlEWV_PVBOUfaYI8GHAKi1nqJanSrIVhTYqGgK4oHzOzM3mvCH_64ZPNlcXVpj1E1tx9Fz1ZWcwzES27hD8du1Lo6hnuxfqAUwiIeOTgUh6WpgV0BPN5Rq78ymB_P8LJqLjmLpw1DmIyOeNMAOaqjwPn56EX"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-primary rounded-full shadow"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight">Derrick White</span>
+<span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro font-bold">STARTER</span>
+</div>
+<div class="flex items-center gap-space-sm text-outline font-label-mono-sm text-label-mono-sm">
+<span>BOS • SG/PG #9</span>
+<span>•</span>
+<span class="text-on-surface">vs CHA Hornets</span>
+<span class="px-1 py-0.2 bg-surface-container rounded text-primary font-label-mono-micro text-label-mono-micro">PACE +3.4</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-2 py-0.5 rounded bg-primary/15 text-primary font-label-mono-sm text-label-mono-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +6.2% EDGE
+              </span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline mt-0.5">vs CHA PERIMETER DEF (#28)</span>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs mb-space-md">
+<div class="bg-surface-container rounded p-space-xs flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">PROJ MIN</span>
+<div class="flex items-baseline gap-1">
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold">32.4</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary">+3.8%</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">Rot rank: #2</span>
+</div>
+<div class="bg-surface-container rounded p-space-xs flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">PERIM USG</span>
+<div class="flex items-baseline gap-1">
+<span class="font-label-mono-lg text-label-mono-lg text-secondary font-bold">26.1%</span>
+<span class="font-label-mono-micro text-label-mono-micro text-secondary">+2.1%</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">P-Roll handler</span>
+</div>
+<div class="bg-surface-container rounded p-space-xs flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SEASON PPG</span>
+<div class="flex items-baseline gap-1">
+<span class="font-label-mono-lg text-label-mono-lg text-on-surface font-bold">18.4</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">4.2 3PA</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-primary">54.2% eFG</span>
+</div>
+<div class="bg-surface-container rounded p-space-xs flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">3PM L5 HIT</span>
+<div class="flex items-baseline gap-1">
+<span class="font-label-mono-lg text-label-mono-lg text-primary font-bold">80%</span>
+<span class="font-label-mono-micro text-label-mono-micro text-primary">4/5 Over</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">Consensus 2.5</span>
+</div>
+</div>
+<div class="bg-surface-container rounded p-space-sm mb-space-sm">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold uppercase">3-Point FGM Log (Last 5 Games)</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container-high text-outline font-label-mono-micro text-label-mono-micro">LINE: 2.5</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">AVG 3.4 3PM</span>
+</div>
+<div class="grid grid-cols-5 gap-2 items-end h-16 pt-2 pb-1">
+<div class="flex flex-col items-center gap-1 h-full justify-end">
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">4</span>
+<div class="w-full bg-primary/20 rounded-t h-[75%] relative flex items-end">
+<div class="w-full bg-primary rounded-t h-full"></div>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">vs NYK</span>
+</div>
+<div class="flex flex-col items-center gap-1 h-full justify-end">
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">3</span>
+<div class="w-full bg-primary/20 rounded-t h-[55%] relative flex items-end">
+<div class="w-full bg-primary rounded-t h-full"></div>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">@ WAS</span>
+</div>
+<div class="flex flex-col items-center gap-1 h-full justify-end">
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">5</span>
+<div class="w-full bg-primary/20 rounded-t h-[95%] relative flex items-end">
+<div class="w-full bg-primary rounded-t h-full"></div>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">@ DET</span>
+</div>
+<div class="flex flex-col items-center gap-1 h-full justify-end">
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-bold">3</span>
+<div class="w-full bg-primary/20 rounded-t h-[55%] relative flex items-end">
+<div class="w-full bg-primary rounded-t h-full"></div>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">vs MIL</span>
+</div>
+<div class="flex flex-col items-center gap-1 h-full justify-end">
+<span class="font-label-mono-micro text-label-mono-micro text-error font-bold">2</span>
+<div class="w-full bg-surface-container-highest rounded-t h-[40%] relative flex items-end">
+<div class="w-full bg-outline rounded-t h-full"></div>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">@ IND</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-outline font-label-mono-micro text-label-mono-micro pt-1 border-t-0">
+<span>Threshold: 2.5 3PM</span>
+<span class="text-primary font-semibold">Over Odds: -118 Pinnacle</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs pt-space-xs">
+<button class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded font-label-mono-sm text-label-mono-sm font-semibold transition-colors">
+<span class="material-symbols-outlined text-[16px] text-primary">bookmark_add</span>
+<span>+ ADD TO WATCH</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-primary hover:bg-primary-container text-on-primary rounded font-label-mono-sm text-label-mono-sm font-bold shadow-md transition-all">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+<span>+ ADD TO TICKET</span>
+</button>
+</div>
+</div>
+<div class="xl:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-space-xs">
+<div class="bg-surface-container-low rounded p-space-sm flex flex-col justify-between hover:bg-surface-container transition-colors shadow-sm">
+<div>
+<div class="flex items-start justify-between gap-2 mb-2">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover grayscale" data-alt="Monochrome dynamic close up of LaMelo Ball point guard for Charlotte Hornets dribbling basketball with high intensity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxDY5lHZoAl_h1DTgxhXrvMUYwyg-NaeJJ4k0-AU7fmPamFIzqK0s-jQw9BU98JWXbqVGUhh7U-ZLxyxneb5fchT62pZwbmx2kfzCwQp-C_alN9L9RLafWNLkKFcA7_tC50InDnspmVEa3sneQdI8vneYMhajEbStKWtyWUfAfH3bpATwCiFVSJBG8tqxkhAhcbHQehhWQejC7vOs2r3UyreCEgX4qAqMeXTpn6eu7"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm text-on-surface">LaMelo Ball</span>
+<span class="px-1 py-0.2 bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro">PG</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">CHA • Starter vs BOS</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-primary/20 text-primary font-label-mono-micro text-label-mono-micro font-bold">10/10 HIT</span>
+</div>
+<div class="grid grid-cols-3 gap-1 bg-surface-container-lowest p-1.5 rounded mb-2">
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">MPG</span>
+<span class="font-label-mono-md text-label-mono-md text-on-surface font-semibold">34.2</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">USG%</span>
+<span class="font-label-mono-md text-label-mono-md text-secondary font-semibold">28.5%</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">PROP</span>
+<span class="font-label-mono-md text-label-mono-md text-primary font-semibold">AST 7.5</span>
+</div>
+</div>
+<div class="space-y-1 mb-2">
+<div class="flex items-center justify-between text-outline font-label-mono-micro text-label-mono-micro">
+<span>L5 Log: [7, 8, 6, 8, 5]</span>
+<span class="text-on-surface">Line: 7.5</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded overflow-hidden flex">
+<div class="bg-primary h-full w-[80%]"></div>
+<div class="bg-error h-full w-[20%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-mono-micro text-label-mono-micro text-primary font-semibold">+4.8% EV vs Boston Switch</span>
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors">+ SLIP</button>
+</div>
+</div>
+<div class="bg-surface-container-low rounded p-space-sm flex flex-col justify-between hover:bg-surface-container transition-colors shadow-sm">
+<div>
+<div class="flex items-start justify-between gap-2 mb-2">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover grayscale" data-alt="High contrast black and white sports portrait of Chet Holmgren center for Oklahoma City Thunder looking up at the hoop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcCcyRGhIZQSyVHUoQFfhqDScOpqPpy5mxnxnEC8L3azrciEMy7OrFhCk7ezMFCD_OQThwHLBjOlBUhI0VzbMLP5N_yzjaCspaeBjb5v9LTUVnrdYNZ3g86mhrc-OtGOp6MbUbcSk29EO2suYO_cx7AYlSnNpHTxgLwVn0c21nN4u1x2a7C7geEQ25XrTybwCMdrQgXlyowzbaXysTs9KFFHruGulntC_lV2DVXCYe"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm text-on-surface">Chet Holmgren</span>
+<span class="px-1 py-0.2 bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro">C</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">OKC • Starter @ MEM</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-primary/15 text-primary font-label-mono-micro text-label-mono-micro font-bold">+EV EDGE</span>
+</div>
+<div class="grid grid-cols-3 gap-1 bg-surface-container-lowest p-1.5 rounded mb-2">
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">MPG</span>
+<span class="font-label-mono-md text-label-mono-md text-on-surface font-semibold">30.1</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">REB AVG</span>
+<span class="font-label-mono-md text-label-mono-md text-on-surface font-semibold">9.6</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">PROP</span>
+<span class="font-label-mono-md text-label-mono-md text-primary font-semibold">REB 7.5</span>
+</div>
+</div>
+<div class="space-y-1 mb-2">
+<div class="flex items-center justify-between text-outline font-label-mono-micro text-label-mono-micro">
+<span>L5: [11, 9, 14, 8, 6]</span>
+<span class="text-primary font-bold">4/5 Over</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded overflow-hidden flex">
+<div class="bg-primary h-full w-[85%]"></div>
+<div class="bg-error h-full w-[15%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">Memphis without Edey (Rim vuln)</span>
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors">+ SLIP</button>
+</div>
+</div>
+<div class="bg-surface-container-low rounded p-space-sm flex flex-col justify-between hover:bg-surface-container transition-colors shadow-sm">
+<div>
+<div class="flex items-start justify-between gap-2 mb-2">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded bg-surface-container-high flex items-center justify-center overflow-hidden">
+<div class="w-full h-full bg-surface-container-highest flex items-center justify-center text-outline font-label-mono-sm">AW</div>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm text-on-surface">Aaron Wiggins</span>
+<span class="px-1 py-0.2 bg-secondary/15 text-secondary font-label-mono-micro text-label-mono-micro">BENCH</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">OKC • SG Sparkplug</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-secondary/20 text-secondary font-label-mono-micro text-label-mono-micro font-bold">HOT BENCH</span>
+</div>
+<div class="grid grid-cols-3 gap-1 bg-surface-container-lowest p-1.5 rounded mb-2">
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">MIN BUMP</span>
+<span class="font-label-mono-md text-label-mono-md text-primary font-semibold">+6.2m</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">3PA LINE</span>
+<span class="font-label-mono-md text-label-mono-md text-on-surface font-semibold">4.5</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">VOL L5</span>
+<span class="font-label-mono-md text-label-mono-md text-primary font-semibold">6.8 3PA</span>
+</div>
+</div>
+<div class="space-y-1 mb-2">
+<div class="flex items-center justify-between text-outline font-label-mono-micro text-label-mono-micro">
+<span>L5: [7, 7, 6, 9, 5]</span>
+<span class="text-primary font-bold">5/5 Over 4.5</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded overflow-hidden flex">
+<div class="bg-primary h-full w-[100%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-mono-micro text-label-mono-micro text-secondary font-semibold">Sixth man role expansion</span>
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors">+ SLIP</button>
+</div>
+</div>
+<div class="bg-surface-container-low rounded p-space-sm flex flex-col justify-between hover:bg-surface-container transition-colors shadow-sm">
+<div>
+<div class="flex items-start justify-between gap-2 mb-2">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded bg-surface-container-high flex items-center justify-center overflow-hidden">
+<div class="w-full h-full bg-surface-container-highest flex items-center justify-center text-outline font-label-mono-sm">PP</div>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-headline-sm text-on-surface">Payton Pritchard</span>
+<span class="px-1 py-0.2 bg-secondary/15 text-secondary font-label-mono-micro text-label-mono-micro">BENCH</span>
+</div>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">BOS • PG 6th Man</span>
+</div>
+</div>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-mono-micro text-label-mono-micro">ROTATION</span>
+</div>
+<div class="grid grid-cols-3 gap-1 bg-surface-container-lowest p-1.5 rounded mb-2">
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">MPG</span>
+<span class="font-label-mono-md text-label-mono-md text-on-surface font-semibold">19.5</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">3PM LINE</span>
+<span class="font-label-mono-md text-label-mono-md text-primary font-semibold">1.5</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">L5 HIT</span>
+<span class="font-label-mono-md text-label-mono-md text-primary font-semibold">4/5</span>
+</div>
+</div>
+<div class="space-y-1 mb-2">
+<div class="flex items-center justify-between text-outline font-label-mono-micro text-label-mono-micro">
+<span>L5: [2, 3, 1, 4, 3]</span>
+<span class="text-primary font-bold">80% Over</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded overflow-hidden flex">
+<div class="bg-primary h-full w-[80%]"></div>
+<div class="bg-error h-full w-[20%]"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<span class="font-label-mono-micro text-label-mono-micro text-outline">J. Brown rested = high usage</span>
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-mono-micro text-label-mono-micro font-semibold transition-colors">+ SLIP</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded shadow-sm overflow-hidden">
+<div class="px-space-md py-space-sm bg-surface-container flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">PROP INTELLIGENCE MATRIX &amp; HIT LOGS</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">LIVE SLATE: 18 ACTIVE PROPS IDENTIFIED</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">EXPORT MATRIX:</span>
+<button class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-label-mono-micro text-label-mono-micro hover:bg-surface-container-highest transition-colors">CSV</button>
+<button class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-label-mono-micro text-label-mono-micro hover:bg-surface-container-highest transition-colors">P-ROLL JSON</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest text-outline font-table-header text-table-header uppercase select-none">
+<th class="py-2.5 px-3">PLAYER / MATCHUP</th>
+<th class="py-2.5 px-2">POS</th>
+<th class="py-2.5 px-2">ROLE</th>
+<th class="py-2.5 px-2 text-right">MIN/G</th>
+<th class="py-2.5 px-2 text-right">USG%</th>
+<th class="py-2.5 px-3">MARKET PROP</th>
+<th class="py-2.5 px-3 text-right">CONSENSUS LINE</th>
+<th class="py-2.5 px-3 text-right">L5 AVG</th>
+<th class="py-2.5 px-3 text-center">L10 HIT RATE</th>
+<th class="py-2.5 px-3 text-right">EDGE / EV</th>
+<th class="py-2.5 px-3 text-center">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-highest/30 font-body-sm text-body-sm">
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-2 px-3">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">Derrick White</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">BOS @ CHA • 7:00 PM</span>
+</div>
+</div>
+</td>
+<td class="py-2 px-2 font-label-mono-sm text-label-mono-sm text-on-surface-variant">SG/PG</td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro">Starter</span></td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">32.4</td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-secondary font-semibold">26.1%</td>
+<td class="py-2 px-3">
+<div class="flex items-center gap-1.5">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">3-PT Made</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-primary font-label-mono-micro text-label-mono-micro">O 2.5</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-on-surface">2.5 (-118)</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">3.4</td>
+<td class="py-2 px-3 text-center">
+<div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro font-bold">
+<span>80%</span>
+<span class="text-outline font-normal">(8/10)</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">+6.2%</td>
+<td class="py-2 px-3 text-center">
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors">LOCK</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-2 px-3">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">LaMelo Ball</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">CHA vs BOS • 7:00 PM</span>
+</div>
+</div>
+</td>
+<td class="py-2 px-2 font-label-mono-sm text-label-mono-sm text-on-surface-variant">PG</td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro">Starter</span></td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">34.2</td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-secondary font-semibold">28.5%</td>
+<td class="py-2 px-3">
+<div class="flex items-center gap-1.5">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">Assists</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-primary font-label-mono-micro text-label-mono-micro">O 7.5</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-on-surface">7.5 (-105)</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">8.2</td>
+<td class="py-2 px-3 text-center">
+<div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro font-bold">
+<span>90%</span>
+<span class="text-outline font-normal">(9/10)</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">+4.8%</td>
+<td class="py-2 px-3 text-center">
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors">LOCK</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-2 px-3">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">Chet Holmgren</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">OKC @ MEM • 8:00 PM</span>
+</div>
+</div>
+</td>
+<td class="py-2 px-2 font-label-mono-sm text-label-mono-sm text-on-surface-variant">C</td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro">Starter</span></td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">30.1</td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-outline">21.8%</td>
+<td class="py-2 px-3">
+<div class="flex items-center gap-1.5">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">Rebounds</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-primary font-label-mono-micro text-label-mono-micro">O 7.5</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-on-surface">7.5 (-112)</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">9.6</td>
+<td class="py-2 px-3 text-center">
+<div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro font-bold">
+<span>80%</span>
+<span class="text-outline font-normal">(8/10)</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">+5.1%</td>
+<td class="py-2 px-3 text-center">
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors">LOCK</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-2 px-3">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">Aaron Wiggins</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">OKC @ MEM • 8:00 PM</span>
+</div>
+</div>
+</td>
+<td class="py-2 px-2 font-label-mono-sm text-label-mono-sm text-on-surface-variant">SG</td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-secondary/15 text-secondary font-label-mono-micro text-label-mono-micro">Bench</span></td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-primary font-semibold">22.4</td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-outline">18.2%</td>
+<td class="py-2 px-3">
+<div class="flex items-center gap-1.5">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">3-PT Attempts</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-secondary font-label-mono-micro text-label-mono-micro">O 4.5</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-on-surface">4.5 (-110)</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">6.8</td>
+<td class="py-2 px-3 text-center">
+<div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro font-bold">
+<span>100%</span>
+<span class="text-outline font-normal">(5/5)</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">+7.4%</td>
+<td class="py-2 px-3 text-center">
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors">LOCK</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-2 px-3">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">Payton Pritchard</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">BOS @ CHA • 7:00 PM</span>
+</div>
+</div>
+</td>
+<td class="py-2 px-2 font-label-mono-sm text-label-mono-sm text-on-surface-variant">PG</td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-secondary/15 text-secondary font-label-mono-micro text-label-mono-micro">Bench</span></td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">19.5</td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-outline">19.1%</td>
+<td class="py-2 px-3">
+<div class="flex items-center gap-1.5">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">3-PT Made</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-primary font-label-mono-micro text-label-mono-micro">O 1.5</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-on-surface">1.5 (-140)</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">2.6</td>
+<td class="py-2 px-3 text-center">
+<div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro font-bold">
+<span>80%</span>
+<span class="text-outline font-normal">(8/10)</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">+3.9%</td>
+<td class="py-2 px-3 text-center">
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors">LOCK</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-2 px-3">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">Stephen Curry</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">GSW vs PHX • 10:00 PM</span>
+</div>
+</div>
+</td>
+<td class="py-2 px-2 font-label-mono-sm text-label-mono-sm text-on-surface-variant">PG</td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro">Starter</span></td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">31.8</td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-secondary font-semibold">30.4%</td>
+<td class="py-2 px-3">
+<div class="flex items-center gap-1.5">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">Points + Assists</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-primary font-label-mono-micro text-label-mono-micro">O 32.5</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-on-surface">32.5 (-110)</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">34.8</td>
+<td class="py-2 px-3 text-center">
+<div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro font-bold">
+<span>70%</span>
+<span class="text-outline font-normal">(7/10)</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">+2.9%</td>
+<td class="py-2 px-3 text-center">
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors">LOCK</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors group">
+<td class="py-2 px-3">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">Devin Booker</span>
+<span class="font-label-mono-micro text-label-mono-micro text-outline">PHX @ GSW • 10:00 PM</span>
+</div>
+</div>
+</td>
+<td class="py-2 px-2 font-label-mono-sm text-label-mono-sm text-on-surface-variant">SG</td>
+<td class="py-2 px-2"><span class="px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro">Starter</span></td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">35.6</td>
+<td class="py-2 px-2 text-right font-label-mono-sm text-secondary font-semibold">29.8%</td>
+<td class="py-2 px-3">
+<div class="flex items-center gap-1.5">
+<span class="font-label-mono-sm text-label-mono-sm text-on-surface font-semibold">Total Points</span>
+<span class="px-1 py-0.2 rounded bg-surface-container-highest text-error font-label-mono-micro text-label-mono-micro">U 27.5</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-on-surface">27.5 (-108)</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-error font-bold">24.2</td>
+<td class="py-2 px-3 text-center">
+<div class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-primary/10 text-primary font-label-mono-micro text-label-mono-micro font-bold">
+<span>70% Under</span>
+</div>
+</td>
+<td class="py-2 px-3 text-right font-label-mono-sm text-label-mono-sm text-primary font-bold">+4.1%</td>
+<td class="py-2 px-3 text-center">
+<button class="px-2 py-1 rounded bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface font-label-mono-micro text-label-mono-micro font-bold uppercase transition-colors">LOCK</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-space-md py-space-xs bg-surface-container-lowest flex items-center justify-between text-outline font-label-mono-micro text-label-mono-micro">
+<div class="flex items-center gap-space-sm">
+<span>SHOWING 7 OF 18 FILTERED COMBOS</span>
+<span>•</span>
+<span class="text-primary font-bold">MODEL UPDATE: 48 SECONDS AGO</span>
+</div>
+<div class="flex items-center gap-2">
+<span>PAGE 1 OF 3</span>
+<button class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors">‹ PREV</button>
+<button class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors">NEXT ›</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const input = document.getElementById('player-filter-input');
+    if (input) {
+      window.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          input.focus();
+        } else if (e.key === 'Escape' && document.activeElement === input) {
+          input.blur();
+        }
+      });
+
+      input.addEventListener('input', (e) => {
+        const val = e.target.value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+          const text = row.innerText.toLowerCase();
+          row.style.display = text.includes(val) ? '' : 'none';
+        });
+      });
+    }
+  })();
+</script></main><footer class="w-full bg-surface-container-lowest py-space-md mt-auto"><div class="w-full px-gutter flex flex-col md:flex-row items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">© 2024 LIVEINTEL TERMINAL SYSTEM</span><span class="font-label-mono-micro text-label-mono-micro text-outline">•</span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">INSTITUTIONAL ODDS ENGINE</span></div><div class="flex items-center gap-space-lg"><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SOCKET: <span class="text-primary">CONNECTED</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">LATENCY: <span class="text-on-surface">14MS</span></span><span class="font-label-mono-micro text-label-mono-micro text-outline uppercase">SYS HOLD: <span class="text-secondary">2.41%</span></span></div></div></footer></body></html>
