@@ -33,6 +33,43 @@ class StitchCalculationTests(unittest.TestCase):
         self.assertEqual(stitch_data.kelly(0.3, 2.0)["fraction"], 0.0)
         self.assertEqual(stitch_data.kelly(0.9, 5.0)["fraction"], 0.25)
 
+    def test_implied_probability(self):
+        self.assertEqual(stitch_data.implied_probability(100), 0.5)
+        self.assertEqual(stitch_data.implied_probability(-100), 0.5)
+        self.assertEqual(stitch_data.implied_probability(150), 0.4)
+        self.assertEqual(stitch_data.implied_probability(-150), 0.6)
+        self.assertAlmostEqual(stitch_data.implied_probability(200), 1 / 3, places=6)
+        self.assertAlmostEqual(stitch_data.implied_probability(-200), 2 / 3, places=6)
+        self.assertIsNone(stitch_data.implied_probability(0))
+        self.assertIsNone(stitch_data.implied_probability(None))
+        self.assertIsNone(stitch_data.implied_probability("garbage"))
+
+    def test_no_vig_probability(self):
+        result = stitch_data.no_vig_probability(-110, -110)
+        self.assertIsNotNone(result)
+        self.assertAlmostEqual(result["over_fair"], 0.5, places=6)
+        self.assertAlmostEqual(result["under_fair"], 0.5, places=6)
+
+        result = stitch_data.no_vig_probability(-150, 120)
+        self.assertIsNotNone(result)
+        p1 = 150 / 250.0
+        p2 = 100 / 220.0
+        total = p1 + p2
+        self.assertAlmostEqual(result["over_fair"], p1 / total, places=6)
+        self.assertAlmostEqual(result["under_fair"], p2 / total, places=6)
+
+        self.assertIsNone(stitch_data.no_vig_probability(None, -110))
+        self.assertIsNone(stitch_data.no_vig_probability(-110, 0))
+
+        dispatched = stitch_data.calculation({
+            "kind": "no_vig_probability",
+            "over_odds": -110,
+            "under_odds": -110,
+        })
+        self.assertTrue(dispatched["available"])
+        self.assertFalse(dispatched["fail_closed"])
+        self.assertEqual(dispatched["result"]["over_fair"], 0.5)
+
     def test_stats_extraction_uses_recorded_values(self):
         payload = {"shooting": {"FG": "8/15", "3PT": "3/7"}, "totals": {"points": 22, "assists": 6}}
         self.assertEqual(stitch_data.totals(json.dumps(payload))["points"], 22)

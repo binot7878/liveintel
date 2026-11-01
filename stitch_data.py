@@ -447,6 +447,33 @@ def record_ticket(connection: sqlite3.Connection, payload: dict[str, Any]) -> di
     return {"success": True, "ticket_id": ticket_id, "recorded": True, "wager_placed": False}
 
 
+def implied_probability(odds: Any) -> float | None:
+    """Convert American odds to implied probability."""
+    val = finite(odds)
+    if val is None or val == 0:
+        return None
+    if val > 0:
+        return round(100.0 / (val + 100.0), 6)
+    return round(abs(val) / (abs(val) + 100.0), 6)
+
+
+def no_vig_probability(over_odds: Any, under_odds: Any) -> dict[str, Any] | None:
+    """Calculate no-vig fair probabilities from two American prices."""
+    over = implied_probability(over_odds)
+    under = implied_probability(under_odds)
+    if over is None or under is None:
+        return None
+    total = over + under
+    if total <= 0:
+        return None
+    return {
+        "over_implied": over,
+        "under_implied": under,
+        "over_fair": round(over / total, 6),
+        "under_fair": round(under / total, 6),
+    }
+
+
 def calculation(payload: dict[str, Any]) -> dict[str, Any]:
     kind = clean(payload.get("kind")).lower()
     if kind == "hit_rate":
@@ -461,6 +488,11 @@ def calculation(payload: dict[str, Any]) -> dict[str, Any]:
                                payload.get("left_side", "OVER"), payload.get("right_side", "OVER"))
     elif kind == "kelly":
         value = kelly(payload.get("probability"), payload.get("decimal_odds"), finite(payload.get("cap")) or 0.25)
+    elif kind == "implied_probability":
+        probability = implied_probability(payload.get("odds"))
+        value = {"implied_probability": probability} if probability is not None else None
+    elif kind == "no_vig_probability":
+        value = no_vig_probability(payload.get("over_odds"), payload.get("under_odds"))
     else:
         raise ValueError("Unsupported calculation")
     return {"kind": kind, "result": value, "available": value is not None, "fail_closed": value is None}
