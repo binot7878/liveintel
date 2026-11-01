@@ -128,7 +128,9 @@ def discover_slate(sport, espn_path, day):
         if comp.get('id') is not None and numeric_id(comp['id']) != gid:
             raise ValueError('scoreboard competition ID mismatch')
         sides = teams(comp)
+        scheduled_at = event.get('date') or comp.get('date')
         game = {'id': gid, 'sport': sport, 'game_date': actual_date,
+                'slate_date': day, 'scheduled_at': scheduled_at,
                 'status': game_status(comp),
                 'home_team': sides['home']['abbr'], 'away_team': sides['away']['abbr'],
                 'team_ids': {v['abbr']: v['id'] for v in sides.values()}}
@@ -275,10 +277,18 @@ def persist_game(conn, game):
             return
         if str(existing['status']).lower() in ('live', 'in', 'halftime') and game['status'] == 'PRE':
             raise ValueError('refusing to regress a live game to PRE')
-    conn.execute('INSERT INTO games(id,sport,home_team,away_team,status,last_updated) VALUES(?,?,?,?,?,?) '
-                 'ON CONFLICT(id) DO UPDATE SET status=excluded.status,last_updated=excluded.last_updated',
-                 (game['id'], game['sport'], game['home_team'], game['away_team'], game['status'],
-                  datetime.datetime.now(SLATE_ZONE).isoformat(' ', 'seconds')))
+    conn.execute('''INSERT INTO games
+        (id,sport,home_team,away_team,status,last_updated,game_date,slate_date,scheduled_at)
+        VALUES(?,?,?,?,?,?,?,?,?)
+        ON CONFLICT(id) DO UPDATE SET
+            status=excluded.status,
+            last_updated=excluded.last_updated,
+            game_date=COALESCE(excluded.game_date,games.game_date),
+            slate_date=COALESCE(excluded.slate_date,games.slate_date),
+            scheduled_at=COALESCE(excluded.scheduled_at,games.scheduled_at)''',
+        (game['id'], game['sport'], game['home_team'], game['away_team'], game['status'],
+         datetime.datetime.now(SLATE_ZONE).isoformat(' ', 'seconds'),
+         game.get('game_date'), game.get('slate_date'), game.get('scheduled_at')))
 
 
 def persist_players(conn, game, rows):

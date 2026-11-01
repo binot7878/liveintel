@@ -27,8 +27,8 @@ TEST_OWNERS = {'early test','test','test2','test owner','parlay owner','test_use
 def instant(value):
     try:
         d = datetime.fromisoformat(str(value).replace('Z', '+00:00'))
-        # Existing naive ingestion/database stamps are UTC.
-        return d.replace(tzinfo=timezone.utc) if d.tzinfo is None else d
+        # Existing naive ingestion/database stamps are America/New_York local time.
+        return d.replace(tzinfo=ZONE) if d.tzinfo is None else d
     except (ValueError, TypeError):
         return None
 

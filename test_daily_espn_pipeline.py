@@ -18,7 +18,8 @@ class IngestionTests(unittest.TestCase):
         self.addCleanup(self.conn.close)
         self.conn.executescript('''
             CREATE TABLE games(id TEXT PRIMARY KEY,sport TEXT,home_team TEXT,
-                               away_team TEXT,status TEXT,last_updated TEXT);
+                               away_team TEXT,status TEXT,last_updated TEXT,
+                               game_date TEXT,slate_date TEXT,scheduled_at TEXT);
             CREATE TABLE multi_sport_players(
                 id INTEGER PRIMARY KEY, sport TEXT, player_id TEXT, player_name TEXT,
                 team TEXT, position TEXT, game_id TEXT, game_date TEXT, segment TEXT,
@@ -72,6 +73,8 @@ class IngestionTests(unittest.TestCase):
             self.assertIn('dates=20261031', fetch.call_args.args[0])
             result = pipeline.discover_slate('NFL', 'football/nfl', '2026-10-30')
             self.assertEqual(result[0]['status'], 'PRE')
+            self.assertEqual(result[0]['scheduled_at'], '2026-10-30T23:00:00Z')
+            self.assertEqual(result[0]['slate_date'], '2026-10-30')
 
     def test_event_roster_links_player_without_inventing_stats(self):
         pipeline.validate_summary(self.summary(), self.game)
@@ -139,6 +142,24 @@ class IngestionTests(unittest.TestCase):
         with self.assertRaises(ValueError), self.conn:
             pipeline.persist_game(self.conn, self.game)
         self.assertEqual(self.conn.execute('SELECT status FROM games').fetchone()[0], 'post')
+
+    def test_persist_game_preserves_schedule_fields(self):
+        game = dict(
+            self.game,
+            slate_date='2026-10-30',
+            scheduled_at='2026-10-30T23:00:00Z'
+        )
+        with self.conn:
+            pipeline.persist_game(self.conn, game)
+
+        stored = dict(self.conn.execute(
+            'SELECT game_date,slate_date,scheduled_at FROM games WHERE id=?',
+            (game['id'],)
+        ).fetchone())
+
+        self.assertEqual(stored['game_date'], '2026-10-30')
+        self.assertEqual(stored['slate_date'], '2026-10-30')
+        self.assertEqual(stored['scheduled_at'], '2026-10-30T23:00:00Z')
 
     def test_process_pregame_roster_end_to_end_and_idempotence(self):
         with patch.object(pipeline, 'discover_slate', return_value=[self.game]), \
