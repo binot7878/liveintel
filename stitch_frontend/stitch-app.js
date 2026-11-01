@@ -196,34 +196,245 @@
     const detailGrid = Array.from(document.querySelectorAll('main div')).find(element => /xl:grid-cols-12/.test(element.className || '') && !element.querySelector('table'));
     const detailPanels = detailGrid ? Array.from(detailGrid.children) : [];
     const playerDetail = detailPanels[0] || null;
+    const rotationDetail = detailPanels[1] || null;
     if (playerDetail) pending(playerDetail, 'SELECTED PLAYER DETAIL • CHOOSE A REAL MATRIX ROW');
-    detailPanels.slice(1).forEach(panel => pending(panel, 'MATCHUP ROTATION DETAIL • REAL ROW SELECTION REQUIRED'));
+    if (rotationDetail) pending(rotationDetail, 'MATCHUP ROTATION DETAIL • REAL ROW SELECTION REQUIRED');
+    detailPanels.slice(2).forEach(panel => pending(panel, 'REAL DATA BINDING PENDING'));
     const rows = all('tbody tr');
     rows.forEach((row, index) => {
       const player = players[index];
       if (!player) { pending(row, 'NO ADDITIONAL CURRENT PLAYER'); return; }
       unpending(row); row.dataset.playerId = player.player_id; row.dataset.sport = player.sport; row.dataset.team = player.team; row.dataset.playerIndex = String(index);
       const cells = Array.from(row.children); const market = playerMarket(player); const window = player.windows[market] || {};
-      if (cells[0]) fillLeaves(cells[0], [player.name, `${player.team}${player.game ? ` • ${player.game}` : ''}`]);
-      if (cells[1]) fillLeaves(cells[1], [player.position || '—']);
-      if (cells[2]) fillLeaves(cells[2], [player.role]);
-      if (cells[3]) fillLeaves(cells[3], [player.minutes == null ? '—' : number(player.minutes, 1)]);
-      if (cells[4]) fillLeaves(cells[4], ['NOT DERIVABLE']);
-      if (cells[5]) fillLeaves(cells[5], [titleStat(market)]);
-      if (cells[6]) fillLeaves(cells[6], ['SOURCE PENDING']);
-      if (cells[7]) fillLeaves(cells[7], [window.l5 == null ? '—' : number(window.l5, 1)]);
-      if (cells[8]) fillLeaves(cells[8], [window.l10 == null ? '—' : number(window.l10, 1), 'LINE REQUIRED']);
-      if (cells[9]) fillLeaves(cells[9], ['PRICE REQUIRED']);
+
+      if (cells[0]) {
+        cells[0].replaceChildren();
+
+        const primary = document.createElement('div');
+        primary.textContent = player.name || 'PLAYER';
+
+        const secondary = document.createElement('div');
+        secondary.textContent = `${player.team || '—'}${player.game ? ` • ${player.game}` : ''}`;
+
+        cells[0].append(primary, secondary);
+      }
+
+      const replaceCell = (cell, value) => {
+        if (!cell) return;
+        cell.replaceChildren(document.createTextNode(String(value)));
+      };
+
+      replaceCell(cells[1], player.position || '—');
+      replaceCell(cells[2], player.role || 'ROLE NOT SUPPLIED');
+      replaceCell(cells[3], player.minutes == null ? '—' : number(player.minutes, 1));
+      replaceCell(cells[4], 'NOT DERIVABLE');
+      replaceCell(cells[5], titleStat(market));
+      replaceCell(cells[6], 'SOURCE PENDING');
+      replaceCell(cells[7], window.l5 == null ? '—' : number(window.l5, 1));
+      replaceCell(
+        cells[8],
+        `${window.l10 == null ? '—' : number(window.l10, 1)} • LINE REQUIRED`
+      );
+      replaceCell(cells[9], 'PRICE REQUIRED');
       const buttons = cells[10] ? all('button', cells[10]) : [];
       buttons.forEach((button, buttonIndex) => {
-        button.dataset.playerId = player.player_id; button.dataset.playerName = player.name; button.dataset.team = player.team; button.dataset.sport = player.sport;
-        button.dataset.liAction = buttonIndex === 0 ? 'watch-add' : 'ticket-add';
-        if (buttonIndex > 0) { button.dataset.market = titleStat(market); button.dataset.gameId = player.game_id; }
+        button.dataset.playerId = player.player_id;
+        button.dataset.playerName = player.name;
+        button.dataset.team = player.team;
+        button.dataset.sport = player.sport;
+
+        if (buttonIndex === 0) {
+          button.dataset.liAction = 'watch-add';
+          text(button, 'WATCH');
+        } else {
+          delete button.dataset.liAction;
+          button.disabled = true;
+          button.dataset.market = titleStat(market);
+          button.dataset.gameId = player.game_id || '';
+          text(button, 'LINE REQUIRED');
+        }
       });
     });
 
+    const renderRotationDetail = selectedPlayer => {
+      if (!rotationDetail || !selectedPlayer) return;
+
+      unpending(rotationDetail);
+
+      const peers = players
+        .filter(player =>
+          player &&
+          String(player.game_id || '') === String(selectedPlayer.game_id || '') &&
+          String(player.player_id || '') !== String(selectedPlayer.player_id || '')
+        )
+        .sort((a, b) => {
+          const aSame = a.team === selectedPlayer.team ? 0 : 1;
+          const bSame = b.team === selectedPlayer.team ? 0 : 1;
+          if (aSame !== bSame) return aSame - bSame;
+
+          const roleRank = role =>
+            role === 'STARTER' ? 0 :
+            role === 'BENCH / ROTATION' ? 1 : 2;
+
+          const roleDiff = roleRank(a.role) - roleRank(b.role);
+          if (roleDiff) return roleDiff;
+
+          return (Number(b.minutes) || -1) - (Number(a.minutes) || -1);
+        })
+        .slice(0, 4);
+
+      const cards = Array.from(rotationDetail.children);
+
+      cards.forEach((card, index) => {
+        const player = peers[index];
+
+        if (!player) {
+          pending(card, 'NO ADDITIONAL CURRENT PLAYER');
+          return;
+        }
+
+        unpending(card);
+        card.dataset.playerId = player.player_id || '';
+        card.dataset.team = player.team || '';
+        card.dataset.sport = player.sport || '';
+
+        const market = playerMarket(player);
+        const window = (player.windows || {})[market] || {};
+        const values = (window.values || []).slice(0, 5);
+        const statName = titleStat(market);
+
+        const leaves = leafElements(card);
+
+        const nameElement = leaves.find(element =>
+          /font-headline-sm/.test(element.className || '')
+        );
+        text(nameElement, player.name || 'PLAYER');
+
+        if (nameElement?.parentElement) {
+          const positionElement = Array.from(nameElement.parentElement.children).find(
+            element => element !== nameElement && element.tagName === 'SPAN'
+          );
+          text(positionElement, player.position || '—');
+        }
+
+        const identityElement = leaves.find(element =>
+          /•/.test(element.textContent) &&
+          /font-label-mono-micro/.test(element.className || '')
+        );
+        text(
+          identityElement,
+          `${player.team || '—'} • ${player.role || 'ROLE NOT SUPPLIED'}`
+        );
+
+        const headerBadge = Array.from(card.querySelectorAll('span')).find(element =>
+          /10\/10 HIT|\+EV EDGE|HOT BENCH|ROTATION/i.test(element.textContent.trim())
+        );
+        text(headerBadge, player.role || 'ROLE NOT SUPPLIED');
+
+        const image = card.querySelector('img');
+        if (image) {
+          image.removeAttribute('src');
+          image.style.display = 'none';
+
+          const holder = image.parentElement;
+          if (holder) {
+            let initials = holder.querySelector('[data-li-rotation-initials]');
+            if (!initials) {
+              initials = document.createElement('span');
+              initials.dataset.liRotationInitials = 'true';
+              initials.className = 'font-label-mono-sm text-label-mono-sm text-on-surface font-bold';
+              holder.insertBefore(initials, holder.firstChild);
+            }
+            initials.textContent = String(player.name || '?')
+              .split(/\s+/)
+              .filter(Boolean)
+              .map(part => part[0])
+              .join('')
+              .slice(0, 2)
+              .toUpperCase();
+          }
+        }
+
+        const metricGrid = Array.from(card.querySelectorAll('div')).find(element =>
+          /grid-cols-3/.test(element.className || '')
+        );
+
+        const metricBoxes = metricGrid ? Array.from(metricGrid.children) : [];
+
+        const setMetric = (box, label, value) => {
+          if (!box) return;
+          const boxLeaves = leafElements(box);
+          if (boxLeaves[0]) text(boxLeaves[0], label);
+          if (boxLeaves[1]) text(boxLeaves[1], value);
+        };
+
+        setMetric(
+          metricBoxes[0],
+          'MIN',
+          player.minutes == null ? '—' : number(player.minutes, 1)
+        );
+
+        setMetric(
+          metricBoxes[1],
+          `${statName} L5`,
+          window.l5 == null ? '—' : number(window.l5, 1)
+        );
+
+        setMetric(
+          metricBoxes[2],
+          'MARKET',
+          'SOURCE PENDING'
+        );
+
+        const logLine = leaves.find(element =>
+          /^L5(?: Log)?:/i.test(element.textContent.trim())
+        );
+
+        text(
+          logLine,
+          `L5: [${values.length ? values.map(value => number(value, 1)).join(', ') : 'NO HISTORY'}]`
+        );
+
+        const lineOrHit = leaves.find(element =>
+          /^Line:|Over$|\d+\/\d+ Over|\d+% Over/i.test(element.textContent.trim())
+        );
+        text(lineOrHit, 'LINE REQUIRED');
+
+        const footerText = leaves.find(element =>
+          /EV vs|Rim vuln|role expansion|rested = high usage/i.test(element.textContent)
+        );
+        text(footerText, 'RECORDED PLAYER HISTORY • MARKET SOURCE PENDING');
+
+        const slipButton = all('button', card).find(button =>
+          /SLIP/i.test(button.textContent)
+        );
+
+        if (slipButton) {
+          delete slipButton.dataset.liAction;
+          slipButton.disabled = true;
+          text(slipButton, 'LINE REQUIRED');
+        }
+
+        const progress = Array.from(card.querySelectorAll('div')).find(element =>
+          /h-1\.5/.test(element.className || '') &&
+          /overflow-hidden/.test(element.className || '')
+        );
+
+        if (progress) {
+          progress.replaceChildren();
+
+          const bar = document.createElement('div');
+          bar.className = 'bg-primary h-full';
+          bar.style.width = values.length ? '100%' : '0%';
+          progress.appendChild(bar);
+        }
+      });
+    };
+
     const renderPlayerDetail = player => {
       if (!playerDetail || !player) return;
+
+      renderRotationDetail(player);
 
       unpending(playerDetail);
       playerDetail.dataset.playerId = player.player_id || '';
