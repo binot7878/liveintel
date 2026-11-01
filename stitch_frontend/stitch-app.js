@@ -100,6 +100,21 @@
   }
 
   function bindLive(data) {
+    const games = data.games || [];
+
+    const counts = games.reduce((acc, game) => {
+      const sport = String(game.sport || '').toLowerCase();
+      acc.all += 1;
+      if (sport) acc[sport] = (acc[sport] || 0) + 1;
+      return acc;
+    }, { all: 0 });
+
+    all('[data-sport-filter]').forEach(button => {
+      const key = String(button.dataset.sportFilter || '').toLowerCase();
+      const badge = button.querySelector('span:last-child');
+      if (badge) text(badge, String(counts[key] || 0));
+    });
+
     const cards = all('.matchup-card');
     cards.forEach((card, index) => {
       const game = data.games[index];
