@@ -115,6 +115,19 @@
       if (badge) text(badge, String(counts[key] || 0));
     });
 
+    leafElements(document.querySelector('main')).forEach(element => {
+      const value = element.textContent.trim();
+
+      if (/^BOOKMAKERS:/i.test(value)) {
+        text(element, 'MARKET DATA: SOURCE PENDING');
+      } else if (/^LATENCY:/i.test(value)) {
+        const live = data.global &&
+                     data.global.health &&
+                     data.global.health.state === 'LIVE';
+        text(element, live ? 'INGEST: CURRENT' : 'INGEST: DEGRADED');
+      }
+    });
+
     const cards = all('.matchup-card');
     cards.forEach((card, index) => {
       const game = data.games[index];
