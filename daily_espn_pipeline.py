@@ -647,8 +647,16 @@ def process_league(conn, sport, espn_path, today):
         try:
             usable, missing_teams = check_usable_context(conn, game)
             if not usable:
-                result['fatal_errors'].append({'category': 'unusable_game_context',
-                                               'reason': f"{game['id']}: no usable player identities"})
+                if game['status'] == 'LIVE':
+                    result['fatal_errors'].append({
+                        'category': 'unusable_game_context',
+                        'reason': f"{game['id']}: no usable player identities"
+                    })
+                else:
+                    result['warning_details'].append({
+                        'category': 'awaiting_player_context',
+                        'reason': f"{game['id']}: pregame player identities not yet available"
+                    })
             else:
                 result['usable_games'] += 1
                 if missing_teams:

@@ -389,14 +389,31 @@ class IngestionTests(unittest.TestCase):
              contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(pipeline.main(), 1)
 
-    def test_discovered_active_game_without_usable_context_is_fatal(self):
+    def test_discovered_live_game_without_usable_context_is_fatal(self):
         game, summary = self.cfb_summary()
+        game['status'] = 'LIVE'
         summary['rosters'] = []
         with patch.object(pipeline, 'player_groups', return_value=[]):
             code, result = self.run_cfb_main(game, summary)
         self.assertEqual(code, 1)
         self.assertEqual(result['usable_games'], 0)
         self.assertTrue(any(e['category'] == 'unusable_game_context' for e in result['fatal_errors']))
+
+    def test_discovered_pregame_without_usable_context_waits_without_failing(self):
+        game, summary = self.cfb_summary()
+        game['status'] = 'PRE'
+        summary['rosters'] = []
+        with patch.object(pipeline, 'player_groups', return_value=[]):
+            code, result = self.run_cfb_main(game, summary)
+
+        self.assertEqual(code, 0)
+        self.assertEqual(result['usable_games'], 0)
+        self.assertEqual(result['fatal_error_count'], 0)
+        self.assertIn(game['id'], result['games_awaiting_player_context'])
+        self.assertTrue(any(
+            warning['category'] == 'awaiting_player_context'
+            for warning in result['warning_details']
+        ))
 
     def test_rejected_supplemental_abbreviation_does_not_admit_bad_players(self):
         game, summary = self.cfb_summary()
