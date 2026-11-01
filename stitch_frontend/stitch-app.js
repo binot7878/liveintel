@@ -41,6 +41,19 @@
     return api(path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-LiveIntel-Development': '1' }, body: JSON.stringify(payload) });
   }
 
+  async function calculate(kind, payload) {
+    try {
+      const result = await post('/api/stitch/calculate', { kind, ...payload });
+      if (result.fail_closed) {
+        notify(`Calculation ${kind} failed closed: missing required inputs`, true);
+      }
+      return result;
+    } catch (error) {
+      notify(`Calculation ${kind} failed: ${error.message}`, true);
+      return { kind, result: null, available: false, fail_closed: true };
+    }
+  }
+
   function addEnvironmentNotice() {
     const notice = document.createElement('div'); notice.id = 'liveintel-development-state';
     notice.textContent = 'DEVELOPMENT STITCH • REAL LIVEINTEL READS • WRITES ISOLATED • NO WAGER EXECUTION';
@@ -219,7 +232,24 @@
       const cadence = findLeaf(/INNING & QUARTER FLOW CADENCE/i, main); if (cadence) pending(cadence.closest('section') || cadence.parentElement && cadence.parentElement.parentElement, 'CURRENT SEGMENT PROJECTION INPUTS NOT AVAILABLE');
       const sensitivity = findLeaf(/SENSITIVITY SIM/i, main); if (sensitivity) pending(sensitivity.parentElement && sensitivity.parentElement.parentElement, 'MODEL PARAMETERS REQUIRE CURRENT PROJECTION INPUTS');
     }
-    all('button', main).filter(button => /EXECUTE OPTIMAL SLIP|ADD CORRELATED PAIR|DISPATCH TO BETSLIP/i.test(button.textContent)).forEach(button => { button.dataset.liAction = 'calculation-pending'; });
+    all('button', main).forEach(button => {
+      if (/DIRECT LAB EXECUTION|EXECUTE OPTIMAL SLIP|DISPATCH TO BETSLIP/i.test(button.textContent)) {
+        const odds = button.dataset.odds || (button.parentElement && button.parentElement.dataset.odds);
+        const prob = button.dataset.probability || (button.parentElement && button.parentElement.dataset.probability);
+        const overOdds = button.dataset.overOdds || (button.parentElement && button.parentElement.dataset.overOdds);
+        const underOdds = button.dataset.underOdds || (button.parentElement && button.parentElement.dataset.underOdds);
+
+        if (odds && prob) {
+          button.dataset.liAction = 'calc-kelly';
+        } else if (overOdds && underOdds) {
+          button.dataset.liAction = 'calc-no-vig';
+        } else if (odds) {
+          button.dataset.liAction = 'calc-implied';
+        } else {
+          button.dataset.liAction = 'calculation-pending';
+        }
+      }
+    });
   }
 
   function bindWatch(data) {
@@ -447,6 +477,42 @@
       else if (action === 'draft-remove') { event.preventDefault(); event.stopImmediatePropagation(); state.draft.splice(Number(button.dataset.index), 1); updateDraftDisplay(); }
       else if (action === 'export') { event.preventDefault(); event.stopImmediatePropagation(); exportVisible(); }
       else if (action === 'calculation-pending') { event.preventDefault(); event.stopImmediatePropagation(); notify('Required market inputs are not connected. Calculation failed closed.', true); }
+      else if (action === 'calc-kelly') {
+        event.preventDefault(); event.stopImmediatePropagation();
+        const prob = parseFloat(button.dataset.probability);
+        const odds = parseFloat(button.dataset.odds);
+        if (!Number.isFinite(prob) || prob <= 0 || prob >= 1 || !Number.isFinite(odds) || odds === 0) {
+          notify('Kelly calculation failed closed: valid probability (0 < p < 1) and non-zero odds required.', true);
+          return;
+        }
+        const decimalOdds = odds > 0 ? 1 + odds / 100 : 1 + 100 / Math.abs(odds);
+        calculate('kelly', { probability: prob, decimal_odds: decimalOdds }).then(res => {
+          if (res.available) notify(`Kelly sizing calculated: ${res.result.fraction} fraction`);
+        });
+      }
+      else if (action === 'calc-no-vig') {
+        event.preventDefault(); event.stopImmediatePropagation();
+        const overOdds = parseFloat(button.dataset.overOdds);
+        const underOdds = parseFloat(button.dataset.underOdds);
+        if (!Number.isFinite(overOdds) || !Number.isFinite(underOdds) || overOdds === 0 || underOdds === 0) {
+          notify('No-vig calculation failed closed: both over and under odds are required.', true);
+          return;
+        }
+        calculate('no_vig_probability', { over_odds: overOdds, under_odds: underOdds }).then(res => {
+          if (res.available) notify(`No-vig probabilities: Over ${res.result.over_fair}, Under ${res.result.under_fair}`);
+        });
+      }
+      else if (action === 'calc-implied') {
+        event.preventDefault(); event.stopImmediatePropagation();
+        const odds = parseFloat(button.dataset.odds);
+        if (!Number.isFinite(odds) || odds === 0) {
+          notify('Implied probability calculation failed closed: valid non-zero odds required.', true);
+          return;
+        }
+        calculate('implied_probability', { odds }).then(res => {
+          if (res.available) notify(`Implied probability: ${res.result.implied_probability}`);
+        });
+      }
       else if (button.id === 'stageTicketBtn' || button.id === 'transmitTicketBtn' || /RECORD TICKET/i.test(label)) { event.preventDefault(); event.stopImmediatePropagation(); recordDraft(); }
     }, true);
     document.addEventListener('paste', event => {

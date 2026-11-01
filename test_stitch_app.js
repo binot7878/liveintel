@@ -23,3 +23,13 @@ for (const filename of screens) {
   );
 }
 console.log('PASS: 15 code.html files frozen; shared data, action, update, fail-closed and page binding contracts present');
+
+
+assert.ok(runtime.includes("async function calculate(kind, payload)"), 'missing calculate helper');
+assert.ok(runtime.includes("/api/stitch/calculate"), 'missing /api/stitch/calculate endpoint');
+assert.ok(runtime.includes("calc-kelly"), 'missing calc-kelly action handler');
+assert.ok(runtime.includes("calc-no-vig"), 'missing calc-no-vig action handler');
+assert.ok(runtime.includes("calc-implied"), 'missing calc-implied action handler');
+assert.ok(runtime.includes("calculation-pending"), 'missing calculation-pending fail-closed state');
+
+console.log('PASS: Calculation wiring and fail-closed contracts present');
