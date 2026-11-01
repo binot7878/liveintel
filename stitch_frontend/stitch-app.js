@@ -145,11 +145,24 @@
         if (leaves.length >= 3) { text(leaves[0], team[0]); text(leaves[1], team[0]); text(leaves[leaves.length - 1], team[1] == null ? '—' : team[1]); }
       });
       const metrics = blocks[2] ? Array.from(blocks[2].children) : [];
-      metrics.slice(0, 2).forEach(metric => pending(metric, 'LIVE MARKET • DATA SOURCE PENDING'));
-      if (metrics[2]) { unpending(metrics[2]); const leaves = leafElements(metrics[2]); text(leaves[0], 'GAME STATE'); text(leaves[1], gameSituation(game)); }
+      metrics.slice(0, 2).forEach(metric => {
+        pending(metric, 'LIVE MARKET • DATA SOURCE PENDING');
+        const leaves = leafElements(metric);
+        if (leaves[0]) text(leaves[0], 'LIVE MARKET');
+        if (leaves[1]) text(leaves[1], 'DATA SOURCE PENDING');
+      });
+      if (metrics[2]) {
+        unpending(metrics[2]);
+        const leaves = leafElements(metrics[2]);
+        text(leaves[0], 'GAME STATE');
+        text(leaves[1], gameSituation(game));
+      }
       const footer = blocks[blocks.length - 1];
       if (footer) {
-        const detail = leafElements(footer).find(element => !/GAMECAST|arrow_forward|open_in_new/i.test(element.textContent));
+        const detail = leafElements(footer).find(
+          element => !element.closest('button') &&
+                     !element.classList.contains('material-symbols-outlined')
+        );
         text(detail, game.status === 'FINAL' ? 'FINAL • RECORDED' : game.status === 'LIVE' ? 'LIVEINTEL STATE CURRENT' : `START ${game.start_time || 'TIME NOT SUPPLIED'}`);
         const button = one('button', footer);
         if (button) {
