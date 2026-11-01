@@ -453,7 +453,7 @@ def store_player_game_stats(conn, summary, game_id, plays, now):
                 if cat_name == 'passing':
                     segs = aggregate_qb_passing_segments(plays, name)
                     for seg, val in segs.items():
-                        conn.execute(""""
+                        conn.execute("""
                             INSERT OR REPLACE INTO player_segment_stats
                             (game_id, player_id, player_name, team, segment, stat_type, value, last_updated)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -462,7 +462,7 @@ def store_player_game_stats(conn, summary, game_id, plays, now):
                 if cat_name == 'rushing':
                     segs = aggregate_rb_rushing_segments(plays, name)
                     for seg, val in segs.items():
-                        conn.execute(""""
+                        conn.execute("""
                             INSERT OR REPLACE INTO player_segment_stats
                             (game_id, player_id, player_name, team, segment, stat_type, value, last_updated)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -471,7 +471,7 @@ def store_player_game_stats(conn, summary, game_id, plays, now):
                 if cat_name == 'receiving':
                     segs = aggregate_wr_receiving_segments(plays, name)
                     for seg, val in segs.items():
-                        conn.execute(""""
+                        conn.execute("""
                             INSERT OR REPLACE INTO player_segment_stats
                             (game_id, player_id, player_name, team, segment, stat_type, value, last_updated)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -819,13 +819,13 @@ def process_game_situation(conn, game_id, summary, plays, home_team, away_team, 
                           100 * pas / max(1, rush + pas) if (rush + pas) > 0 else 0,
                           0, 0, 0, 0, 0,  # red zone stats not fully tracked yet
                           0, 0, 0, 0, 0, 0, datetime.datetime.now())
-                    conn.execute(""""
+                    conn.execute("""
                         INSERT OR REPLACE INTO team_situation_stats
                         (game_id, team_id, period, rush_plays, pass_plays, rush_yards, pass_yards,
                          rush_pct, pass_pct, red_zone_entries, red_zone_plays, red_zone_td, red_zone_fg,
                          fg_attempts, fg_makes, pat_attempts, pat_makes, fg_range_entries,
                          drive_stalls, two_minute_plays, last_updated)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         """, vals)
         
         # Store player opportunity
