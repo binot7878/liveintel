@@ -194,7 +194,10 @@
   function bindPlayers(data) {
     const players = data.players || [];
     const detailGrid = Array.from(document.querySelectorAll('main div')).find(element => /xl:grid-cols-12/.test(element.className || '') && !element.querySelector('table'));
-    if (detailGrid) Array.from(detailGrid.children).forEach((panel, index) => pending(panel, index === 0 ? 'SELECTED PLAYER DETAIL • CHOOSE A REAL MATRIX ROW' : 'MATCHUP ROTATION DETAIL • REAL ROW SELECTION REQUIRED'));
+    const detailPanels = detailGrid ? Array.from(detailGrid.children) : [];
+    const playerDetail = detailPanels[0] || null;
+    if (playerDetail) pending(playerDetail, 'SELECTED PLAYER DETAIL • CHOOSE A REAL MATRIX ROW');
+    detailPanels.slice(1).forEach(panel => pending(panel, 'MATCHUP ROTATION DETAIL • REAL ROW SELECTION REQUIRED'));
     const rows = all('tbody tr');
     rows.forEach((row, index) => {
       const player = players[index];
@@ -218,6 +221,246 @@
         if (buttonIndex > 0) { button.dataset.market = titleStat(market); button.dataset.gameId = player.game_id; }
       });
     });
+
+    const renderPlayerDetail = player => {
+      if (!playerDetail || !player) return;
+
+      unpending(playerDetail);
+      playerDetail.dataset.playerId = player.player_id || '';
+      playerDetail.dataset.sport = player.sport || '';
+      playerDetail.dataset.team = player.team || '';
+
+      const market = playerMarket(player);
+      const window = (player.windows || {})[market] || {};
+      const values = (window.values || []).slice(0, 5);
+      const statName = titleStat(market);
+      const leaves = leafElements(playerDetail);
+
+      const nameElement = leaves.find(element =>
+        /font-headline-lg/.test(element.className || '') &&
+        /tracking-tight/.test(element.className || '') &&
+        !element.dataset.liPlayerInitials
+      );
+      text(nameElement, player.name || 'PLAYER');
+
+      if (nameElement && nameElement.parentElement) {
+        const roleElement = Array.from(nameElement.parentElement.children).find(
+          element => element !== nameElement && element.tagName === 'SPAN'
+        );
+        text(roleElement, player.role || 'ROLE NOT SUPPLIED');
+      }
+
+      const identityElement = leaves.find(element =>
+        /^[A-Z0-9]{2,5}\s*•/.test(element.textContent.trim())
+      );
+      text(
+        identityElement,
+        `${player.team || '—'} • ${player.position || 'POSITION NOT SUPPLIED'}`
+      );
+
+      const matchupElement = leaves.find(element =>
+        /^(?:vs|@)\s/i.test(element.textContent.trim())
+      );
+      text(matchupElement, player.game || 'MATCHUP NOT AVAILABLE');
+
+      const paceElement = leaves.find(element =>
+        /^PACE\s/i.test(element.textContent.trim())
+      );
+      text(paceElement, 'PACE: DATA NOT DERIVED');
+
+      const edgeElement = Array.from(playerDetail.querySelectorAll('span')).find(element =>
+        /EDGE/i.test(element.textContent.trim()) &&
+        /font-label-mono-sm/.test(element.className || '')
+      );
+      if (edgeElement) {
+        edgeElement.replaceChildren(document.createTextNode('MARKET EDGE: PRICE REQUIRED'));
+      }
+
+      const defenseElement = leaves.find(element =>
+        /PERIMETER DEF|DEF \(#/i.test(element.textContent.trim())
+      );
+      text(defenseElement, 'MATCHUP DEFENSE: SOURCE PENDING');
+
+      const image = playerDetail.querySelector('img');
+      if (image) {
+        image.removeAttribute('src');
+        image.style.display = 'none';
+        image.alt = `${player.name || 'Player'} portrait unavailable`;
+
+        const holder = image.parentElement;
+        if (holder) {
+          let initials = holder.querySelector('[data-li-player-initials]');
+          if (!initials) {
+            initials = document.createElement('span');
+            initials.dataset.liPlayerInitials = 'true';
+            initials.className = 'font-headline-lg text-headline-lg text-on-surface font-bold';
+            holder.insertBefore(initials, holder.firstChild);
+          }
+          initials.textContent = String(player.name || '?')
+            .split(/\s+/)
+            .filter(Boolean)
+            .map(part => part[0])
+            .join('')
+            .slice(0, 2)
+            .toUpperCase();
+        }
+      }
+
+      const metricGrid = Array.from(playerDetail.querySelectorAll('div')).find(element =>
+        /grid-cols-2/.test(element.className || '') &&
+        /sm:grid-cols-4/.test(element.className || '')
+      );
+
+      const metricBoxes = metricGrid ? Array.from(metricGrid.children) : [];
+
+      const setMetric = (box, items) => {
+        if (!box) return;
+        const boxLeaves = leafElements(box);
+        items.forEach((value, index) => {
+          if (boxLeaves[index]) text(boxLeaves[index], value);
+        });
+      };
+
+      setMetric(metricBoxes[0], [
+        'RECORDED MIN',
+        player.minutes == null ? '—' : number(player.minutes, 1),
+        'CURRENT GAME',
+        `ROLE: ${player.role || 'NOT SUPPLIED'}`
+      ]);
+
+      setMetric(metricBoxes[1], [
+        'USAGE',
+        'NOT DERIVABLE',
+        '—',
+        'SOURCE NOT RECORDED'
+      ]);
+
+      setMetric(metricBoxes[2], [
+        `${statName} L5 AVG`,
+        window.l5 == null ? '—' : number(window.l5, 1),
+        window.l10 == null ? 'L10 —' : `L10 ${number(window.l10, 1)}`,
+        'RECORDED HISTORY'
+      ]);
+
+      setMetric(metricBoxes[3], [
+        `${statName} HISTORY`,
+        `${values.length} GAMES`,
+        'RECORDED',
+        'LINE REQUIRED'
+      ]);
+
+      const logHeading = leaves.find(element =>
+        /LOG \(LAST 5 (?:GAMES|RECORDED)\)/i.test(element.textContent.trim())
+      );
+
+      const logPanel = logHeading?.parentElement?.parentElement?.parentElement || null;
+
+      text(logHeading, `${statName} LOG (LAST 5 RECORDED)`);
+
+      if (logPanel) {
+        const logLeaves = leafElements(logPanel);
+
+        const lineElement = logLeaves.find(element =>
+          /^LINE:/i.test(element.textContent.trim())
+        );
+        text(lineElement, 'LINE: SOURCE PENDING');
+
+        const averageElement = logLeaves.find(element =>
+          /^AVG\s/i.test(element.textContent.trim())
+        );
+        text(
+          averageElement,
+          window.l5 == null ? 'AVG —' : `AVG ${number(window.l5, 1)} ${statName}`
+        );
+
+        const logGrid = Array.from(logPanel.querySelectorAll('div')).find(element =>
+          /grid-cols-5/.test(element.className || '')
+        );
+
+        if (logGrid) {
+          const boxes = Array.from(logGrid.children);
+          const numericValues = values
+            .map(value => Number(value))
+            .filter(value => Number.isFinite(value));
+          const maximum = Math.max(...numericValues, 1);
+
+          boxes.forEach((box, index) => {
+            const boxLeaves = leafElements(box);
+            const value = Number(values[index]);
+            const available = Number.isFinite(value);
+
+            if (boxLeaves[0]) text(boxLeaves[0], available ? number(value, 1) : '—');
+            if (boxLeaves[boxLeaves.length - 1]) text(boxLeaves[boxLeaves.length - 1], `G${index + 1}`);
+
+            const bar = Array.from(box.children).find(element =>
+              /bg-primary\/20|bg-surface-container-highest/.test(element.className || '')
+            );
+
+            if (bar) {
+              bar.style.height = available
+                ? `${Math.max(8, Math.round(100 * value / maximum))}%`
+                : '8%';
+            }
+          });
+        }
+
+        const thresholdElement = logLeaves.find(element =>
+          /^Threshold:/i.test(element.textContent.trim())
+        );
+        text(thresholdElement, 'Threshold: LINE REQUIRED');
+
+        const oddsElement = logLeaves.find(element =>
+          /Over Odds:/i.test(element.textContent.trim())
+        );
+        text(oddsElement, 'Price: SOURCE PENDING');
+      }
+
+      const detailButtons = all('button', playerDetail);
+
+      const watchButton = detailButtons.find(button =>
+        /ADD TO WATCH/i.test(button.textContent)
+      );
+
+      if (watchButton) {
+        watchButton.dataset.playerId = player.player_id || '';
+        watchButton.dataset.playerName = player.name || '';
+        watchButton.dataset.team = player.team || '';
+        watchButton.dataset.sport = player.sport || '';
+        watchButton.dataset.liAction = 'watch-add';
+      }
+
+      const ticketButton = detailButtons.find(button =>
+        /ADD TO TICKET|TICKET:/i.test(button.textContent)
+      );
+
+      if (ticketButton) {
+        delete ticketButton.dataset.liAction;
+        ticketButton.disabled = true;
+        const ticketLabel = leafElements(ticketButton).find(element =>
+          !/add_circle/i.test(element.textContent)
+        );
+        text(ticketLabel, 'TICKET: LINE / PRICE REQUIRED');
+      }
+
+      rows.forEach(row => row.classList.remove('bg-surface-container'));
+      const selectedRow = rows.find(
+        row => row.dataset.playerId === String(player.player_id || '')
+      );
+      if (selectedRow) selectedRow.classList.add('bg-surface-container');
+    };
+
+    rows.forEach(row => {
+      row.addEventListener('click', event => {
+        if (event.target.closest('button')) return;
+        const index = Number(row.dataset.playerIndex);
+        if (Number.isInteger(index) && players[index]) {
+          renderPlayerDetail(players[index]);
+        }
+      });
+    });
+
+    if (players.length) renderPlayerDetail(players[0]);
+
     const applyPlayerFilters = () => {
       const query = (one('#player-filter-input')?.value || '').trim().toLowerCase();
       const activeRole = document.querySelector('[data-player-role-filter].li-active-role')?.dataset.playerRoleFilter || 'all';
