@@ -812,10 +812,196 @@
         button.dataset.side = card.side; button.dataset.odds = card.odds == null ? '' : card.odds; button.dataset.book = card.book || ''; button.dataset.gameId = card.game_id || '';
       });
     });
-    text(one('#player-active-count-badge'), `SHOWING ${Math.min(cards.length, heat.cards.length)} OF ${heat.total} QUALIFYING PATTERNS`);
-    pending(one('#total-ou-correlation-bar'), 'MARKET CORRELATION • MULTI-BOOK SOURCE PENDING');
-    pending(one('#sgp-correlation-engine'), 'SGP MARKET / PRICE / ALIGNED CORRELATION INPUTS PENDING');
-    const drawer = one('#sgp-betslip-drawer'); if (drawer) drawer.dataset.liveintelDraft = 'true';
+    text(
+      one('#player-active-count-badge'),
+      `SHOWING ${Math.min(cards.length, heat.cards.length)} OF ${heat.total} RECORDED HISTORY PATTERNS`
+    );
+
+    // Remove frozen demo sportsbook / pattern-count claims from the shell.
+    leafElements(document.querySelector('main')).forEach(element => {
+      const value = element.textContent.trim();
+
+      if (/REAL BOOK SYNC:/i.test(value)) {
+        text(element, 'MARKET PRICES: SOURCE PENDING');
+      } else if (/^STREAKS \(\d+\)$/i.test(value)) {
+        text(element, `RECORDED PATTERNS (${heat.total || 0})`);
+      } else if (/^BOOK: MULTI-SYNTHESIS$/i.test(value)) {
+        text(element, 'BOOK: SOURCE PENDING');
+      }
+    });
+
+    // The frozen correlation bar contains illustrative market totals/covariance.
+    // Keep the component, but remove claims until verified market inputs exist.
+    const correlationBar = one('#total-ou-correlation-bar');
+    if (correlationBar) {
+      pending(correlationBar, 'MARKET CORRELATION • MULTI-BOOK SOURCE PENDING');
+
+      leafElements(correlationBar).forEach(element => {
+        const value = element.textContent.trim();
+
+        if (/GAME TOTAL O\/U CORRELATION:/i.test(value)) {
+          text(element, 'GAME TOTAL / HISTORY CORRELATION');
+        } else if (/CLUSTERS GAME-TOTAL CORRELATED/i.test(value)) {
+          text(element, 'CORRELATION: VERIFIED MARKET INPUTS REQUIRED');
+        } else if (/GAME TOTAL:|TOTAL OU:/i.test(value)) {
+          text(element, 'GAME TOTAL: MARKET SOURCE PENDING');
+        } else if (/MARKET DENSITY:/i.test(value)) {
+          text(element, 'MARKET DENSITY: SOURCE PENDING');
+        } else if (/PINNACLE|CRIS|SYNDICATE LINE HOOK/i.test(value)) {
+          text(element, 'MARKET SOURCE: PENDING');
+        }
+      });
+
+      all('button', correlationBar).forEach(button => {
+        button.disabled = true;
+        button.removeAttribute('onclick');
+      });
+    }
+
+    // The frozen SGP engine is illustrative only. Do not expose fake odds,
+    // edge, covariance, presets, or actionable sportsbook controls.
+    const sgpEngine = one('#sgp-correlation-engine');
+    if (sgpEngine) {
+      pending(sgpEngine, 'SGP MARKET / PRICE / ALIGNED CORRELATION INPUTS PENDING');
+
+      leafElements(sgpEngine).forEach(element => {
+        const value = element.textContent.trim();
+
+        if (/AUTOMATED SGP CORRELATION ENGINE/i.test(value)) {
+          text(element, 'SGP CORRELATION ENGINE • INPUTS PENDING');
+        } else if (/QUANT MULTI-LEG SYNERGY CALCULATOR/i.test(value)) {
+          text(element, 'VERIFIED MARKET / COVARIANCE INPUTS REQUIRED');
+        } else if (/ACTIVE SGP SLIP:/i.test(value)) {
+          text(element, 'SGP SLIP: MARKET INPUTS REQUIRED');
+        } else if (/EDGE|FAIR ODDS|BOOK|ACTIVE CLUSTERS|COVARIANCE/i.test(value)) {
+          text(element, 'SOURCE PENDING');
+        }
+      });
+
+      all('button', sgpEngine).forEach(button => {
+        button.disabled = true;
+        button.removeAttribute('onclick');
+      });
+    }
+
+    // Player-card correlation/SGP/footer claims are frozen demo content.
+    cards.forEach(cardElement => {
+      const content = cardElement.children[1];
+
+      if (content) {
+        Array.from(content.querySelectorAll('span, div')).forEach(element => {
+          const value = element.textContent.trim();
+
+          if (/TOTAL O\/U CORR:/i.test(value) && element.children.length <= 1) {
+            text(element, 'MARKET CORRELATION: SOURCE PENDING');
+          }
+        });
+
+        leafElements(content).forEach(element => {
+          const value = element.textContent.trim();
+
+          if (/TOTAL O\/U CORR:/i.test(value)) {
+            text(element, 'MARKET CORRELATION: SOURCE PENDING');
+          } else if (/BULLISH OVER|DEF COVARIANCE|BEARISH UNDER/i.test(value)) {
+            text(element, 'CORRELATION PENDING');
+          } else if (/hits occurred when|overs hit when|hits accompanied|defensive slogs/i.test(value)) {
+            text(element, 'VERIFIED MARKET HISTORY REQUIRED');
+          } else if (/\+\d+(?:\.\d+)?% EDGE|\+EV EDGE|PLUS MONEY EV|STEAM DETECTED/i.test(value)) {
+            text(element, 'MARKET EDGE: PRICE REQUIRED');
+          } else if (/VS OPP RANK|PERIMETER USAGE|REB DEFENSE|PACE UP MATCHUP|STARTING ROLE \(/i.test(value)) {
+            text(element, 'MATCHUP DERIVATION: SOURCE PENDING');
+          }
+        });
+      }
+
+      const actionBar = cardElement.children[2];
+      const buttons = actionBar ? all('button', actionBar) : [];
+
+      buttons.forEach((button, buttonIndex) => {
+        button.removeAttribute('onclick');
+
+        if (buttonIndex === 0) {
+          button.dataset.liAction = 'watch-add';
+        } else {
+          delete button.dataset.liAction;
+          button.disabled = true;
+          text(button, buttonIndex === 1 ? 'SGP: INPUTS REQUIRED' : 'TICKET: LINE / PRICE REQUIRED');
+        }
+      });
+    });
+
+    // Remove remaining frozen SGP preset narratives and top/floating demo claims.
+    if (sgpEngine) {
+      Array.from(sgpEngine.querySelectorAll('p')).forEach(element => {
+        if (/LaMelo|Derrick White|Chet Holmgren|Over \d|Under \d/i.test(element.textContent)) {
+          text(element, 'PRESET LEGS UNAVAILABLE • VERIFIED MARKET INPUTS REQUIRED');
+        }
+      });
+
+      Array.from(sgpEngine.querySelectorAll('span')).forEach(element => {
+        const value = element.textContent.trim();
+
+        if (/FAIR ODDS:/i.test(value)) {
+          text(element, 'ODDS: SOURCE PENDING');
+        } else if (/\+\d+(?:\.\d+)?% EDGE/i.test(value)) {
+          text(element, 'EDGE: PRICE REQUIRED');
+        }
+      });
+    }
+
+    const sgpBarButton = one('#btn-open-sgp-drawer-bar');
+    if (sgpBarButton) {
+      sgpBarButton.disabled = true;
+      sgpBarButton.removeAttribute('onclick');
+      text(sgpBarButton, 'SGP SLIP • VERIFIED MARKET INPUTS REQUIRED');
+    }
+
+    const floatingSgpButton = one('#btn-toggle-betslip-drawer');
+    if (floatingSgpButton) {
+      floatingSgpButton.disabled = true;
+      floatingSgpButton.removeAttribute('onclick');
+      text(floatingSgpButton, 'SGP DRAFT • INPUTS REQUIRED');
+    }
+
+    const drawer = one('#sgp-betslip-drawer');
+    if (drawer) {
+      drawer.dataset.liveintelDraft = 'true';
+
+      const wagerInput = one('#sgp-wager-input');
+      if (wagerInput) {
+        wagerInput.disabled = true;
+        wagerInput.value = '';
+        wagerInput.placeholder = 'PRICE REQUIRED';
+      }
+
+      leafElements(drawer).forEach(element => {
+        const value = element.textContent.trim();
+
+        if (/QUANT PROTOCOL ACTIVE|AUTO-PAIRING/i.test(value)) {
+          text(element, 'MARKET INPUTS PENDING');
+        } else if (/CORRELATED EDGE|JOINT TRUE PROB|IMP:|PAIRWISE CORRELATION MATRIX|SYNCHRONIZED/i.test(value)) {
+          text(element, 'SOURCE PENDING');
+        } else if (/LaMelo Ball|Derrick White|Chet Holmgren|Game Total/i.test(value)) {
+          text(element, 'DEMO LEG REMOVED');
+        } else if (/Over \d|Under \d|[-+]\d{3}|CORR EDGE|SGP COVARIANCE|r =/i.test(value)) {
+          text(element, 'SOURCE PENDING');
+        } else if (/COMBINED PARLAY ODDS:/i.test(value)) {
+          text(element, 'COMBINED ODDS: SOURCE PENDING');
+        } else if (/EST\. TOTAL PAYOUT:/i.test(value)) {
+          text(element, 'EST. PAYOUT: PRICE REQUIRED');
+        } else if (/NET QUANT EDGE VALUE:/i.test(value)) {
+          text(element, 'EDGE VALUE: PRICE REQUIRED');
+        }
+      });
+
+      all('button', drawer).forEach(button => {
+        if (/TRANSMIT ORDER TO SPORTSBOOK/i.test(button.textContent)) {
+          button.disabled = true;
+          button.removeAttribute('onclick');
+          text(button, 'SPORTSBOOK TRANSMISSION NOT CONNECTED');
+        }
+      });
+    }
   }
 
   function researchTeams(data) { return (data.research && data.research.cards || []).filter(card => card.kind === 'team').slice(0, 2); }
