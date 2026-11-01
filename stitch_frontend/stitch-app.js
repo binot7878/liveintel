@@ -199,7 +199,7 @@
     rows.forEach((row, index) => {
       const player = players[index];
       if (!player) { pending(row, 'NO ADDITIONAL CURRENT PLAYER'); return; }
-      unpending(row); row.dataset.playerId = player.player_id; row.dataset.sport = player.sport; row.dataset.team = player.team;
+      unpending(row); row.dataset.playerId = player.player_id; row.dataset.sport = player.sport; row.dataset.team = player.team; row.dataset.playerIndex = String(index);
       const cells = Array.from(row.children); const market = playerMarket(player); const window = player.windows[market] || {};
       if (cells[0]) fillLeaves(cells[0], [player.name, `${player.team}${player.game ? ` • ${player.game}` : ''}`]);
       if (cells[1]) fillLeaves(cells[1], [player.position || '—']);
@@ -258,6 +258,60 @@
 
     const input = one('#player-filter-input');
     if (input) input.addEventListener('input', applyPlayerFilters);
+
+    const sortSelect = Array.from(document.querySelectorAll('select')).find(select =>
+      Array.from(select.options).some(option => /PROP HEAT \(\+EV\)|USAGE RATE|MINUTES SHIFT|L5 HIT RATE/i.test(option.textContent))
+    );
+
+    if (sortSelect) {
+      Array.from(sortSelect.options).forEach(option => {
+        if (/PROP HEAT \(\+EV\)|USAGE RATE/i.test(option.textContent)) {
+          option.disabled = true;
+          option.textContent = option.textContent.replace(/\s*\(\+EV\)/i, '') + ' — SOURCE PENDING';
+        } else if (/MINUTES SHIFT/i.test(option.textContent)) {
+          option.value = 'minutes';
+          option.textContent = 'MINUTES';
+        } else if (/L5 HIT RATE/i.test(option.textContent)) {
+          option.value = 'l5';
+          option.textContent = 'L5 AVG';
+        }
+      });
+
+      const firstSupported = Array.from(sortSelect.options).find(option => !option.disabled);
+      if (firstSupported) sortSelect.value = firstSupported.value;
+
+      sortSelect.addEventListener('change', () => {
+        const mode = sortSelect.value;
+        const tbody = rows[0]?.parentElement;
+        if (!tbody) return;
+
+        rows
+          .slice()
+          .sort((a, b) => {
+            const ai = Number(a.dataset.playerIndex || 0);
+            const bi = Number(b.dataset.playerIndex || 0);
+            const ap = players[ai] || {};
+            const bp = players[bi] || {};
+
+            if (mode === 'minutes') {
+              return (Number(bp.minutes) || -1) - (Number(ap.minutes) || -1);
+            }
+
+            if (mode === 'l5') {
+              const am = playerMarket(ap);
+              const bm = playerMarket(bp);
+              const av = Number((ap.windows?.[am] || {}).l5);
+              const bv = Number((bp.windows?.[bm] || {}).l5);
+              return (Number.isFinite(bv) ? bv : -1) - (Number.isFinite(av) ? av : -1);
+            }
+
+            return ai - bi;
+          })
+          .forEach(row => tbody.appendChild(row));
+
+        applyPlayerFilters();
+      });
+    }
 
     const activeClaim = leafElements(document.querySelector('main')).find(
       element => /LIVE SLATE:\s*\d+\s+ACTIVE PROPS IDENTIFIED/i.test(element.textContent)
