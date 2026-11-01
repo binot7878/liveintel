@@ -225,7 +225,11 @@
       rows.forEach(row => {
         const matchesText = !query || row.textContent.toLowerCase().includes(query);
         const role = (row.dataset.playerRole || '').toLowerCase();
-        const matchesRole = activeRole === 'all' || role === activeRole;
+        const matchesRole =
+          activeRole === 'all' ||
+          (activeRole === 'starter' && role === 'starter') ||
+          (activeRole === 'bench-rotation' && role === 'bench / rotation') ||
+          (activeRole === 'unknown' && role === 'role not supplied');
         row.classList.toggle('li-hidden', !(matchesText && matchesRole));
       });
     };
@@ -238,8 +242,11 @@
       const label = button.textContent.trim().toLowerCase();
       button.dataset.playerRoleFilter =
         label === 'starters' ? 'starter' :
-        label === 'bench' ? 'bench' :
-        label === 'rotation' ? 'rotation' : 'all';
+        label === 'bench' ? 'bench-rotation' :
+        label === 'rotation' ? 'unknown' : 'all';
+
+      if (label === 'bench') button.textContent = 'BENCH / ROT';
+      if (label === 'rotation') button.textContent = 'ROLE UNKNOWN';
 
       button.addEventListener('click', () => {
         roleButtons.forEach(item => item.classList.remove('li-active-role'));
