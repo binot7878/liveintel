@@ -1004,50 +1004,312 @@
     }
   }
 
-  function researchTeams(data) { return (data.research && data.research.cards || []).filter(card => card.kind === 'team').slice(0, 2); }
-  function bindMath(data) {
-    const teams = researchTeams(data); const main = one('main'); if (!main) return;
-    const demoNames = [/ATLANTA DREAM/i, /GOLDEN STATE/i];
-    teams.forEach((team, index) => {
-      const name = findLeaf(demoNames[index], main); text(name, team.team);
-      const parent = name && name.parentElement && name.parentElement.parentElement;
-      if (parent) {
-        const recent = findLeaf(/^RECENT FULL-GAME AVERAGE$/i, parent.parentElement || parent);
-        if (recent && recent.parentElement) text(leafElements(recent.parentElement).filter(element => element !== recent)[0], team.average == null ? '—' : `${number(team.average, 1)} PPG (RECORDED)`);
-      }
-    });
-    all('div', main).filter(element => element.children.length && /SPORTSBOOK LINE/.test(element.textContent) && element.textContent.length < 300).forEach(element => pending(element, 'SPORTSBOOK LINE / EDGE • DATA SOURCE PENDING'));
-    const execution = findLeaf(/DIRECT LAB EXECUTION/i, main); if (execution) pending(execution.parentElement, 'EXECUTION REQUIRES VERIFIED MARKET PRICES');
-    const matrix = one('#prop-correlation-matrix-container'); if (matrix) pending(matrix, 'ALIGNED TARGET HISTORY + REAL MARKET LINES REQUIRED');
-    const projectionsAvailable = teams.length === 2 && teams.every(team => team.math && team.math.projection != null);
-    if (!projectionsAvailable) {
-      leafElements(main).filter(element => /TEAM PROJECTION/i.test(element.textContent)).forEach(element => {
-        let panel = element.parentElement;
-        while (panel && panel !== main && !/bg-surface-container-low/.test(panel.className || '')) panel = panel.parentElement;
-        pending(panel, 'LIVE PROJECTION INPUTS NOT AVAILABLE • RECORDED HISTORY RETAINED');
-      });
-      const cadence = findLeaf(/INNING & QUARTER FLOW CADENCE/i, main); if (cadence) pending(cadence.closest('section') || cadence.parentElement && cadence.parentElement.parentElement, 'CURRENT SEGMENT PROJECTION INPUTS NOT AVAILABLE');
-      const sensitivity = findLeaf(/SENSITIVITY SIM/i, main); if (sensitivity) pending(sensitivity.parentElement && sensitivity.parentElement.parentElement, 'MODEL PARAMETERS REQUIRE CURRENT PROJECTION INPUTS');
-    }
-    all('button', main).forEach(button => {
-      if (/DIRECT LAB EXECUTION|EXECUTE OPTIMAL SLIP|DISPATCH TO BETSLIP/i.test(button.textContent)) {
-        const odds = button.dataset.odds || (button.parentElement && button.parentElement.dataset.odds);
-        const prob = button.dataset.probability || (button.parentElement && button.parentElement.dataset.probability);
-        const overOdds = button.dataset.overOdds || (button.parentElement && button.parentElement.dataset.overOdds);
-        const underOdds = button.dataset.underOdds || (button.parentElement && button.parentElement.dataset.underOdds);
+  function researchTeams(data) {
+    const cards = data.research && Array.isArray(data.research.cards)
+      ? data.research.cards
+      : [];
 
-        if (odds && prob) {
-          button.dataset.liAction = 'calc-kelly';
-        } else if (overOdds && underOdds) {
-          button.dataset.liAction = 'calc-no-vig';
-        } else if (odds) {
-          button.dataset.liAction = 'calc-implied';
-        } else {
-          button.dataset.liAction = 'calculation-pending';
-        }
+    const teamCards = cards.filter(card =>
+      card &&
+      card.team &&
+      card.game_id &&
+      /team score/i.test(card.market || '')
+    );
+
+    for (const card of teamCards) {
+      const mate = teamCards.find(other =>
+        other !== card &&
+        String(other.game_id) === String(card.game_id) &&
+        other.team !== card.team
+      );
+
+      if (mate) return [card, mate];
+    }
+
+    return teamCards.slice(0, 2);
+  }
+
+  function bindMath(data) {
+    const main = one('main');
+    if (!main) return;
+
+    const teams = researchTeams(data);
+    const demoNames = [/ATLANTA DREAM/i, /GOLDEN STATE/i];
+
+    teams.forEach((team, index) => {
+      const heading = findLeaf(demoNames[index], main);
+      if (!heading) return;
+
+      text(
+        heading,
+        `${team.team} • ${team.sport || 'SPORT'} • GAME ${team.game_id}`
+      );
+
+      let panel = heading;
+
+      while (panel && panel !== main) {
+        const value = panel.textContent || '';
+
+        if (
+          /RECENT FULL-GAME AVERAGE/i.test(value) &&
+          /TEAM PROJECTION/i.test(value)
+        ) break;
+
+        panel = panel.parentElement;
+      }
+
+      if (!panel || panel === main) return;
+
+      const leaves = leafElements(panel);
+
+      const recentIndex = leaves.findIndex(element =>
+        /^RECENT FULL-GAME AVERAGE$/i.test(element.textContent.trim())
+      );
+
+      if (recentIndex >= 0 && leaves[recentIndex + 1]) {
+        text(
+          leaves[recentIndex + 1],
+          team.average == null
+            ? 'RECORDED AVERAGE UNAVAILABLE'
+            : `${number(team.average, 1)} PPG (RECORDED)`
+        );
+      }
+
+      const sportsbookIndex = leaves.findIndex(element =>
+        /^SPORTSBOOK LINE$/i.test(element.textContent.trim())
+      );
+
+      if (sportsbookIndex >= 0 && leaves[sportsbookIndex + 1]) {
+        text(leaves[sportsbookIndex + 1], 'SOURCE PENDING');
+      }
+
+      const projectionIndex = leaves.findIndex(element =>
+        /^MODEL PROJ$/i.test(element.textContent.trim())
+      );
+
+      const projection =
+        team.math &&
+        team.math.projection != null &&
+        Number.isFinite(Number(team.math.projection))
+          ? Number(team.math.projection)
+          : null;
+
+      if (projectionIndex >= 0 && leaves[projectionIndex + 1]) {
+        text(
+          leaves[projectionIndex + 1],
+          projection == null
+            ? 'INPUTS PENDING'
+            : `${number(projection, 1)} DESCRIPTIVE`
+        );
+      }
+
+      const edgeIndex = leaves.findIndex(element =>
+        /^EDGE VS LINE$/i.test(element.textContent.trim())
+      );
+
+      if (edgeIndex >= 0 && leaves[edgeIndex + 1]) {
+        text(leaves[edgeIndex + 1], 'LINE / PRICE REQUIRED');
       }
     });
+
+    leafElements(main).forEach(element => {
+      const value = element.textContent.trim();
+
+      if (/^100,000 ITER$/i.test(value)) {
+        text(element, 'SIMULATION NOT ACTIVE');
+
+      } else if (/ENGINE V4\.8/i.test(value)) {
+        text(element, 'RECORDED RESEARCH ENGINE');
+
+      } else if (/MONTE CARLO SIMS:/i.test(value)) {
+        text(element, 'SIMULATION STATUS:');
+
+      } else if (/^[+-]?\d+(?:\.\d+)?%\s*EV(?:\s*\(U\))?$/i.test(value)) {
+        text(element, 'EV: PRICE REQUIRED');
+
+      } else if (/^EDGE:\s*[+-]?\d/i.test(value)) {
+        text(element, 'EDGE: LINE REQUIRED');
+
+      } else if (/^[+-]?\d+(?:\.\d+)?\s*EV$/i.test(value)) {
+        text(element, 'EV: INPUTS REQUIRED');
+
+      } else if (/^(PINNACLE|CRIS|CIRCUS)$/i.test(value)) {
+        text(element, 'SOURCE PENDING');
+
+      } else if (/INSTITUTIONAL ODDS ENGINE/i.test(value)) {
+        text(element, 'MARKET DATA ENGINE • SOURCE PENDING');
+
+      } else if (/^SOCKET:\s*CONNECTED$/i.test(value)) {
+        text(element, 'SOCKET: NOT REQUIRED');
+
+      } else if (/^LATENCY:\s*14MS$/i.test(value)) {
+        text(element, 'INGEST: DATABASE CURRENT');
+
+      } else if (/^SYS HOLD:\s*2\.41%$/i.test(value)) {
+        text(element, 'MARKET HOLD: SOURCE PENDING');
+      }
+    });
+
+    // Rebind the two visible recorded-average blocks by occurrence.
+    // Replace the entire value cell so frozen parent text cannot remain.
+    const recentLabels = leafElements(main).filter(element =>
+      /^RECENT FULL-GAME AVERAGE$/i.test(element.textContent.trim())
+    ).slice(0, 2);
+
+    recentLabels.forEach((label, index) => {
+      const team = teams[index];
+      const parent = label.parentElement;
+
+      if (!team || !parent) return;
+
+      const valueCell = Array.from(parent.children).find(
+        element => element !== label
+      );
+
+      if (valueCell) {
+        text(
+          valueCell,
+          team.average == null
+            ? 'RECORDED AVERAGE UNAVAILABLE'
+            : `${number(team.average, 1)} PPG (RECORDED)`
+        );
+      }
+    });
+
+    // Neutralize remaining frozen book / market leg claims.
+    leafElements(main).forEach(element => {
+      const value = element.textContent.trim();
+
+      if (
+        /PINNACLE/i.test(value) ||
+        /CRIS/i.test(value) ||
+        /CIRCUS/i.test(value)
+      ) {
+        text(element, 'MARKET SOURCE PENDING');
+
+      } else if (
+        /^ATL Team Total Over 78\.5$/i.test(value) ||
+        /^GS Team Total Under 74\.0$/i.test(value) ||
+        /^ATL -4\.5 1st Half Spread$/i.test(value)
+      ) {
+        text(element, 'MARKET LEG • VERIFIED INPUTS REQUIRED');
+      }
+    });
+
+    // Footer is outside <main>, so clean it separately.
+    const footer = one('footer');
+
+    if (footer) {
+      Array.from(footer.querySelectorAll('span')).forEach(element => {
+        const value = element.textContent.trim();
+
+        if (/^INSTITUTIONAL ODDS ENGINE$/i.test(value)) {
+          text(element, 'MARKET DATA ENGINE • SOURCE PENDING');
+
+        } else if (/^SOCKET:\s*CONNECTED$/i.test(value)) {
+          text(element, 'SOCKET: NOT REQUIRED');
+
+        } else if (/^LATENCY:\s*14MS$/i.test(value)) {
+          text(element, 'INGEST: DATABASE CURRENT');
+
+        } else if (/^SYS HOLD:\s*2\.41%$/i.test(value)) {
+          text(element, 'MARKET HOLD: SOURCE PENDING');
+        }
+      });
+    }
+
+    const matrix = one('#prop-correlation-matrix-container');
+    if (matrix) {
+      pending(
+        matrix,
+        'ALIGNED TARGET HISTORY + VERIFIED MARKET LINES REQUIRED'
+      );
+    }
+
+    const cadence = findLeaf(/INNING & QUARTER FLOW CADENCE/i, main);
+    if (cadence) {
+      pending(
+        cadence.closest('section') ||
+          cadence.parentElement?.parentElement,
+        'CURRENT SEGMENT PROJECTION INPUTS NOT AVAILABLE'
+      );
+    }
+
+    const sensitivity = findLeaf(/SENSITIVITY SIM/i, main);
+    if (sensitivity) {
+      const panel =
+        sensitivity.closest('section') ||
+        sensitivity.parentElement?.parentElement;
+
+      if (panel) {
+        pending(
+          panel,
+          'SIMULATOR INPUTS / CALIBRATED MODEL PARAMETERS NOT AVAILABLE'
+        );
+
+        all('input', panel).forEach(input => {
+          input.disabled = true;
+        });
+
+        all('button', panel).forEach(button => {
+          button.disabled = true;
+          button.removeAttribute('onclick');
+        });
+      }
+    }
+
+    all('button', main).forEach(button => {
+      if (
+        !/DIRECT LAB EXECUTION|EXECUTE OPTIMAL SLIP|DISPATCH TO BETSLIP/i
+          .test(button.textContent)
+      ) return;
+
+      const odds =
+        button.dataset.odds ||
+        button.parentElement?.dataset.odds;
+
+      const prob =
+        button.dataset.probability ||
+        button.parentElement?.dataset.probability;
+
+      const overOdds =
+        button.dataset.overOdds ||
+        button.parentElement?.dataset.overOdds;
+
+      const underOdds =
+        button.dataset.underOdds ||
+        button.parentElement?.dataset.underOdds;
+
+      if (odds && prob) {
+        button.dataset.liAction = 'calc-kelly';
+        button.disabled = false;
+
+      } else if (overOdds && underOdds) {
+        button.dataset.liAction = 'calc-no-vig';
+        button.disabled = false;
+
+      } else if (odds) {
+        button.dataset.liAction = 'calc-implied';
+        button.disabled = false;
+
+      } else {
+        button.dataset.liAction = 'calculation-pending';
+        button.disabled = true;
+        button.removeAttribute('onclick');
+      }
+    });
+
+    const execution = findLeaf(/DIRECT LAB EXECUTION/i, main);
+
+    if (execution) {
+      pending(
+        execution.closest('section') ||
+          execution.parentElement?.parentElement,
+        'EXECUTION REQUIRES VERIFIED MARKET PRICES'
+      );
+    }
   }
+
 
   function bindWatch(data) {
     const watch = data.watch || []; const ticketData = data.tickets || {};
