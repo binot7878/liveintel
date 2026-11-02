@@ -185,89 +185,98 @@
   }
 
   function bindLive(data) {
-    const games = data.games || [];
-
-    const counts = games.reduce((acc, game) => {
-      const sport = String(game.sport || '').toLowerCase();
-      acc.all += 1;
-      if (sport) acc[sport] = (acc[sport] || 0) + 1;
-      return acc;
-    }, { all: 0 });
-
-    all('[data-sport-filter]').forEach(button => {
-      const key = String(button.dataset.sportFilter || '').toLowerCase();
-      const badge = button.querySelector('span:last-child');
-      if (badge) text(badge, String(counts[key] || 0));
-    });
-
-    leafElements(document.querySelector('main')).forEach(element => {
-      const value = element.textContent.trim();
-
-      if (/^BOOKMAKERS:/i.test(value)) {
-        text(element, 'MARKET DATA: SOURCE PENDING');
-      } else if (/^LATENCY:/i.test(value)) {
-        const live = data.global &&
-                     data.global.health &&
-                     data.global.health.state === 'LIVE';
-        text(element, live ? 'INGEST: CURRENT' : 'INGEST: DEGRADED');
+    const main = one('main');
+    const games = Array.isArray(data.games) ? data.games : [];
+    if (!main.liveUI) {
+      const cards = all('.matchup-card', main);
+      const heading = findLeaf(/^QUANT LIVE EDGE RADAR$/i, main);
+      const radar = heading?.closest('.bg-surface-container');
+      main.liveUI = { cards, base: cards.length, template: cards[0]?.cloneNode(true), filter: 'all', radar };
+      all('[data-sport-filter]', main).forEach(button => {
+        button.onclick = () => { main.liveUI.filter = button.dataset.sportFilter; bindLive(main.liveUI.data); };
+      });
+      leafElements(main).forEach(el => {
+        if (/REALTIME EXECUTION MATRIX/i.test(el.textContent)) text(el, 'LIVEINTEL GAME STATE');
+        if (/GLOBAL SLATE IN-PLAY/i.test(el.textContent)) main.liveUI.slate = el;
+        if (/^BOOKMAKERS:/i.test(el.textContent)) text(el, 'MARKET DATA: SOURCE PENDING');
+        if (/EV ARB DISCOVERY|STEAM >|HIGH LEVERAGE Q4/i.test(el.textContent)) text(el, 'MARKET SIGNAL: SOURCE PENDING');
+      });
+      const signalText = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
+      while (signalText.nextNode()) {
+        const node = signalText.currentNode;
+        if (/EV ARB DISCOVERY|STEAM >|HIGH LEVERAGE Q4/.test(node.textContent)) node.textContent = ' MARKET SIGNAL: SOURCE PENDING';
       }
+      const latency = all('span', main).find(el => /^LATENCY:/.test(el.textContent.trim()));
+      text(latency, 'MARKET LATENCY: SOURCE PENDING');
+      const intro = one('h1', main)?.nextElementSibling;
+      text(intro, 'Recorded slate and game state. Verified market inputs remain source-pending.');
+      if (radar) {
+        all('p', radar).forEach(el => text(el, 'VERIFIED CURRENT LINE / PRICE / BOOK INPUTS REQUIRED'));
+        leafElements(radar).filter(el => /^ACTIVE SCAN$/i.test(el.textContent.trim())).forEach(el => text(el, 'SOURCE PENDING'));
+        all('button', radar).forEach(disableControl);
+      }
+    }
+    const ui = main.liveUI; ui.data = data;
+    // Only the radar is source-pending; the game workspace must remain usable.
+    all('.li-source-pending', main).filter(el => el.querySelector('.matchup-card')).forEach(unpending);
+    if (ui.radar) pending(ui.radar, 'EDGE / ARBITRAGE • VERIFIED MARKET SOURCE PENDING');
+    text(ui.slate, `${games.length} RECORDED SLATE GAMES`);
+    all('[data-sport-filter]', main).forEach(button => {
+      const sport = button.dataset.sportFilter;
+      const count = sport === 'all' ? games.length : games.filter(game => game.sport?.toLowerCase() === sport).length;
+      text(one('span:last-child', button), count);
+      button.disabled = false;
+      button.classList.toggle('bg-surface-container-highest', ui.filter === sport);
+      button.classList.toggle('text-on-surface', ui.filter === sport);
     });
-
-    const cards = all('.matchup-card');
-    cards.forEach((card, index) => {
+    while (ui.cards.length < games.length && ui.template) {
+      const card = ui.template.cloneNode(true); ui.cards[0].parentElement.appendChild(card); ui.cards.push(card);
+    }
+    while (ui.cards.length > Math.max(ui.base, games.length)) ui.cards.pop().remove();
+    ui.cards.forEach((card, index) => {
       const game = games[index];
-      if (!prepareDataRegion(card, Boolean(game), 'NO ADDITIONAL CURRENT LIVEINTEL GAME')) return;
-      unpending(card); card.dataset.gameId = game.id; card.dataset.sport = game.sport;
-      const blocks = Array.from(card.children);
-      const headLeaves = blocks[0] ? leafElements(blocks[0]) : [];
-      text(headLeaves[0], game.sport); text(headLeaves[1], game.slate_date || 'CURRENT SLATE');
-      text(headLeaves[headLeaves.length - 1], `${game.period_label || game.status || '—'}${game.clock ? ` ${game.clock}` : ''}`);
-      const scoreRows = blocks[1] ? Array.from(blocks[1].children).filter(element => element.classList.contains('flex')) : [];
-      const recorded = game.recorded || {};
-      const teams = [[game.away, game.away_score ?? recorded.away_score], [game.home, game.home_score ?? recorded.home_score]];
-      scoreRows.slice(0, 2).forEach((row, rowIndex) => {
-        const leaves = leafElements(row); const team = teams[rowIndex];
-        if (leaves.length >= 3) { text(leaves[0], team[0]); text(leaves[1], team[0]); text(leaves[leaves.length - 1], team[1] == null ? '—' : team[1]); }
-      });
-      const metrics = blocks[2] ? Array.from(blocks[2].children) : [];
-      metrics.slice(0, 2).forEach(metric => {
-        pending(metric, 'LIVE MARKET • DATA SOURCE PENDING');
-        const leaves = leafElements(metric);
-        if (leaves[0]) text(leaves[0], 'LIVE MARKET');
-        if (leaves[1]) text(leaves[1], 'DATA SOURCE PENDING');
-      });
-      if (metrics[2]) {
-        unpending(metrics[2]);
-        const leaves = leafElements(metrics[2]);
-        text(leaves[0], 'GAME STATE');
-        text(leaves[1], gameSituation(game));
+      if (!prepareDataRegion(card, Boolean(game), 'NO ADDITIONAL RECORDED GAME')) { card.liveFields = null; card.classList.remove('li-hidden'); return; }
+      unpending(card); card.dataset.gameId = game.id; card.dataset.sport = String(game.sport || '').toLowerCase();
+      card.classList.toggle('li-hidden', ui.filter !== 'all' && card.dataset.sport !== ui.filter);
+      if (!card.liveFields) {
+        const blocks = Array.from(card.children);
+        const head = leafElements(blocks[0]);
+        const teams = Array.from(blocks[1]?.children || []).slice(0, 2).map(row => {
+          const leaves = leafElements(row);
+          return { badge: leaves[0], name: leaves[1], score: leaves.at(-1), extra: leaves.slice(2, -1) };
+        });
+        const footer = blocks.at(-1);
+        card.liveFields = { sport: head[0], date: head[1], status: head.at(-1), teams,
+          metrics: Array.from(blocks[2]?.children || []),
+          footer: leafElements(footer).find(el => !el.closest('button') && !el.matches('.material-symbols-outlined')),
+          action: one('button', footer) };
+        leafElements(card).filter(el => !el.matches('.material-symbols-outlined')).forEach(el => text(el, 'SOURCE PENDING'));
       }
-      const footer = blocks[blocks.length - 1];
-      if (footer) {
-        const detail = leafElements(footer).find(
-          element => !element.closest('button') &&
-                     !element.classList.contains('material-symbols-outlined')
-        );
-        text(detail, game.status === 'FINAL' ? 'FINAL • RECORDED' : game.status === 'LIVE' ? 'LIVEINTEL STATE CURRENT' : `START ${game.start_time || 'TIME NOT SUPPLIED'}`);
-        const button = one('button', footer);
-        if (button) {
-          button.dataset.liAction = 'gamecast';
-          button.dataset.url = game.gamecast || '';
-          const buttonLeaves = leafElements(button).filter(
-            element => !/arrow_forward|open_in_new/i.test(element.textContent)
-          );
-          const buttonLabel = buttonLeaves.find(
-            element => !/^[•·]$/.test(element.textContent.trim())
-          );
-          if (buttonLabel) {
-            text(buttonLabel, game.status === 'FINAL' ? 'RECAP & LOG' : 'GAMECAST');
-          }
-        }
+      const refs = card.liveFields;
+      text(refs.sport, game.sport); text(refs.date, game.slate_date || data.global?.slate_date || 'SLATE PENDING');
+      text(refs.status, `${game.status || 'STATUS PENDING'}${game.status === 'LIVE' ? ` • ${game.period_label || 'PERIOD PENDING'} ${game.clock || ''}` : ''}`);
+      const recorded = game.recorded || {};
+      [[game.away, game.away_score ?? recorded.away_score], [game.home, game.home_score ?? recorded.home_score]].forEach(([team, score], i) => {
+        text(refs.teams[i]?.badge, team); text(refs.teams[i]?.name, team);
+        text(refs.teams[i]?.score, finiteInput(score) ? score : '—');
+        refs.teams[i]?.extra.forEach(el => text(el, 'SEGMENTS PENDING'));
+      });
+      refs.metrics.forEach((metric, i) => {
+        const leaves = leafElements(metric);
+        text(leaves[0], i < 2 ? 'LIVE MARKET' : 'GAME STATE');
+        text(leaves[1], i < 2 ? 'SOURCE PENDING' : gameSituation(game));
+        if (i < 2) pending(metric, 'LIVE MARKET • DATA SOURCE PENDING'); else unpending(metric);
+      });
+      text(refs.footer, game.status === 'PRE' ? `START ${game.start_time || 'TIME PENDING'}` : `${game.status || 'RECORDED'} • RECORDED STATE`);
+      if (refs.action) {
+        const label = leafElements(refs.action).find(el => !el.matches('.material-symbols-outlined'));
+        text(label, game.status === 'FINAL' ? 'RECAP & LOG' : 'GAMECAST');
+        refs.action.dataset.liAction = 'gamecast'; refs.action.dataset.url = game.gamecast || '';
+        refs.action.disabled = !/^https:\/\/www\.espn\.com\//.test(game.gamecast || '');
       }
     });
-    const radar = Array.from(document.querySelectorAll('main div')).find(element => /QUANT LIVE EDGE RADAR/i.test(element.textContent) && element.children.length < 8);
-    if (radar) pending(radar, data.markets && data.markets.length ? 'EDGE REQUIRES VERIFIED PRICE • RECORDED LINES HAVE NO ODDS' : 'EDGE / ARB DATA SOURCE PENDING');
-    const timer = one('#syncTimer'); if (timer) text(timer, '15s');
+    text(one('#syncTimer'), '15s');
+    all('header button').forEach(disableControl);
   }
 
   function playerMarket(player) {
@@ -277,9 +286,66 @@
   function titleStat(key) { return key ? key.replaceAll('_', ' ').replace(/\b\w/g, char => char.toUpperCase()) : 'HISTORY NOT AVAILABLE'; }
 
   function bindPlayers(data) {
-    const players = data.players || [];
+    const main = one('main');
+    const players = Array.isArray(data.players) ? data.players : [];
+    if (!main.playersUI) {
+      const grid = all('div', main).find(el => /xl:grid-cols-12/.test(el.className) && !el.querySelector('table'));
+      const footerText = leafElements(main);
+      const chips = all('button', main).filter(button => /(?:BOS @ CHA|OKC @ MEM|PHX @ GSW)/.test(button.textContent));
+      const ui = main.playersUI = { page: 0, role: 'all', sport: '', sort: 'source', selected: '',
+        templates: Array.from(grid?.children || []).map(el => el.cloneNode(true)),
+        search: one('#player-filter-input'), sortSelect: one('select', main), chips,
+        count: footerText.find(el => /^SHOWING 7 OF 18/i.test(el.textContent)),
+        age: footerText.find(el => /^MODEL UPDATE:/i.test(el.textContent)),
+        pageLabel: footerText.find(el => /^PAGE 1 OF 3/i.test(el.textContent)),
+        active: footerText.find(el => /ACTIVE PROPS IDENTIFIED/i.test(el.textContent)),
+        prev: all('button', main).find(button => /PREV/.test(button.textContent)),
+        next: all('button', main).find(button => /NEXT/.test(button.textContent)),
+        roles: all('button', main).filter(button => /^(ALL|STARTERS|BENCH|ROTATION)$/.test(button.textContent.trim())),
+        sports: all('button', main).filter(button => /^(NBA|WNBA|NFL|CFB)$/.test(button.textContent.trim())) };
+      const refresh = () => bindPlayers(ui.data);
+      ui.search.addEventListener('input', event => { event.stopImmediatePropagation(); ui.page = 0; refresh(); }, true);
+      ui.sports.forEach(button => {
+        button.dataset.playerSport = button.textContent.trim();
+        button.onclick = () => { ui.sport = ui.sport === button.dataset.playerSport ? '' : button.dataset.playerSport; ui.page = 0; refresh(); };
+      });
+      ui.roles.forEach((button, index) => {
+        button.dataset.playerRoleFilter = ['all', 'starter', 'bench', 'unknown'][index];
+        text(button, ['ALL', 'STARTERS', 'BENCH / ROT', 'ROLE UNKNOWN'][index]);
+        button.onclick = () => { ui.role = button.dataset.playerRoleFilter; ui.page = 0; refresh(); };
+      });
+      if (ui.sortSelect) {
+        Array.from(ui.sortSelect.options).forEach((option, index) => {
+          option.value = ['source', 'usage', 'minutes', 'l5'][index];
+          text(option, ['SOURCE ORDER', 'USAGE • SOURCE PENDING', 'MINUTES', 'L5 AVG'][index]);
+          option.disabled = index === 1;
+        });
+        ui.sortSelect.value = 'source';
+        ui.sortSelect.onchange = () => { ui.sort = ui.sortSelect.value; ui.page = 0; refresh(); };
+      }
+      ui.prev.onclick = () => { ui.page = Math.max(0, ui.page - 1); refresh(); };
+      ui.next.onclick = () => { ui.page++; refresh(); };
+      const model = findLeaf(/^PRO QUANT V4$/i, main); text(model, 'RECORDED RESEARCH');
+      text(findLeaf(/^⌘K$/i, main), 'SEARCH');
+      const headers = all('thead th', main); text(headers[8], 'L10 AVG');
+    }
+    const ui = main.playersUI; ui.data = data;
+    const supported = [...ui.roles, ...ui.sports, ui.prev, ui.next];
+    all('button', main).filter(button => !supported.includes(button)).forEach(disableControl);
+    const query = ui.search.value.trim().toLowerCase();
+    const matches = players.filter(player => {
+      const role = String(player.role || '').toLowerCase();
+      return (!ui.sport || player.sport === ui.sport) && (!query || `${player.name} ${player.team} ${player.game || ''} ${titleStat(playerMarket(player))}`.toLowerCase().includes(query)) &&
+        (ui.role === 'all' || (ui.role === 'starter' && role === 'starter') || (ui.role === 'bench' && /bench|rotation/.test(role)) || (ui.role === 'unknown' && (!role || /not supplied|unknown/.test(role))));
+    });
+    const statValue = player => ui.sort === 'minutes' ? player.minutes : (player.windows?.[playerMarket(player)] || {}).l5;
+    if (ui.sort === 'minutes' || ui.sort === 'l5') matches.sort((a, b) => (finiteInput(statValue(b)) ? Number(statValue(b)) : -Infinity) - (finiteInput(statValue(a)) ? Number(statValue(a)) : -Infinity));
+    const pageSize = all('tbody tr', main).length;
+    ui.page = Math.max(0, Math.min(ui.page, Math.max(0, Math.ceil(matches.length / pageSize) - 1)));
+    const pagePlayers = matches.slice(ui.page * pageSize, (ui.page + 1) * pageSize);
     const detailGrid = Array.from(document.querySelectorAll('main div')).find(element => /xl:grid-cols-12/.test(element.className || '') && !element.querySelector('table'));
     const detailPanels = detailGrid ? Array.from(detailGrid.children) : [];
+    detailPanels.forEach((panel, i) => { const copy = ui.templates[i]?.cloneNode(true); if (copy) panel.replaceChildren(...Array.from(copy.childNodes)); });
     const playerDetail = detailPanels[0] || null;
     const rotationDetail = detailPanels[1] || null;
     if (playerDetail) pending(playerDetail, 'SELECTED PLAYER DETAIL • CHOOSE A REAL MATRIX ROW');
@@ -287,26 +353,25 @@
     detailPanels.slice(2).forEach(panel => pending(panel, 'REAL DATA BINDING PENDING'));
     const rows = all('tbody tr');
     rows.forEach((row, index) => {
-      const player = players[index];
+      row.style.display = '';
+      const player = pagePlayers[index];
       if (!prepareDataRegion(row, Boolean(player), 'NO ADDITIONAL CURRENT PLAYER')) return;
-      unpending(row); row.dataset.playerId = player.player_id; row.dataset.sport = player.sport; row.dataset.team = player.team; row.dataset.playerIndex = String(index);
-      const cells = Array.from(row.children); const market = playerMarket(player); const window = player.windows[market] || {};
+      const sourceRow = row.liDataTemplate.cloneNode(true);
+      row.replaceChildren(...Array.from(sourceRow.childNodes));
+      unpending(row); row.dataset.playerId = player.player_id; row.dataset.sport = player.sport; row.dataset.team = player.team; row.dataset.playerIndex = String(players.indexOf(player));
+      const cells = Array.from(row.children); const market = playerMarket(player); const window = (player.windows || {})[market] || {};
 
       if (cells[0]) {
-        cells[0].replaceChildren();
-
-        const primary = document.createElement('div');
-        primary.textContent = player.name || 'PLAYER';
-
-        const secondary = document.createElement('div');
-        secondary.textContent = `${player.team || '—'}${player.game ? ` • ${player.game}` : ''}`;
-
-        cells[0].append(primary, secondary);
+        const identity = leafElements(cells[0]);
+        text(identity[0], player.name || 'PLAYER');
+        text(identity[1], `${player.team || '—'}${player.game ? ` • ${player.game}` : ''}`);
       }
 
       const replaceCell = (cell, value) => {
         if (!cell) return;
-        cell.replaceChildren(document.createTextNode(String(value)));
+        const walker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT), nodes = [];
+        while (walker.nextNode()) if (walker.currentNode.textContent.trim()) nodes.push(walker.currentNode);
+        nodes.forEach((node, i) => { node.textContent = i === 0 ? String(value) : ''; });
       };
 
       replaceCell(cells[1], player.position || '—');
@@ -341,6 +406,14 @@
         }
       });
     });
+
+    const bindAvatar = (root, player) => {
+      const holder = all('div', root).find(el => /\bw-(?:8|10|12|14|16|20|full)\b/.test(el.className) && /items-center/.test(el.className) && /justify-center/.test(el.className));
+      if (!holder || one('img', holder)) return;
+      const initials = String(player.name || '?').split(/\s+/).filter(Boolean).map(part => part[0]).join('').slice(0, 2).toUpperCase();
+      const value = leafElements(holder).find(el => !el.matches('.material-symbols-outlined'));
+      text(value || holder, initials);
+    };
 
     const renderRotationDetail = selectedPlayer => {
       if (!rotationDetail || !selectedPlayer) return;
@@ -387,6 +460,7 @@
         const statName = titleStat(market);
 
         const leaves = leafElements(card);
+        bindAvatar(card, player);
 
         const nameElement = leaves.find(element =>
           /font-headline-sm/.test(element.className || '')
@@ -503,14 +577,7 @@
           /overflow-hidden/.test(element.className || '')
         );
 
-        if (progress) {
-          progress.replaceChildren();
-
-          const bar = document.createElement('div');
-          bar.className = 'bg-primary h-full';
-          bar.style.width = values.length ? '100%' : '0%';
-          progress.appendChild(bar);
-        }
+        if (progress) all('div', progress).forEach(bar => { bar.style.width = '0%'; });
       });
     };
 
@@ -529,6 +596,7 @@
       const values = (window.values || []).slice(0, 5);
       const statName = titleStat(market);
       const leaves = leafElements(playerDetail);
+      bindAvatar(playerDetail, player);
 
       const nameElement = leaves.find(element =>
         /font-headline-lg/.test(element.className || '') &&
@@ -674,14 +742,13 @@
         if (logGrid) {
           const boxes = Array.from(logGrid.children);
           const numericValues = values
-            .map(value => Number(value))
-            .filter(value => Number.isFinite(value));
+            .filter(finiteInput).map(Number);
           const maximum = Math.max(...numericValues, 1);
 
           boxes.forEach((box, index) => {
             const boxLeaves = leafElements(box);
             const value = Number(values[index]);
-            const available = Number.isFinite(value);
+            const available = finiteInput(values[index]);
 
             if (boxLeaves[0]) text(boxLeaves[0], available ? number(value, 1) : '—');
             if (boxLeaves[boxLeaves.length - 1]) text(boxLeaves[boxLeaves.length - 1], `G${index + 1}`);
@@ -721,6 +788,7 @@
         watchButton.dataset.team = player.team || '';
         watchButton.dataset.sport = player.sport || '';
         watchButton.dataset.liAction = 'watch-add';
+        watchButton.disabled = false;
       }
 
       const ticketButton = detailButtons.find(button =>
@@ -744,347 +812,158 @@
     };
 
     rows.forEach(row => {
-      row.addEventListener('click', event => {
-        if (event.target.closest('button')) return;
-        const index = Number(row.dataset.playerIndex);
-        if (Number.isInteger(index) && players[index]) {
-          renderPlayerDetail(players[index]);
-        }
-      });
+      row.onclick = event => {
+        if (event.target.closest('button') || !row.dataset.playerId) return;
+        ui.selected = row.dataset.playerId; bindPlayers(ui.data);
+      };
     });
-
-    if (players.length) renderPlayerDetail(players[0]);
-
-    const applyPlayerFilters = () => {
-      const query = (one('#player-filter-input')?.value || '').trim().toLowerCase();
-      const activeRole = document.querySelector('[data-player-role-filter].li-active-role')?.dataset.playerRoleFilter || 'all';
-
-      rows.forEach(row => {
-        const matchesText = !query || row.textContent.toLowerCase().includes(query);
-        const role = (row.dataset.playerRole || '').toLowerCase();
-        const matchesRole =
-          activeRole === 'all' ||
-          (activeRole === 'starter' && role === 'starter') ||
-          (activeRole === 'bench-rotation' && role === 'bench / rotation') ||
-          (activeRole === 'unknown' && role === 'role not supplied');
-        row.classList.toggle('li-hidden', !(matchesText && matchesRole));
-      });
-    };
-
-    const roleButtons = Array.from(document.querySelectorAll('button')).filter(button =>
-      /^(ALL|STARTERS|BENCH|ROTATION)$/i.test(button.textContent.trim())
-    );
-
-    roleButtons.forEach(button => {
-      const label = button.textContent.trim().toLowerCase();
-      button.dataset.playerRoleFilter =
-        label === 'starters' ? 'starter' :
-        label === 'bench' ? 'bench-rotation' :
-        label === 'rotation' ? 'unknown' : 'all';
-
-      if (label === 'bench') button.textContent = 'BENCH / ROT';
-      if (label === 'rotation') button.textContent = 'ROLE UNKNOWN';
-
-      button.addEventListener('click', () => {
-        roleButtons.forEach(item => item.classList.remove('li-active-role'));
-        button.classList.add('li-active-role');
-        applyPlayerFilters();
-      });
+    const selected = pagePlayers.find(player => String(player.player_id) === ui.selected) || pagePlayers[0];
+    if (selected) { ui.selected = String(selected.player_id); renderPlayerDetail(selected); }
+    else [playerDetail, rotationDetail].filter(Boolean).forEach(panel => { neutralizeData(panel, 'NO MATCHING PLAYER'); pending(panel, 'NO MATCHING RECORDED PLAYER'); });
+    ui.search.disabled = false;
+    ui.roles.forEach(button => { button.disabled = false; button.classList.toggle('li-active-role', button.dataset.playerRoleFilter === ui.role); });
+    ui.sports.forEach(button => { button.disabled = false; button.classList.toggle('bg-surface-container-highest', button.dataset.playerSport === ui.sport); });
+    if (ui.sortSelect) ui.sortSelect.disabled = false;
+    ui.prev.disabled = ui.page === 0; ui.next.disabled = (ui.page + 1) * pageSize >= matches.length;
+    text(ui.count, `SHOWING ${matches.length ? ui.page * pageSize + 1 : 0}–${Math.min((ui.page + 1) * pageSize, matches.length)} OF ${matches.length} MATCHING PLAYERS`);
+    text(ui.pageLabel, `PAGE ${matches.length ? ui.page + 1 : 0} OF ${Math.ceil(matches.length / pageSize)}`);
+    text(ui.age, data.generated_at ? `SOURCE: ${data.generated_at}` : 'SOURCE TIMESTAMP PENDING');
+    text(ui.active, `LIVE SLATE: ${players.length} CURRENT PLAYERS • PROP SOURCE PENDING`);
+    const games = Array.isArray(data.games) ? data.games : [];
+    ui.chips.forEach((button, i) => {
+      const game = games[i];
+      const leaves = leafElements(button).filter(el => !el.matches('.material-symbols-outlined'));
+      text(leaves[0], game ? `${game.away} @ ${game.home}` : 'MATCHUP PENDING');
+      text(leaves[1], game?.start_time || 'TIME PENDING');
     });
-
-    const allRoleButton = roleButtons.find(button => button.dataset.playerRoleFilter === 'all');
-    if (allRoleButton) allRoleButton.classList.add('li-active-role');
-
-    rows.forEach((row, index) => {
-      const player = players[index];
-      if (player) row.dataset.playerRole = String(player.role || '').toLowerCase();
-    });
-
-    const input = one('#player-filter-input');
-    if (input) input.addEventListener('input', applyPlayerFilters);
-
-    const sortSelect = Array.from(document.querySelectorAll('select')).find(select =>
-      Array.from(select.options).some(option => /PROP HEAT \(\+EV\)|USAGE RATE|MINUTES SHIFT|L5 HIT RATE/i.test(option.textContent))
-    );
-
-    if (sortSelect) {
-      Array.from(sortSelect.options).forEach(option => {
-        if (/PROP HEAT \(\+EV\)|USAGE RATE/i.test(option.textContent)) {
-          option.disabled = true;
-          option.textContent = option.textContent.replace(/\s*\(\+EV\)/i, '') + ' — SOURCE PENDING';
-        } else if (/MINUTES SHIFT/i.test(option.textContent)) {
-          option.value = 'minutes';
-          option.textContent = 'MINUTES';
-        } else if (/L5 HIT RATE/i.test(option.textContent)) {
-          option.value = 'l5';
-          option.textContent = 'L5 AVG';
-        }
-      });
-
-      const firstSupported = Array.from(sortSelect.options).find(option => !option.disabled);
-      if (firstSupported) sortSelect.value = firstSupported.value;
-
-      sortSelect.addEventListener('change', () => {
-        const mode = sortSelect.value;
-        const tbody = rows[0]?.parentElement;
-        if (!tbody) return;
-
-        rows
-          .slice()
-          .sort((a, b) => {
-            const ai = Number(a.dataset.playerIndex || 0);
-            const bi = Number(b.dataset.playerIndex || 0);
-            const ap = players[ai] || {};
-            const bp = players[bi] || {};
-
-            if (mode === 'minutes') {
-              return (Number(bp.minutes) || -1) - (Number(ap.minutes) || -1);
-            }
-
-            if (mode === 'l5') {
-              const am = playerMarket(ap);
-              const bm = playerMarket(bp);
-              const av = Number((ap.windows?.[am] || {}).l5);
-              const bv = Number((bp.windows?.[bm] || {}).l5);
-              return (Number.isFinite(bv) ? bv : -1) - (Number.isFinite(av) ? av : -1);
-            }
-
-            return ai - bi;
-          })
-          .forEach(row => tbody.appendChild(row));
-
-        applyPlayerFilters();
-      });
-    }
-
-    const activeClaim = leafElements(document.querySelector('main')).find(
-      element => /LIVE SLATE:\s*\d+\s+ACTIVE PROPS IDENTIFIED/i.test(element.textContent)
-    );
-    if (activeClaim) text(activeClaim, `LIVE SLATE: ${players.length} CURRENT PLAYERS • PROP SOURCE PENDING`);
+    all('header button').forEach(disableControl);
   }
 
   function bindHeat(data) {
-    const heat = data.heat || { cards: [] }; const cards = all('#players-grid > div');
-    cards.forEach((cardElement, index) => {
-      const card = heat.cards[index];
-      if (!prepareDataRegion(cardElement, Boolean(card), 'NO ADDITIONAL QUALIFYING PATTERN')) return;
-      unpending(cardElement); cardElement.dataset.playerId = card.player_id; cardElement.dataset.sport = card.sport; cardElement.dataset.team = card.team;
-      const header = cardElement.children[0];
-      const name = header && Array.from(header.querySelectorAll('span')).find(element => /font-headline-sm/.test(element.className));
-      text(name, card.player); const headerLeaves = header ? leafElements(header) : [];
-      text(headerLeaves[0], (card.player || '?').split(/\s+/).map(part => part[0]).join('').slice(0, 2).toUpperCase());
-      const teamRole = headerLeaves.find(element => /•/.test(element.textContent)); text(teamRole, `${card.team} • ${card.sport}`);
-      const matchup = headerLeaves.find(element => /(?:vs|@)\s/i.test(element.textContent)); text(matchup, card.game_id ? `GAME ${card.game_id}` : 'RECORDED HISTORY');
-      const marketValue = headerLeaves[headerLeaves.length - 1]; text(marketValue, card.market);
-      const content = cardElement.children[1]; const labels = content ? leafElements(content) : [];
-      const currentLabel = labels.findIndex(element => /^CURRENT LINE$/i.test(element.textContent));
-      if (currentLabel >= 0) text(labels[currentLabel + 1], card.current_line == null ? 'NOT RECORDED' : `${card.side} ${card.current_line}`);
-      const consensusLabel = labels.findIndex(element => /^CONSENSUS$/i.test(element.textContent));
-      if (consensusLabel >= 0) text(labels[consensusLabel + 1], 'SOURCE PENDING');
-      const probabilityLabel = labels.findIndex(element => /REC HIT PROB/i.test(element.textContent));
-      if (probabilityLabel >= 0) text(labels[probabilityLabel + 1], card.total ? `${number(100 * card.hits / card.total, 1)}% HIST` : '—');
-      const streak = labels.find(element => /^\d+\s*\/\s*\d+/i.test(element.textContent)); text(streak, `${card.hits} / ${card.total} RECORDED`);
-      const average = labels.find(element => /^AVG:/i.test(element.textContent)); text(average, `AVG: ${number((card.values || []).reduce((a, b) => a + Number(b || 0), 0) / Math.max((card.values || []).length, 1), 1)} ${card.market}`);
-      const logGrid = content && Array.from(content.querySelectorAll('div')).find(element => /grid-cols-(?:8|10)/.test(element.className));
-      if (logGrid) Array.from(logGrid.children).forEach((box, valueIndex) => { const leaves = leafElements(box); text(leaves[0], `G${valueIndex + 1}`); text(leaves[1], card.values[valueIndex] == null ? '—' : card.values[valueIndex]); });
-      Array.from(content ? content.querySelectorAll('div') : []).filter(element => /TOTAL O\/U CORR|STEAM DETECTED|EDGE/.test(element.textContent)).forEach(element => pending(element, 'MARKET CORRELATION • VERIFIED MARKET SOURCE PENDING'));
-      const buttons = all('button', cardElement.children[2]);
-      buttons.forEach((button, buttonIndex) => {
-        button.dataset.playerId = card.player_id; button.dataset.playerName = card.player; button.dataset.team = card.team; button.dataset.sport = card.sport;
-        button.dataset.liAction = buttonIndex === 0 ? 'watch-add' : 'ticket-add'; button.dataset.market = card.market; button.dataset.line = card.current_line == null ? '' : card.current_line;
-        button.dataset.side = card.side; button.dataset.odds = card.odds == null ? '' : card.odds; button.dataset.book = card.book || ''; button.dataset.gameId = card.game_id || '';
+    const main = one('main');
+    const heat = data.heat || {};
+    const labelControl = (control, label) => {
+      if (!control) return;
+      const walker = document.createTreeWalker(control, NodeFilter.SHOW_TEXT), nodes = [];
+      while (walker.nextNode()) if (walker.currentNode.textContent.trim() && !walker.currentNode.parentElement.closest('.material-symbols-outlined')) nodes.push(walker.currentNode);
+      nodes.forEach((node, i) => { node.textContent = i === 0 ? label : ''; });
+    };
+    if (!main.heatUI) {
+      const ui = main.heatUI = { mode: 'players', sport: '', search: one('input[type="text"]', main),
+        grids: { players: one('#players-grid'), teams: one('#teams-grid') },
+        detected: findLeaf(/^412 DETECTED$/i, main), segments: [one('#seg-btn-players'), one('#seg-btn-teams')], sports: all('#sport-selector button') };
+      // Capture references before clearing exported identities and market claims.
+      Object.values(ui.grids).forEach(grid => Array.from(grid.children).forEach(el => {
+        const header = el.children[0], content = el.children[1];
+        const leaves = leafElements(content), head = leafElements(header);
+        const after = pattern => { const i = leaves.findIndex(e => pattern.test(e.textContent.trim())); return i < 0 ? null : leaves[i + 1]; };
+        el.heatFields = { name: one('span.font-headline-sm', header), initials: head[0],
+          team: head.find(e => /•/.test(e.textContent)), matchup: head.find(e => /(?:vs|@)\s/i.test(e.textContent)), market: head.at(-1),
+          line: after(/^CURRENT LINE$/i), price: after(/^CONSENSUS$/i), rate: after(/REC HIT PROB/i),
+          rateLabel: leaves.find(e => /REC HIT PROB/i.test(e.textContent)),
+          streak: leaves.find(e => /^\d+\s*\/\s*\d+/.test(e.textContent)), average: leaves.find(e => /^AVG:/i.test(e.textContent)),
+          log: all('div', content).find(e => /grid-cols-(?:7|8|10)/.test(e.className)), buttons: all('button', el.children[2]) };
+        const keep = /^(CURRENT LINE|CONSENSUS|REC HIT PROB|LAST \d+|GAME LOG|RECENT RESULTS|HIT RATE|PATTERN)$/i;
+        const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+          const node = walker.currentNode;
+          if (node.textContent.trim() && !node.parentElement.closest('.material-symbols-outlined') && !keep.test(node.textContent.trim())) node.textContent = 'SOURCE PENDING';
+        }
+        all('[onclick]', el).forEach(e => e.removeAttribute('onclick'));
+        all('[style*="width:"]', el).forEach(e => { e.style.width = '0%'; });
+        all('svg polyline,svg path,svg line', el).forEach(e => { e.style.visibility = 'hidden'; });
+      }));
+      // These components require live market/covariance inputs the history API does not supply.
+      ['#total-ou-correlation-bar', '#sgp-correlation-engine', '#sgp-betslip-drawer'].forEach(selector => {
+        const component = one(selector);
+        if (component) { neutralizeData(component, 'MARKET INPUTS PENDING'); unpending(component); }
       });
-    });
-    text(
-      one('#player-active-count-badge'),
-      `SHOWING ${Math.min(cards.length, heat.cards.length)} OF ${heat.total} RECORDED HISTORY PATTERNS`
-    );
-
-    // Remove frozen demo sportsbook / pattern-count claims from the shell.
-    leafElements(document.querySelector('main')).forEach(element => {
-      const value = element.textContent.trim();
-
-      if (/REAL BOOK SYNC:/i.test(value)) {
-        text(element, 'MARKET PRICES: SOURCE PENDING');
-      } else if (/^STREAKS \(\d+\)$/i.test(value)) {
-        text(element, `RECORDED PATTERNS (${heat.total || 0})`);
-      } else if (/^BOOK: MULTI-SYNTHESIS$/i.test(value)) {
-        text(element, 'BOOK: SOURCE PENDING');
+      [one('#btn-toggle-betslip-drawer'), one('#btn-open-sgp-drawer-bar')].forEach(button => {
+        if (button) { disableControl(button); labelControl(button, 'SGP • VERIFIED INPUTS REQUIRED'); }
+      });
+      // Clear unsupported aggregate, ranking, feed, age and synchronization narratives.
+      const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) {
+        const node = walker.currentNode, parent = node.parentElement;
+        if (parent.closest('#players-grid,#teams-grid,.material-symbols-outlined,script,style')) continue;
+        const value = node.textContent.trim();
+        if (/14 PLAYS|10\/10 RATE|18\.4%|98\.2%|\(252\)|\(14\)|\(39\)|\(68\)|\(87\)|PERFECT|CORR|COVARIANCE|SYNCHRON|ARBITRAGE|HIGH.CONFIDENCE|LOGICAL VERIFICATION|BOOK.*(?:SYNC|REPAIR|MULTI)|REPAIR.*STATUS|412 DETECTED|DATA CADENCE: REAL.TIME|\d+\s*(?:ERRORS|NODES)|0\.082|REAL BOOK|LINE DISCREPANCY|SLATE EFFICIENCY/i.test(value)) node.textContent = 'SOURCE PENDING';
       }
-    });
-
-    // The frozen correlation bar contains illustrative market totals/covariance.
-    // Keep the component, but remove claims until verified market inputs exist.
-    const correlationBar = one('#total-ou-correlation-bar');
-    if (correlationBar) {
-      pending(correlationBar, 'MARKET CORRELATION • MULTI-BOOK SOURCE PENDING');
-
-      leafElements(correlationBar).forEach(element => {
-        const value = element.textContent.trim();
-
-        if (/GAME TOTAL O\/U CORRELATION:/i.test(value)) {
-          text(element, 'GAME TOTAL / HISTORY CORRELATION');
-        } else if (/CLUSTERS GAME-TOTAL CORRELATED/i.test(value)) {
-          text(element, 'CORRELATION: VERIFIED MARKET INPUTS REQUIRED');
-        } else if (/GAME TOTAL:|TOTAL OU:/i.test(value)) {
-          text(element, 'GAME TOTAL: MARKET SOURCE PENDING');
-        } else if (/MARKET DENSITY:/i.test(value)) {
-          text(element, 'MARKET DENSITY: SOURCE PENDING');
-        } else if (/PINNACLE|CRIS|SYNDICATE LINE HOOK/i.test(value)) {
-          text(element, 'MARKET SOURCE: PENDING');
-        }
+      text(findLeaf(/^HEAT ENGINE v4.1$/i, main), 'RECORDED HEAT HISTORY');
+      text(findLeaf(/^HISTORIC TRUTH PROTOCOL$/i, main), 'RECORDED RESULTS');
+      text(findLeaf(/STRICTLY HISTORICAL/i, main), 'RECORDED HISTORY • CURRENT MARKET DATA PENDING');
+      text(one('#mins-readout-badge'), 'MINUTES FILTER PENDING');
+      text(one('#pace-readout-badge'), 'PACE FILTER PENDING');
+      all('button,input,select', main).forEach(disableControl);
+      ui.segments.forEach((button, i) => { button.onclick = () => { ui.mode = i ? 'teams' : 'players'; bindHeat(ui.data); }; });
+      ui.sports.forEach(button => {
+        button.dataset.heatSport = button.textContent.trim();
+        button.onclick = () => { ui.sport = ui.sport === button.dataset.heatSport ? '' : button.dataset.heatSport; bindHeat(ui.data); };
       });
-
-      all('button', correlationBar).forEach(button => {
-        button.disabled = true;
-        button.removeAttribute('onclick');
-      });
+      ui.search.oninput = () => bindHeat(ui.data);
     }
-
-    // The frozen SGP engine is illustrative only. Do not expose fake odds,
-    // edge, covariance, presets, or actionable sportsbook controls.
-    const sgpEngine = one('#sgp-correlation-engine');
-    if (sgpEngine) {
-      pending(sgpEngine, 'SGP MARKET / PRICE / ALIGNED CORRELATION INPUTS PENDING');
-
-      leafElements(sgpEngine).forEach(element => {
-        const value = element.textContent.trim();
-
-        if (/AUTOMATED SGP CORRELATION ENGINE/i.test(value)) {
-          text(element, 'SGP CORRELATION ENGINE • INPUTS PENDING');
-        } else if (/QUANT MULTI-LEG SYNERGY CALCULATOR/i.test(value)) {
-          text(element, 'VERIFIED MARKET / COVARIANCE INPUTS REQUIRED');
-        } else if (/ACTIVE SGP SLIP:/i.test(value)) {
-          text(element, 'SGP SLIP: MARKET INPUTS REQUIRED');
-        } else if (/EDGE|FAIR ODDS|BOOK|ACTIVE CLUSTERS|COVARIANCE/i.test(value)) {
-          text(element, 'SOURCE PENDING');
+    const ui = main.heatUI; ui.data = data;
+    const source = Array.isArray(heat.cards) ? heat.cards : [];
+    const query = ui.search.value.trim().toLowerCase();
+    for (const [kind, grid] of Object.entries(ui.grids)) {
+      const records = source.filter(record => (record.kind === 'team' ? 'teams' : 'players') === kind);
+      const filtered = records.filter(record => (!ui.sport || record.sport === ui.sport) && (!query || `${record.player || ''} ${record.team || ''} ${record.market || ''}`.toLowerCase().includes(query)));
+      const slots = Array.from(grid.children);
+      slots.forEach((el, index) => {
+        const record = filtered[index], refs = el.heatFields;
+        all('button', el).forEach(disableControl);
+        delete el.dataset.playerId;
+        if (!record) {
+          pending(el, 'NO ADDITIONAL RECORDED HISTORY PATTERN');
+          [refs.name, refs.initials, refs.team, refs.matchup, refs.market, refs.line, refs.price, refs.rate, refs.streak, refs.average].forEach(ref => text(ref, 'SOURCE PENDING'));
+          if (refs.log) leafElements(refs.log).forEach(ref => text(ref, '—'));
+          all('svg polyline,svg path', el).forEach(e => { e.style.visibility = 'hidden'; });
+          return;
         }
-      });
-
-      all('button', sgpEngine).forEach(button => {
-        button.disabled = true;
-        button.removeAttribute('onclick');
-      });
-    }
-
-    // Player-card correlation/SGP/footer claims are frozen demo content.
-    cards.forEach(cardElement => {
-      const content = cardElement.children[1];
-
-      if (content) {
-        Array.from(content.querySelectorAll('span, div')).forEach(element => {
-          const value = element.textContent.trim();
-
-          if (/TOTAL O\/U CORR:/i.test(value) && element.children.length <= 1) {
-            text(element, 'MARKET CORRELATION: SOURCE PENDING');
+        unpending(el);
+        const name = record.player || record.team || 'IDENTITY PENDING';
+        el.dataset.playerId = record.player_id || ''; el.dataset.sport = record.sport || ''; el.dataset.team = record.team || '';
+        text(refs.name, name); text(refs.initials, name.split(/\s+/).map(s => s[0]).join('').slice(0, 2).toUpperCase());
+        text(refs.team, `${record.team || 'TEAM PENDING'} • ${record.sport || 'SPORT PENDING'}`);
+        text(refs.matchup, 'RECORDED HISTORY'); text(refs.market, record.market || 'STAT PENDING');
+        text(refs.line, 'SOURCE PENDING'); text(refs.price, 'SOURCE PENDING');
+        const validCount = finiteInput(record.hits) && finiteInput(record.total) && Number(record.total) > 0 && Number(record.hits) >= 0 && Number(record.hits) <= Number(record.total);
+        text(refs.rateLabel, 'HISTORICAL FREQUENCY'); text(refs.rate, validCount ? `${number(100 * record.hits / record.total, 1)}% HIST` : 'SOURCE PENDING');
+        text(refs.streak, validCount ? `${record.hits} / ${record.total} RECORDED` : 'RECORD PENDING');
+        const values = (record.values || []).filter(finiteInput).map(Number);
+        text(refs.average, values.length ? `AVG: ${number(values.reduce((a, b) => a + b, 0) / values.length, 1)} ${record.market || ''}` : 'AVG: SOURCE PENDING');
+        const curve = one('svg polyline', el);
+        if (curve && values.length > 1 && values.length === (record.values || []).length) {
+          const low = Math.min(...values), range = Math.max(...values) - low;
+          curve.setAttribute('points', values.map((value, i) => `${100 * i / (values.length - 1)},${range ? 21 - 18 * (value - low) / range : 12}`).join(' '));
+          curve.style.visibility = 'visible';
+        } else if (curve) curve.style.visibility = 'hidden';
+        if (refs.log) Array.from(refs.log.children).forEach((box, i) => {
+          const leaves = leafElements(box); text(leaves[0], record.dates?.[i]?.slice(5) || `G${i + 1}`);
+          text(leaves[1], finiteInput(record.values?.[i]) ? record.values[i] : '—');
+        });
+        refs.buttons.forEach((button, i) => {
+          labelControl(button, i === 0 ? 'WATCH TARGET' : i === 1 ? 'SGP: INPUTS REQUIRED' : 'TICKET: PRICE REQUIRED');
+          if (i === 0 && record.player_id) {
+            button.disabled = false; button.removeAttribute('aria-disabled');
+            Object.assign(button.dataset, { liAction: 'watch-add', playerId: record.player_id, playerName: name, team: record.team || '', sport: record.sport || '' });
           }
         });
-
-        leafElements(content).forEach(element => {
-          const value = element.textContent.trim();
-
-          if (/TOTAL O\/U CORR:/i.test(value)) {
-            text(element, 'MARKET CORRELATION: SOURCE PENDING');
-          } else if (/BULLISH OVER|DEF COVARIANCE|BEARISH UNDER/i.test(value)) {
-            text(element, 'CORRELATION PENDING');
-          } else if (/hits occurred when|overs hit when|hits accompanied|defensive slogs/i.test(value)) {
-            text(element, 'VERIFIED MARKET HISTORY REQUIRED');
-          } else if (/\+\d+(?:\.\d+)?% EDGE|\+EV EDGE|PLUS MONEY EV|STEAM DETECTED/i.test(value)) {
-            text(element, 'MARKET EDGE: PRICE REQUIRED');
-          } else if (/VS OPP RANK|PERIMETER USAGE|REB DEFENSE|PACE UP MATCHUP|STARTING ROLE \(/i.test(value)) {
-            text(element, 'MATCHUP DERIVATION: SOURCE PENDING');
-          }
-        });
-      }
-
-      const actionBar = cardElement.children[2];
-      const buttons = actionBar ? all('button', actionBar) : [];
-
-      buttons.forEach((button, buttonIndex) => {
-        button.removeAttribute('onclick');
-
-        if (buttonIndex === 0) {
-          button.dataset.liAction = 'watch-add';
-        } else {
-          delete button.dataset.liAction;
-          button.disabled = true;
-          text(button, buttonIndex === 1 ? 'SGP: INPUTS REQUIRED' : 'TICKET: LINE / PRICE REQUIRED');
-        }
       });
-    });
-
-    // Remove remaining frozen SGP preset narratives and top/floating demo claims.
-    if (sgpEngine) {
-      Array.from(sgpEngine.querySelectorAll('p')).forEach(element => {
-        if (/LaMelo|Derrick White|Chet Holmgren|Over \d|Under \d/i.test(element.textContent)) {
-          text(element, 'PRESET LEGS UNAVAILABLE • VERIFIED MARKET INPUTS REQUIRED');
-        }
-      });
-
-      Array.from(sgpEngine.querySelectorAll('span')).forEach(element => {
-        const value = element.textContent.trim();
-
-        if (/FAIR ODDS:/i.test(value)) {
-          text(element, 'ODDS: SOURCE PENDING');
-        } else if (/\+\d+(?:\.\d+)?% EDGE/i.test(value)) {
-          text(element, 'EDGE: PRICE REQUIRED');
-        }
-      });
+      grid.classList.toggle('hidden', ui.mode !== kind);
+      text(one(kind === 'players' ? '#player-active-count-badge' : '#team-active-count-badge'), `SHOWING ${Math.min(slots.length, filtered.length)} OF ${filtered.length} LOADED ${kind.toUpperCase()} PATTERNS`);
+      const segment = ui.segments[kind === 'players' ? 0 : 1];
+      labelControl(segment, `${kind.toUpperCase()} `);
+      text(one('span:last-child', segment), `(${records.length} LOADED)`);
+      segment.disabled = false; segment.removeAttribute('aria-disabled');
+      segment.classList.toggle('bg-surface-container-highest', ui.mode === kind);
+      one(kind === 'players' ? '#player-filters-bar' : '#team-filters-bar')?.classList.toggle('hidden', ui.mode !== kind);
     }
-
-    const sgpBarButton = one('#btn-open-sgp-drawer-bar');
-    if (sgpBarButton) {
-      sgpBarButton.disabled = true;
-      sgpBarButton.removeAttribute('onclick');
-      text(sgpBarButton, 'SGP SLIP • VERIFIED MARKET INPUTS REQUIRED');
-    }
-
-    const floatingSgpButton = one('#btn-toggle-betslip-drawer');
-    if (floatingSgpButton) {
-      floatingSgpButton.disabled = true;
-      floatingSgpButton.removeAttribute('onclick');
-      text(floatingSgpButton, 'SGP DRAFT • INPUTS REQUIRED');
-    }
-
-    const drawer = one('#sgp-betslip-drawer');
-    if (drawer) {
-      drawer.dataset.liveintelDraft = 'true';
-
-      const wagerInput = one('#sgp-wager-input');
-      if (wagerInput) {
-        wagerInput.disabled = true;
-        wagerInput.value = '';
-        wagerInput.placeholder = 'PRICE REQUIRED';
-      }
-
-      leafElements(drawer).forEach(element => {
-        const value = element.textContent.trim();
-
-        if (/QUANT PROTOCOL ACTIVE|AUTO-PAIRING/i.test(value)) {
-          text(element, 'MARKET INPUTS PENDING');
-        } else if (/CORRELATED EDGE|JOINT TRUE PROB|IMP:|PAIRWISE CORRELATION MATRIX|SYNCHRONIZED/i.test(value)) {
-          text(element, 'SOURCE PENDING');
-        } else if (/LaMelo Ball|Derrick White|Chet Holmgren|Game Total/i.test(value)) {
-          text(element, 'DEMO LEG REMOVED');
-        } else if (/Over \d|Under \d|[-+]\d{3}|CORR EDGE|SGP COVARIANCE|r =/i.test(value)) {
-          text(element, 'SOURCE PENDING');
-        } else if (/COMBINED PARLAY ODDS:/i.test(value)) {
-          text(element, 'COMBINED ODDS: SOURCE PENDING');
-        } else if (/EST\. TOTAL PAYOUT:/i.test(value)) {
-          text(element, 'EST. PAYOUT: PRICE REQUIRED');
-        } else if (/NET QUANT EDGE VALUE:/i.test(value)) {
-          text(element, 'EDGE VALUE: PRICE REQUIRED');
-        }
-      });
-
-      all('button', drawer).forEach(button => {
-        if (/TRANSMIT ORDER TO SPORTSBOOK/i.test(button.textContent)) {
-          button.disabled = true;
-          button.removeAttribute('onclick');
-          text(button, 'SPORTSBOOK TRANSMISSION NOT CONNECTED');
-        }
-      });
-    }
+    text(ui.detected, `${source.length} LOADED`);
+    text(one('#cluster-count-label'), finiteInput(heat.total) ? `${heat.total} RECORDED HISTORY PATTERNS • ${source.length} LOADED` : `${source.length} LOADED HISTORY PATTERNS`);
+    ui.search.disabled = false; ui.search.removeAttribute('aria-disabled');
+    ui.sports.forEach(button => { button.disabled = false; button.removeAttribute('aria-disabled'); });
+    all('header button').forEach(disableControl);
   }
 
   function researchTeams(data) {

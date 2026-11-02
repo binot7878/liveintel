@@ -175,7 +175,7 @@ class Handler(BaseHTTPRequestHandler):
             # These routes use the shared runtime exclusively. Exported inline
             # simulators, export handlers and demo timers must never execute.
             # Preserve the head configuration and every frozen file on disk.
-            if screen.startswith(("math_lab_", "watch_5_")):
+            if screen.startswith(("math_lab_", "watch_5_")) or screen in {"live_today_scoreboard", "heat_s_on_repeat_performers"}:
                 head, boundary, body_html = html.partition("</head>")
                 body_html = re.sub(r"<script\b[^>]*>.*?</script\s*>", "", body_html,
                                    flags=re.IGNORECASE | re.DOTALL)
