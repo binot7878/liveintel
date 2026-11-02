@@ -1029,285 +1029,88 @@
     return teamCards.slice(0, 2);
   }
 
+  function finiteInput(value) {
+    return (typeof value === 'number' || typeof value === 'string') && String(value).trim() !== '' && Number.isFinite(Number(value));
+  }
+
+  function disableControl(control) {
+    control.disabled = true;
+    control.removeAttribute('onclick');
+    control.removeAttribute('oninput');
+    delete control.dataset.liAction;
+    control.title = 'Required data / handler not connected';
+  }
+
   function bindMath(data) {
     const main = one('main');
     if (!main) return;
+    // Capture the exported DOM once, before changing any names or values.
+    if (!main.mathBindings) {
+      const labels = leafElements(main);
+      main.mathBindings = labels.filter(el => /^RECENT FULL-GAME AVERAGE$/i.test(el.textContent.trim())).map(label => {
+        const panel = label.parentElement.parentElement.parentElement;
+        const heading = findLeaf(/TEAM PROJECTION$/i, panel);
+        const projection = findLeaf(/^MODEL PROJ$/i, panel);
+        const history = findLeaf(/^L5 Sequence Scores/i, panel);
+        return { panel, heading, average: label.parentElement.children[1],
+          projection: projection && projection.nextElementSibling,
+          historyLabel: history, history: history && all('.grid > div', history.parentElement) };
+      });
+      main.mathBindings.names = labels.filter(el => /^(Atlanta Dream|Golden State)$/i.test(el.textContent.trim()));
+      main.mathBindings.badges = labels.filter(el => /^(ATL|GS)$/i.test(el.textContent.trim()));
+      main.mathBindings.matchup = findLeaf(/^ATL @ GS$/i, main);
+      main.mathBindings.cadenceTeams = all('tbody tr', main).slice(0, 2).map(row => row.children[0]);
+      main.mathBindings.sport = findLeaf(/^WNBA$/i, main);
 
-    const teams = researchTeams(data);
-    const demoNames = [/ATLANTA DREAM/i, /GOLDEN STATE/i];
-
-    teams.forEach((team, index) => {
-      const heading = findLeaf(demoNames[index], main);
-      if (!heading) return;
-
-      text(
-        heading,
-        `${team.team} • ${team.sport || 'SPORT'} • GAME ${team.game_id}`
-      );
-
-      let panel = heading;
-
-      while (panel && panel !== main) {
-        const value = panel.textContent || '';
-
-        if (
-          /RECENT FULL-GAME AVERAGE/i.test(value) &&
-          /TEAM PROJECTION/i.test(value)
-        ) break;
-
-        panel = panel.parentElement;
-      }
-
-      if (!panel || panel === main) return;
-
-      const leaves = leafElements(panel);
-
-      const recentIndex = leaves.findIndex(element =>
-        /^RECENT FULL-GAME AVERAGE$/i.test(element.textContent.trim())
-      );
-
-      if (recentIndex >= 0 && leaves[recentIndex + 1]) {
-        text(
-          leaves[recentIndex + 1],
-          team.average == null
-            ? 'RECORDED AVERAGE UNAVAILABLE'
-            : `${number(team.average, 1)} PPG (RECORDED)`
-        );
-      }
-
-      const sportsbookIndex = leaves.findIndex(element =>
-        /^SPORTSBOOK LINE$/i.test(element.textContent.trim())
-      );
-
-      if (sportsbookIndex >= 0 && leaves[sportsbookIndex + 1]) {
-        text(leaves[sportsbookIndex + 1], 'SOURCE PENDING');
-      }
-
-      const projectionIndex = leaves.findIndex(element =>
-        /^MODEL PROJ$/i.test(element.textContent.trim())
-      );
-
-      const projection =
-        team.math &&
-        team.math.projection != null &&
-        Number.isFinite(Number(team.math.projection))
-          ? Number(team.math.projection)
-          : null;
-
-      if (projectionIndex >= 0 && leaves[projectionIndex + 1]) {
-        text(
-          leaves[projectionIndex + 1],
-          projection == null
-            ? 'INPUTS PENDING'
-            : `${number(projection, 1)} DESCRIPTIVE`
-        );
-      }
-
-      const edgeIndex = leaves.findIndex(element =>
-        /^EDGE VS LINE$/i.test(element.textContent.trim())
-      );
-
-      if (edgeIndex >= 0 && leaves[edgeIndex + 1]) {
-        text(leaves[edgeIndex + 1], 'LINE / PRICE REQUIRED');
-      }
-    });
-
-    leafElements(main).forEach(element => {
-      const value = element.textContent.trim();
-
-      if (/^100,000 ITER$/i.test(value)) {
-        text(element, 'SIMULATION NOT ACTIVE');
-
-      } else if (/ENGINE V4\.8/i.test(value)) {
-        text(element, 'RECORDED RESEARCH ENGINE');
-
-      } else if (/MONTE CARLO SIMS:/i.test(value)) {
-        text(element, 'SIMULATION STATUS:');
-
-      } else if (/^[+-]?\d+(?:\.\d+)?%\s*EV(?:\s*\(U\))?$/i.test(value)) {
-        text(element, 'EV: PRICE REQUIRED');
-
-      } else if (/^EDGE:\s*[+-]?\d/i.test(value)) {
-        text(element, 'EDGE: LINE REQUIRED');
-
-      } else if (/^[+-]?\d+(?:\.\d+)?\s*EV$/i.test(value)) {
-        text(element, 'EV: INPUTS REQUIRED');
-
-      } else if (/^(PINNACLE|CRIS|CIRCUS)$/i.test(value)) {
-        text(element, 'SOURCE PENDING');
-
-      } else if (/INSTITUTIONAL ODDS ENGINE/i.test(value)) {
-        text(element, 'MARKET DATA ENGINE • SOURCE PENDING');
-
-      } else if (/^SOCKET:\s*CONNECTED$/i.test(value)) {
-        text(element, 'SOCKET: NOT REQUIRED');
-
-      } else if (/^LATENCY:\s*14MS$/i.test(value)) {
-        text(element, 'INGEST: DATABASE CURRENT');
-
-      } else if (/^SYS HOLD:\s*2\.41%$/i.test(value)) {
-        text(element, 'MARKET HOLD: SOURCE PENDING');
-      }
-    });
-
-    // Rebind the two visible recorded-average blocks by occurrence.
-    // Replace the entire value cell so frozen parent text cannot remain.
-    const recentLabels = leafElements(main).filter(element =>
-      /^RECENT FULL-GAME AVERAGE$/i.test(element.textContent.trim())
-    ).slice(0, 2);
-
-    recentLabels.forEach((label, index) => {
-      const team = teams[index];
-      const parent = label.parentElement;
-
-      if (!team || !parent) return;
-
-      const valueCell = Array.from(parent.children).find(
-        element => element !== label
-      );
-
-      if (valueCell) {
-        text(
-          valueCell,
-          team.average == null
-            ? 'RECORDED AVERAGE UNAVAILABLE'
-            : `${number(team.average, 1)} PPG (RECORDED)`
-        );
-      }
-    });
-
-    // Neutralize remaining frozen book / market leg claims.
-    leafElements(main).forEach(element => {
-      const value = element.textContent.trim();
-
-      if (
-        /PINNACLE/i.test(value) ||
-        /CRIS/i.test(value) ||
-        /CIRCUS/i.test(value)
-      ) {
-        text(element, 'MARKET SOURCE PENDING');
-
-      } else if (
-        /^ATL Team Total Over 78\.5$/i.test(value) ||
-        /^GS Team Total Under 74\.0$/i.test(value) ||
-        /^ATL -4\.5 1st Half Spread$/i.test(value)
-      ) {
-        text(element, 'MARKET LEG • VERIFIED INPUTS REQUIRED');
-      }
-    });
-
-    // Footer is outside <main>, so clean it separately.
-    const footer = one('footer');
-
-    if (footer) {
-      Array.from(footer.querySelectorAll('span')).forEach(element => {
-        const value = element.textContent.trim();
-
-        if (/^INSTITUTIONAL ODDS ENGINE$/i.test(value)) {
-          text(element, 'MARKET DATA ENGINE • SOURCE PENDING');
-
-        } else if (/^SOCKET:\s*CONNECTED$/i.test(value)) {
-          text(element, 'SOCKET: NOT REQUIRED');
-
-        } else if (/^LATENCY:\s*14MS$/i.test(value)) {
-          text(element, 'INGEST: DATABASE CURRENT');
-
-        } else if (/^SYS HOLD:\s*2\.41%$/i.test(value)) {
-          text(element, 'MARKET HOLD: SOURCE PENDING');
+      // Keep every component in position, but remove all illustrative values
+      // and narratives before explicitly binding supported recorded research.
+      labels.forEach(el => {
+        if (el.matches('.material-symbols-outlined')) return;
+        const value = el.textContent.trim();
+        if (/\d|ATL|GOLDEN STATE|\bGS\b|Rhyne Howard|Allisha Gray|BULLISH|UNDER BIAS|LOW STABILITY|ELEVATED|Adjust game dynamics|Bayesian|Regressor|Syndicate|SGP ALPHA|COPULA|PEARSON/i.test(value)) {
+          text(el, 'SOURCE PENDING');
         }
       });
-    }
-
-    const matrix = one('#prop-correlation-matrix-container');
-    if (matrix) {
-      pending(
-        matrix,
-        'ALIGNED TARGET HISTORY + VERIFIED MARKET LINES REQUIRED'
-      );
-    }
-
-    const cadence = findLeaf(/INNING & QUARTER FLOW CADENCE/i, main);
-    if (cadence) {
-      pending(
-        cadence.closest('section') ||
-          cadence.parentElement?.parentElement,
-        'CURRENT SEGMENT PROJECTION INPUTS NOT AVAILABLE'
-      );
-    }
-
-    const sensitivity = findLeaf(/SENSITIVITY SIM/i, main);
-    if (sensitivity) {
-      const panel =
-        sensitivity.closest('section') ||
-        sensitivity.parentElement?.parentElement;
-
-      if (panel) {
-        pending(
-          panel,
-          'SIMULATOR INPUTS / CALIBRATED MODEL PARAMETERS NOT AVAILABLE'
-        );
-
-        all('input', panel).forEach(input => {
-          input.disabled = true;
+      // Numeric parent text (e.g. an average with a nested Last 5 label)
+      // must be cleared at the value-cell level as well.
+      main.mathBindings.forEach(binding => {
+        text(binding.average, 'RECORDED AVERAGE UNAVAILABLE');
+        all('span', binding.panel).forEach(el => {
+          if (el.children.length && /\d/.test(Array.from(el.childNodes).filter(n => n.nodeType === 3).map(n => n.textContent).join(''))) text(el, 'SOURCE PENDING');
         });
-
-        all('button', panel).forEach(button => {
-          button.disabled = true;
-          button.removeAttribute('onclick');
-        });
-      }
+      });
+      all('select', main).forEach(select => {
+        all('option', select).forEach(option => text(option, 'MODEL INPUTS REQUIRED'));
+      });
+      const footer = one('footer');
+      if (footer) all('span', footer).filter(el => /SOCKET:|LATENCY:|SYS HOLD:|INSTITUTIONAL ODDS ENGINE/.test(el.textContent)).forEach(el => text(el, 'SOURCE PENDING'));
+      text(findLeaf(/^SIMULATED REAL-TIME EDGE:$/i, main), 'SIMULATION: INPUTS REQUIRED');
     }
-
-    all('button', main).forEach(button => {
-      if (
-        !/DIRECT LAB EXECUTION|EXECUTE OPTIMAL SLIP|DISPATCH TO BETSLIP/i
-          .test(button.textContent)
-      ) return;
-
-      const odds =
-        button.dataset.odds ||
-        button.parentElement?.dataset.odds;
-
-      const prob =
-        button.dataset.probability ||
-        button.parentElement?.dataset.probability;
-
-      const overOdds =
-        button.dataset.overOdds ||
-        button.parentElement?.dataset.overOdds;
-
-      const underOdds =
-        button.dataset.underOdds ||
-        button.parentElement?.dataset.underOdds;
-
-      if (odds && prob) {
-        button.dataset.liAction = 'calc-kelly';
-        button.disabled = false;
-
-      } else if (overOdds && underOdds) {
-        button.dataset.liAction = 'calc-no-vig';
-        button.disabled = false;
-
-      } else if (odds) {
-        button.dataset.liAction = 'calc-implied';
-        button.disabled = false;
-
-      } else {
-        button.dataset.liAction = 'calculation-pending';
-        button.disabled = true;
-        button.removeAttribute('onclick');
-      }
+    const teams = researchTeams(data);
+    const bindings = main.mathBindings;
+    bindings.forEach((binding, index) => {
+      const team = teams[index];
+      text(binding.heading, team ? `${team.team} • TEAM PROJECTION` : 'TEAM RESEARCH UNAVAILABLE');
+      text(binding.average, team && finiteInput(team.average) ? `${number(team.average, 1)} PPG (RECORDED)` : 'RECORDED AVERAGE UNAVAILABLE');
+      const rawProjection = team && team.math && team.math.projection;
+      const side = team && team.game && (team.team === team.game.away ? 0 : team.team === team.game.home ? 1 : -1);
+      const projection = Array.isArray(rawProjection) ? rawProjection[side] : rawProjection;
+      text(binding.projection, finiteInput(projection) ? `${number(projection, 1)} DESCRIPTIVE` : 'INPUTS PENDING');
+      text(binding.historyLabel, team && (team.values || []).some(finiteInput) ? 'RECORDED FULL-GAME HISTORY' : 'HISTORY UNAVAILABLE');
+      (binding.history || []).forEach(cell => {
+        const leaves = leafElements(cell);
+        const value = team && (team.values || [])[Array.from(binding.history).indexOf(cell)];
+        text(leaves[0], finiteInput(value) ? number(value, 1) : '—');
+        text(leaves[1], finiteInput(value) ? 'RECORDED' : 'HISTORY PENDING');
+      });
     });
-
-    const execution = findLeaf(/DIRECT LAB EXECUTION/i, main);
-
-    if (execution) {
-      pending(
-        execution.closest('section') ||
-          execution.parentElement?.parentElement,
-        'EXECUTION REQUIRES VERIFIED MARKET PRICES'
-      );
-    }
+    bindings.cadenceTeams.forEach((el, i) => text(el, teams[i] ? teams[i].team : '—'));
+    text(bindings.sport, teams[0] && teams[0].sport || 'SPORT PENDING');
+    bindings.names.forEach((el, i) => text(el, teams[i] ? teams[i].team : 'TEAM UNAVAILABLE'));
+    bindings.badges.forEach((el, i) => text(el, teams[i] ? teams[i].team : '—'));
+    text(bindings.matchup, teams.length ? teams.map(team => team.team).join(' / ') : 'RESEARCH UNAVAILABLE');
+    all('button,input,select', main).forEach(disableControl);
+    all('header button').forEach(disableControl);
   }
 
 
@@ -1323,41 +1126,50 @@
 
       if (!element) continue;
 
+      if (!element.watchBindings) {
+        const name = one('.font-headline-sm', element);
+        const team = name && name.nextElementSibling;
+        const sport = findLeaf(/^(NBA|CFB|NFL|NCAAB|WNBA|MLB|NHL)$/i, element);
+        const line = one(`#card${index + 1}LinePrice`, element);
+        const market = line && line.previousElementSibling;
+        const score = one('.font-headline-xl', element);
+        const leaves = leafElements(element);
+        leaves.forEach(leaf => {
+          if (leaf.matches('.material-symbols-outlined') || leaf.closest('button') || /^SLOT \d+$/i.test(leaf.textContent.trim())) return;
+          text(leaf, 'SOURCE PENDING');
+        });
+        all('[style*="width"]', element).forEach(bar => { bar.style.width = '0%'; });
+        // Retain chart containers without depicting fabricated probability trends.
+        all('.items-end > div', element).forEach(bar => { bar.style.height = '0px'; });
+        // Some exported claims are text nodes alongside an icon.
+        all('div', element).forEach(el => Array.from(el.childNodes).forEach(node => {
+          if (node.nodeType === 3 && /LOCKED IN TICKET/i.test(node.textContent)) node.textContent = 'TICKET STATUS: NOT SUPPLIED';
+        }));
+        element.watchBindings = { name, team, sport, market, score };
+      }
       const target = watch[index];
-
       if (!target) {
         pending(element, 'EMPTY WATCH SLOT');
+        element.draggable = false;
+        delete element.dataset.watchIndex;
+        delete element.dataset.playerId;
+        Object.values(element.watchBindings).forEach(el => text(el, '—'));
+        all('button', element).forEach(disableControl);
         continue;
       }
-
       unpending(element);
-
       element.draggable = true;
       element.dataset.watchIndex = index;
       element.dataset.playerId = target.player_id || target.id || '';
-
-      const values = target.values || [];
+      const values = (target.values || []).filter(finiteInput).map(Number);
       const latest = values.length ? values[0] : null;
-      const average =
-        target.average != null
-          ? Number(target.average)
-          : values.length
-            ? values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length
-            : null;
-
-      // Replace known frozen demo player names.
-      const knownNames = [
-        /D\.\s*WHITE|DERRICK WHITE/i,
-        /MISSOURI/i,
-        /L\.\s*BALL|LAMELO BALL/i,
-        /C\.J\.\s*STROUD/i,
-        /C\.\s*HOLMGREN/i
-      ];
-
-      text(
-        findLeaf(knownNames[index] || /$a/, element),
-        target.player_name || target.name || 'WATCH TARGET'
-      );
+      const average = finiteInput(target.average) ? Number(target.average) : values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+      const refs = element.watchBindings;
+      text(refs.name, target.player_name || target.name || 'WATCH TARGET');
+      text(refs.team, target.team || 'TEAM NOT SUPPLIED');
+      text(refs.sport, target.sport || 'SPORT NOT SUPPLIED');
+      text(refs.market, target.market || 'RECORDED HISTORY');
+      text(refs.score, latest == null ? '—' : number(latest, 1));
 
       // Normalize card-level frozen demo claims.
       leafElements(element).forEach(leaf => {
@@ -1531,7 +1343,7 @@
       );
 
       const bar = one(`#card${index + 1}Bar`);
-      if (bar) bar.style.width = values.length ? '100%' : '0%';
+      if (bar) bar.style.width = '0%';
 
       pending(
         one(`#card${index + 1}SteamBox`),
@@ -1701,16 +1513,25 @@
     }
 
     const exposure = findLeaf(/^MONITORED EXPOSURE$/i);
-
-    if (exposure && exposure.parentElement) {
-      const value = leafElements(exposure.parentElement).find(
-        element =>
-          element !== exposure &&
-          /^\$/.test(element.textContent)
-      );
-
-      text(value, money(ticketData.active_exposure));
+    const exposurePanel = exposure && exposure.parentElement.parentElement;
+    if (exposurePanel) {
+      const cells = exposurePanel.children[1] && exposurePanel.children[1].children;
+      text(cells && cells[0], finiteInput(ticketData.active_exposure) ? money(ticketData.active_exposure) : '—');
+      text(cells && cells[1], finiteInput(ticketData.open) ? `${ticketData.open} OPEN TICKETS` : 'TICKET COUNT UNAVAILABLE');
     }
+    leafElements(main).forEach(el => {
+      if (/^SLOTS:/.test(el.textContent.trim())) text(el, `SLOTS: ${watch.length} / 5 ACTIVE`);
+      if (/^RADAR BUFFER SYNCHRONIZED$/.test(el.textContent.trim())) text(el, 'WATCH HISTORY • DATABASE READ');
+    });
+    leafElements(document).forEach(el => {
+      if (/^GREEN =|^AMBER =|^KEY SHORTCUT:|^COLOR KEY:/.test(el.textContent.trim())) text(el, 'MARKET INPUTS REQUIRED');
+    });
+    all('header button').forEach(disableControl);
+    text(one('#ribbonCycle'), 'POLL: 15 SECONDS');
+    text(one('#engineLoad'), 'NOT SUPPLIED');
+    all('button,input,select', main).forEach(control => {
+      if (control.dataset.liAction !== 'watch-remove') disableControl(control);
+    });
 
     // Remove the remaining exported demo odds ledger completely.
     // All residual fake player/book names live inside this one stale table.
@@ -1985,13 +1806,15 @@
   }
 
   function wireWatchDrag() {
-    const cards = all('[data-watch-index]'); let source = null;
+    const cards = all('[data-watch-index]');
     cards.forEach(card => {
-      card.addEventListener('dragstart', () => { source = Number(card.dataset.watchIndex); });
+      if (card.dataset.dragWired) return;
+      card.dataset.dragWired = 'true';
+      card.addEventListener('dragstart', () => { state.watchDragSource = Number(card.dataset.watchIndex); });
       card.addEventListener('dragover', event => event.preventDefault());
       card.addEventListener('drop', async event => {
-        event.preventDefault(); const destination = Number(card.dataset.watchIndex); if (source == null || source === destination) return;
-        const ids = cards.map(item => item.dataset.playerId); const moved = ids.splice(source, 1)[0]; ids.splice(destination, 0, moved);
+        event.preventDefault(); const source = state.watchDragSource; state.watchDragSource = null; const destination = Number(card.dataset.watchIndex); if (source == null || source === destination || card.dataset.watchIndex == null) return;
+        const ids = all('[data-watch-index]').map(item => item.dataset.playerId); const moved = ids.splice(source, 1)[0]; ids.splice(destination, 0, moved);
         try { await post('/api/stitch/watch/reorder', { player_ids: ids }); notify('Watch order saved in isolated development data.'); await refreshFull(); }
         catch (error) { notify(error.message, true); }
       });
@@ -2019,8 +1842,8 @@
       else if (action === 'calculation-pending') { event.preventDefault(); event.stopImmediatePropagation(); notify('Required market inputs are not connected. Calculation failed closed.', true); }
       else if (action === 'calc-kelly') {
         event.preventDefault(); event.stopImmediatePropagation();
-        const prob = parseFloat(button.dataset.probability);
-        const odds = parseFloat(button.dataset.odds);
+        const prob = (finiteInput(button.dataset.probability) ? Number(button.dataset.probability) : NaN);
+        const odds = (finiteInput(button.dataset.odds) ? Number(button.dataset.odds) : NaN);
         if (!Number.isFinite(prob) || prob <= 0 || prob >= 1 || !Number.isFinite(odds) || odds === 0) {
           notify('Kelly calculation failed closed: valid probability (0 < p < 1) and non-zero odds required.', true);
           return;
@@ -2032,8 +1855,8 @@
       }
       else if (action === 'calc-no-vig') {
         event.preventDefault(); event.stopImmediatePropagation();
-        const overOdds = parseFloat(button.dataset.overOdds);
-        const underOdds = parseFloat(button.dataset.underOdds);
+        const overOdds = (finiteInput(button.dataset.overOdds) ? Number(button.dataset.overOdds) : NaN);
+        const underOdds = (finiteInput(button.dataset.underOdds) ? Number(button.dataset.underOdds) : NaN);
         if (!Number.isFinite(overOdds) || !Number.isFinite(underOdds) || overOdds === 0 || underOdds === 0) {
           notify('No-vig calculation failed closed: both over and under odds are required.', true);
           return;
@@ -2044,7 +1867,7 @@
       }
       else if (action === 'calc-implied') {
         event.preventDefault(); event.stopImmediatePropagation();
-        const odds = parseFloat(button.dataset.odds);
+        const odds = (finiteInput(button.dataset.odds) ? Number(button.dataset.odds) : NaN);
         if (!Number.isFinite(odds) || odds === 0) {
           notify('Implied probability calculation failed closed: valid non-zero odds required.', true);
           return;
@@ -2073,6 +1896,7 @@
   }
   async function poll() {
     try {
+      if (/^(math_lab_|watch_5_)/.test(state.screen)) { await refreshFull(); return; }
       const data = await api('/api/stitch/updates'); if (data.revision !== state.revision) { state.revision = data.revision; state.data = Object.assign({}, state.data, data); bindScreen(state.data); }
     } catch (_) { const notice = one('#liveintel-development-state'); if (notice) notice.textContent = 'DEVELOPMENT STITCH • LIVE UPDATE DEGRADED • LAST DATA RETAINED'; }
   }

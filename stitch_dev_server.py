@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import mimetypes
 import os
+import re
 import threading
 import time
 import urllib.parse
@@ -171,17 +172,14 @@ class Handler(BaseHTTPRequestHandler):
             # time; the authoritative HTML file and its DOM remain unchanged.
             html = html.replace("button:has-text, button", "button")
 
-            # WATCH 5 exported HTML contains a frozen demo simulator that
-            # mutates odds, latency, lines and player stats with timers.
-            # Remove only that inline script at serve time. The authoritative
-            # Stitch HTML file remains byte-for-byte untouched.
-            if screen.startswith("watch_5_") and "Live Feed Simulation State" in html:
-                marker_at = html.find("Live Feed Simulation State")
-                script_start = html.rfind("<script", 0, marker_at)
-                script_end = html.find("</script>", marker_at)
-
-                if script_start != -1 and script_end != -1:
-                    html = html[:script_start] + html[script_end + len("</script>"):]
+            # These routes use the shared runtime exclusively. Exported inline
+            # simulators, export handlers and demo timers must never execute.
+            # Preserve the head configuration and every frozen file on disk.
+            if screen.startswith(("math_lab_", "watch_5_")):
+                head, boundary, body_html = html.partition("</head>")
+                body_html = re.sub(r"<script\b[^>]*>.*?</script\s*>", "", body_html,
+                                   flags=re.IGNORECASE | re.DOTALL)
+                html = head + boundary + body_html
 
             injection = (f'<link rel="stylesheet" href="/stitch-app.css">'
                          f'<script>window.__STITCH_SCREEN__={json.dumps(screen)};window.__STITCH_ENV__="DEVELOPMENT";</script>'
