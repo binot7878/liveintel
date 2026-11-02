@@ -13,7 +13,6 @@ from .nba_ingestor import (
     parse_name_from_play_text,
     parse_nba_play_from_detailed,
     ingest_nba_game,
-    main
 )
 
 __all__ = [
@@ -23,5 +22,4 @@ __all__ = [
     'parse_name_from_play_text',
     'parse_nba_play_from_detailed',
     'ingest_nba_game',
-    'main',
 ]

@@ -1,4 +1,5 @@
 import json
+import copy
 import sqlite3
 from datetime import datetime, timezone
 import unittest
@@ -201,16 +202,107 @@ class StitchActionTests(unittest.TestCase):
         self.assertEqual(self.connection.execute("select count(*) from owner_watchlist").fetchone()[0], 4)
 
     def test_ticket_record_is_record_only(self):
-        result = stitch_data.record_ticket(self.connection, {
-            "owner_name": "Bobby", "book": "Recorded Book", "stake": 10, "potential_payout": 19.09,
-            "legs": [{"sport": "NBA", "game_id": "1", "player_id": "2", "player": "Recorded Player", "team": "BOS", "market": "Points", "line": 20.5, "side": "OVER", "odds": -110}],
-        })
+        result = stitch_data.record_ticket(self.connection, self.ticket_payload())
         self.assertTrue(result["recorded"])
         self.assertFalse(result["wager_placed"])
         ticket = self.connection.execute("select * from tickets where id=?", (result["ticket_id"],)).fetchone()
         self.assertEqual(ticket["environment"], "TEST")
         self.assertEqual(ticket["status"], "OPEN")
+        self.assertTrue(json.loads(ticket["notes"])["record_only"])
         self.assertEqual(self.connection.execute("select count(*) from ticket_legs").fetchone()[0], 1)
+        event = self.connection.execute("select event_data from ticket_events").fetchone()[0]
+        self.assertFalse(json.loads(event)["wager_placed"])
+
+    @staticmethod
+    def ticket_payload():
+        return {
+            "owner_name": "Bobby", "book": "Recorded Book", "stake": 10, "potential_payout": 19.09,
+            "legs": [{"sport": "NBA", "game_id": "1", "player_id": "2", "player": "Recorded Player", "team": "BOS", "market": "Points", "line": 20.5, "side": "OVER", "odds": -110}],
+        }
+
+    def assert_ticket_rejected_without_writes(self, payload):
+        before = [self.connection.execute(f"select count(*) from {table}").fetchone()[0]
+                  for table in ("tickets", "ticket_legs", "ticket_events")]
+        with self.assertRaises(ValueError):
+            stitch_data.record_ticket(self.connection, payload)
+        after = [self.connection.execute(f"select count(*) from {table}").fetchone()[0]
+                 for table in ("tickets", "ticket_legs", "ticket_events")]
+        self.assertEqual(after, before, "invalid ticket must not partially record")
+
+    def test_ticket_rejects_missing_zero_and_malformed_odds(self):
+        missing = object()
+        for value in (missing, None, "", " ", 0, "0", -0.0, True, False, "bad", "-110oops",
+                      [], {}, float("nan"), float("inf"), float("-inf"), "NaN", "Infinity", 10 ** 400):
+            with self.subTest(odds=value):
+                payload = self.ticket_payload()
+                if value is missing:
+                    del payload["legs"][0]["odds"]
+                else:
+                    payload["legs"][0]["odds"] = value
+                self.assert_ticket_rejected_without_writes(payload)
+
+    def test_ticket_rejects_missing_ticket_pricing(self):
+        missing = object()
+        invalid = {
+            "book": (missing, None, "", " ", "null", "undefined"),
+            "stake": (missing, None, "", 0, -1, True, "bad", float("nan"), float("inf")),
+            "potential_payout": (missing, None, "", 0, -1, 9.99, True, "bad", float("nan"), float("inf")),
+        }
+        for field, values in invalid.items():
+            for value in values:
+                with self.subTest(field=field, value=value):
+                    payload = self.ticket_payload()
+                    if value is missing:
+                        del payload[field]
+                    else:
+                        payload[field] = value
+                    self.assert_ticket_rejected_without_writes(payload)
+
+    def test_ticket_validates_every_leg_before_recording(self):
+        for field in ("odds", "line", "market", "side", "sport", "player"):
+            with self.subTest(missing=field):
+                payload = self.ticket_payload()
+                second = copy.deepcopy(payload["legs"][0])
+                second.pop("team")  # No alternate identity when the player is missing.
+                del second[field]
+                payload["legs"].append(second)
+                self.assert_ticket_rejected_without_writes(payload)
+        for leg in (None, "bad", 123, []):
+            with self.subTest(leg=leg):
+                payload = self.ticket_payload()
+                payload["legs"].append(leg)
+                self.assert_ticket_rejected_without_writes(payload)
+
+    def test_ticket_requires_legs_and_moneyline_odds(self):
+        for legs in (None, [], {}, "bad"):
+            with self.subTest(legs=legs):
+                payload = self.ticket_payload()
+                payload["legs"] = legs
+                self.assert_ticket_rejected_without_writes(payload)
+        payload = self.ticket_payload()
+        payload["legs"][0].update(side="MONEYLINE", market="Moneyline", line=None, odds=None)
+        self.assert_ticket_rejected_without_writes(payload)
+
+    def test_ticket_accepts_fully_priced_single_and_multi_leg_records(self):
+        for odds in (-110, 120, "-105", "+100"):
+            with self.subTest(odds=odds):
+                payload = self.ticket_payload()
+                payload["legs"][0]["odds"] = odds
+                price = float(odds)
+                payload["potential_payout"] = round(10 * (1 + (price / 100 if price > 0 else 100 / abs(price))), 2)
+                if odds == 120:
+                    second = copy.deepcopy(payload["legs"][0])
+                    second.update(side="MONEYLINE", market="Moneyline", line=None, odds=-110)
+                    payload["legs"].append(second)
+                    payload["potential_payout"] = 42
+                result = stitch_data.record_ticket(self.connection, payload)
+                self.assertTrue(result["recorded"])
+                self.assertFalse(result["wager_placed"])
+                ticket = self.connection.execute("select * from tickets where id=?", (result["ticket_id"],)).fetchone()
+                self.assertEqual(ticket["environment"], "TEST")
+                legs = self.connection.execute("select * from ticket_legs where ticket_id=? order by id", (result["ticket_id"],)).fetchall()
+                self.assertEqual(len(legs), len(payload["legs"]))
+                self.assertEqual(legs[0]["odds"], float(odds))
 
     def test_ticket_rejects_missing_market_inputs(self):
         with self.assertRaises(ValueError):

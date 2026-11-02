@@ -454,6 +454,8 @@ def record_ticket(connection: sqlite3.Connection, payload: dict[str, Any]) -> di
         raise ValueError("A recorded sportsbook is required")
     normalized = []
     for leg in legs:
+        if not isinstance(leg, dict):
+            raise ValueError("Every ticket leg must be an object")
         side = clean(leg.get("side")).upper()
         if side not in {"OVER", "UNDER", "MORE", "LESS", "MONEYLINE"}:
             raise ValueError("Every leg needs a supported side")
@@ -464,7 +466,13 @@ def record_ticket(connection: sqlite3.Connection, payload: dict[str, Any]) -> di
         line = finite(leg.get("line"))
         if side != "MONEYLINE" and line is None:
             raise ValueError("Every non-moneyline leg needs a line")
-        normalized.append({**leg, "side": side, "line": line, "odds": finite(leg.get("odds"))})
+        try:
+            odds = finite(leg.get("odds"))
+        except OverflowError:
+            odds = None
+        if odds is None or odds == 0:
+            raise ValueError("Every leg needs valid non-zero odds")
+        normalized.append({**leg, "side": side, "line": line, "odds": odds})
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     cursor = connection.execute("""INSERT INTO tickets(owner_name,sportsbook_platform,date_time_placed,wager_amount,potential_payout,
         ticket_type,notes,status,environment) VALUES(?,?,?,?,?,?,?,?,?)""",

@@ -74,7 +74,7 @@ class CompletedHistoryTests(unittest.TestCase):
     def test_repairs_legacy_identity_dates_and_preserves_unobserved_stats(self):
         self.conn.execute('''INSERT INTO multi_sport_players(sport,player_id,player_name,team,game_id,game_date,segment,points)
             VALUES(?,?,?,?,?,?,?,?)''',('CFB','4685720','Bad label','BAD',self.game['id'],None,'FULL GAME',9))
-        self.conn.execute('INSERT INTO games VALUES(?,?,?,?,?,?)',(self.game['id'],'NFL','BAD','OLD','LIVE','2026-10-31'))
+        self.conn.execute('INSERT INTO games(id,sport,home_team,away_team,status,last_updated) VALUES(?,?,?,?,?,?)',(self.game['id'],'NFL','BAD','OLD','LIVE','2026-10-31'))
         self.conn.execute('INSERT INTO player_game_stats VALUES(?,?,?,?,?,?,?)',
             (self.game['id'],'4685720','Bad label','BAD','{"kicking":{"PTS":"3"}}','FULL GAME','2026-10-31'))
         self.conn.commit()
@@ -162,7 +162,7 @@ class CompletedHistoryTests(unittest.TestCase):
         self.assertEqual(result['completed_players'],1)
 
     def test_reconcile_ingests_new_final_with_players(self):
-        self.conn.execute('INSERT INTO games VALUES(?,?,?,?,?,?)',(self.game['id'],'NFL','GB','CAR','LIVE','old'))
+        self.conn.execute('INSERT INTO games(id,sport,home_team,away_team,status,last_updated) VALUES(?,?,?,?,?,?)',(self.game['id'],'NFL','GB','CAR','LIVE','old'))
         self.conn.commit()
         with patch.object(p,'fetch_json',return_value=self.summary):
             self.assertEqual(p.reconcile_previous_games(self.conn,'NFL','football/nfl',set()),[])
