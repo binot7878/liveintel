@@ -7,7 +7,7 @@
 
   function all(selector, root) { return Array.from((root || document).querySelectorAll(selector)); }
   function one(selector, root) { return (root || document).querySelector(selector); }
-  function money(value) { const number = Number(value); return Number.isFinite(number) ? number.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '—'; }
+  function money(value) { const number = Number(value); return finiteInput(value) ? number.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : 'PENDING'; }
   function number(value, digits) { const found = Number(value); return Number.isFinite(found) ? found.toFixed(digits == null ? 1 : digits) : '—'; }
   function dateLabel(value) { const date = value ? new Date(value + 'T12:00:00') : null; return date && !Number.isNaN(+date) ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' }).toUpperCase() : '—'; }
   function leafElements(root) { return all('*', root).filter(element => element.children.length === 0 && element.textContent.trim()); }
@@ -71,23 +71,108 @@
 
   function bindCommon(data) {
     const header = one('header'); if (!header) return;
+    if (!state.shell) {
+      const leaves = leafElements(header);
+      state.shell = {
+        slate: leaves.filter(el => /^LIVE SLATE/i.test(el.textContent.trim())),
+        feeds: leaves.filter(el => /^FEED(?:\s|:)/i.test(el.textContent.trim())),
+        latency: leaves.filter(el => /^\d+ms$/i.test(el.textContent.trim())),
+        roll: findLeaf(/^ROLL$/i, header)?.nextElementSibling,
+        pl: findLeaf(/^P\/L$/i, header)?.nextElementSibling,
+        footer: all('footer span').filter(el => /^(SOCKET:|LATENCY:|SYS HOLD:|INSTITUTIONAL ODDS ENGINE)/i.test(el.textContent.trim()))
+      };
+    }
     const global = data.global || {};
-    const stateText = global.health && global.health.state === 'LIVE' ? 'FEED LIVE' : 'FEED DEGRADED';
-    leafElements(header).forEach(element => {
-      const value = element.textContent.trim();
-      if (/^LIVE SLATE\s*[•·]/i.test(value)) text(element, `LIVE SLATE • ${dateLabel(global.slate_date)}`);
-      else if (/^FEED (?:LIVE|SYNC|ONLINE)/i.test(value)) text(element, stateText);
-      else if (/^\d+ms$/i.test(value)) text(element, global.health && global.health.state === 'LIVE' ? 'DB CURRENT' : 'STALE CHECK');
-      else if (/^SLIP\s*\(\d+\)/i.test(value)) text(element, `SLIP (${state.draft.length})`);
+    const owner = data.bobby || {};
+    const health = global.health?.state;
+    state.shell.slate.forEach(el => text(el, `LIVE SLATE • ${global.slate_date ? dateLabel(global.slate_date) : 'PENDING'}`));
+    state.shell.feeds.forEach(el => text(el, health === 'LIVE' ? 'FEED LIVE' : health === 'DEGRADED' ? 'FEED DEGRADED' : 'FEED PENDING'));
+    state.shell.latency.forEach(el => text(el, health === 'LIVE' ? 'DB CURRENT' : 'LATENCY PENDING'));
+    text(state.shell.roll, money(Object.hasOwn(owner, 'bankroll') ? owner.bankroll : global.bankroll));
+    text(state.shell.pl, money(Object.hasOwn(owner, 'today_pl') ? owner.today_pl : global.pl));
+    state.shell.footer.forEach(el => text(el, 'SOURCE PENDING'));
+    leafElements(header).filter(el => /^SLIP\s*\(/i.test(el.textContent)).forEach(el => text(el, `SLIP (${state.draft.length})`));
+  }
+
+  function neutralizeData(root, label) {
+    // A safe loading/empty copy retains the exported component tree and CSS.
+    // No frozen values, inputs, prices, charts or actions are presented as data.
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const parent = node.parentElement;
+      if (!node.textContent.trim() || parent.closest('script,style,.material-symbols-outlined')) return;
+      if (parent.closest('h1,h2') && !/\d|ORACLE|CRYPTOGRAPHIC|CONFIDENCE/i.test(node.textContent)) return;
+      node.textContent = label || 'DATA SOURCE PENDING';
     });
-    const roll = findLeaf(/^ROLL$/i, header); if (roll && roll.parentElement) {
-      const values = leafElements(roll.parentElement).filter(element => element !== roll);
-      if (values[0]) text(values[0], money(global.bankroll));
+    all('script', root).forEach(el => el.remove());
+    const controls = [...(root.matches('button,input,select,textarea') ? [root] : []), ...all('button,input,select,textarea', root)];
+    controls.forEach(el => {
+      disableControl(el);
+      if (el.matches('input,textarea')) { el.value = ''; el.removeAttribute('value'); el.checked = false; }
+    });
+    all('a', root).forEach(el => { el.removeAttribute('href'); el.setAttribute('aria-disabled', 'true'); });
+    all('img,svg path,svg circle,svg polyline,svg polygon', root).forEach(el => { el.style.visibility = 'hidden'; });
+    all('[style*="width:"]', root).forEach(el => { el.style.width = '0%'; });
+    all('.items-end > *', root).forEach(el => { el.style.height = '0px'; });
+    [root, ...all('*', root)].forEach(el => {
+      ['playerId', 'playerIndex', 'gameId', 'team', 'sport', 'watchIndex', 'liAction', 'intelAction', 'recordedTicketId', 'targetId'].forEach(key => { delete el.dataset[key]; });
+      ['onclick', 'oninput', 'onchange', 'onkeydown'].forEach(key => el.removeAttribute(key));
+    });
+  }
+
+  function showDataPending(label) {
+    if (!state.view) state.view = {
+      original: one('main'), placeholder: null,
+      extras: Array.from(document.body.children).filter(el =>
+        /^(DIV|ASIDE|SECTION|BUTTON|FORM|DIALOG)$/.test(el.tagName) &&
+        !['liveintel-development-state', 'liveintel-runtime-toast'].includes(el.id)
+      ).map(original => ({ original, placeholder: null }))
+    };
+    const view = state.view;
+    if (!view.original) return;
+    const placeholder = view.original.cloneNode(true);
+    neutralizeData(placeholder, label);
+    // Old pending overlays must not hide the neutral component placeholders.
+    all('.li-source-pending', placeholder).forEach(unpending);
+    unpending(placeholder);
+    (view.placeholder || view.original).replaceWith(placeholder);
+    view.placeholder = placeholder;
+    view.extras.forEach(extra => {
+      const safe = extra.original.cloneNode(true);
+      neutralizeData(safe, label);
+      all('.li-source-pending', safe).forEach(unpending); unpending(safe);
+      (extra.placeholder || extra.original).replaceWith(safe); extra.placeholder = safe;
+    });
+    all('header button').forEach(button => {
+      if (!Object.hasOwn(button.dataset, 'liInitialDisabled')) button.dataset.liInitialDisabled = String(button.disabled);
+      button.disabled = true;
+    });
+  }
+
+  function restoreDataView() {
+    if (!state.view?.placeholder) return;
+    state.view.placeholder.replaceWith(state.view.original);
+    state.view.placeholder = null;
+    state.view.extras.forEach(extra => { extra.placeholder?.replaceWith(extra.original); extra.placeholder = null; });
+    all('header button[data-li-initial-disabled]').forEach(button => {
+      button.disabled = button.dataset.liInitialDisabled === 'true';
+      delete button.dataset.liInitialDisabled;
+    });
+  }
+
+  function prepareDataRegion(element, available, label) {
+    if (!element.liDataTemplate) element.liDataTemplate = element.cloneNode(true);
+    if (!available) {
+      neutralizeData(element, 'DATA UNAVAILABLE');
+      element.liDataEmpty = true; pending(element, label); return false;
     }
-    const pl = findLeaf(/^P\/L$/i, header); if (pl && pl.parentElement) {
-      const values = leafElements(pl.parentElement).filter(element => element !== pl);
-      if (values[0]) text(values[0], money(global.pl));
+    if (element.liDataEmpty) {
+      const template = element.liDataTemplate.cloneNode(true);
+      element.replaceChildren(...Array.from(template.childNodes));
+      element.liDataEmpty = false;
     }
+    return true;
   }
 
   function gameSituation(game) {
@@ -130,8 +215,8 @@
 
     const cards = all('.matchup-card');
     cards.forEach((card, index) => {
-      const game = data.games[index];
-      if (!game) { pending(card, 'NO ADDITIONAL CURRENT LIVEINTEL GAME'); return; }
+      const game = games[index];
+      if (!prepareDataRegion(card, Boolean(game), 'NO ADDITIONAL CURRENT LIVEINTEL GAME')) return;
       unpending(card); card.dataset.gameId = game.id; card.dataset.sport = game.sport;
       const blocks = Array.from(card.children);
       const headLeaves = blocks[0] ? leafElements(blocks[0]) : [];
@@ -203,7 +288,7 @@
     const rows = all('tbody tr');
     rows.forEach((row, index) => {
       const player = players[index];
-      if (!player) { pending(row, 'NO ADDITIONAL CURRENT PLAYER'); return; }
+      if (!prepareDataRegion(row, Boolean(player), 'NO ADDITIONAL CURRENT PLAYER')) return;
       unpending(row); row.dataset.playerId = player.player_id; row.dataset.sport = player.sport; row.dataset.team = player.team; row.dataset.playerIndex = String(index);
       const cells = Array.from(row.children); const market = playerMarket(player); const window = player.windows[market] || {};
 
@@ -245,6 +330,7 @@
 
         if (buttonIndex === 0) {
           button.dataset.liAction = 'watch-add';
+          button.disabled = false;
           text(button, 'WATCH');
         } else {
           delete button.dataset.liAction;
@@ -288,10 +374,7 @@
       cards.forEach((card, index) => {
         const player = peers[index];
 
-        if (!player) {
-          pending(card, 'NO ADDITIONAL CURRENT PLAYER');
-          return;
-        }
+        if (!prepareDataRegion(card, Boolean(player), 'NO ADDITIONAL CURRENT PLAYER')) return;
 
         unpending(card);
         card.dataset.playerId = player.player_id || '';
@@ -784,7 +867,7 @@
     const heat = data.heat || { cards: [] }; const cards = all('#players-grid > div');
     cards.forEach((cardElement, index) => {
       const card = heat.cards[index];
-      if (!card) { pending(cardElement, 'NO ADDITIONAL QUALIFYING PATTERN'); return; }
+      if (!prepareDataRegion(cardElement, Boolean(card), 'NO ADDITIONAL QUALIFYING PATTERN')) return;
       unpending(cardElement); cardElement.dataset.playerId = card.player_id; cardElement.dataset.sport = card.sport; cardElement.dataset.team = card.team;
       const header = cardElement.children[0];
       const name = header && Array.from(header.querySelectorAll('span')).find(element => /font-headline-sm/.test(element.className));
@@ -1948,8 +2031,9 @@
     const amountsKnown = list => list.every(ticket => finiteInput(ticket.stake) && Number(ticket.stake) >= 0);
     const groupsKnown = tickets.every(ticket => groups.includes(ticket.group) && ticket.group !== 'HISTORY');
     const settlementsKnown = amountsKnown(settled) && settled.every(ticket => finiteInput(ticket.actual_payout) && Number(ticket.actual_payout) >= 0);
-    const exposure = supplied && groupsKnown && amountsKnown(open) ? open.reduce((sum, ticket) => sum + Number(ticket.stake), 0) : null;
-    const settledPL = supplied && groupsKnown && settlementsKnown ? settled.reduce((sum, ticket) => sum + Number(ticket.actual_payout) - Number(ticket.stake), 0) : null;
+    const authoritative = data.tickets?.aggregates_authoritative === true;
+    const exposure = authoritative ? data.tickets.active_exposure : supplied && groupsKnown && amountsKnown(open) ? open.reduce((sum, ticket) => sum + Number(ticket.stake), 0) : null;
+    const settledPL = authoritative ? data.tickets.settled_pl : supplied && groupsKnown && settlementsKnown ? settled.reduce((sum, ticket) => sum + Number(ticket.actual_payout) - Number(ticket.stake), 0) : null;
     text(refs.kpis[0]?.value, cash(data.bobby?.bankroll));
     copy(refs.kpis[0]?.detail, finiteInput(data.bobby?.bankroll) ? 'OWNER ACCOUNT' : 'ACCOUNT DATA REQUIRED');
     text(refs.kpis[1]?.label, 'ACTIVE EXPOSURE (RECORDED OPEN)');
@@ -2257,6 +2341,14 @@
   }
 
   function bindScreen(data) {
+    const dataset = state.screen === 'live_today_scoreboard' ? data.games :
+      state.screen === 'players_research_rotation_matrix' ? data.players :
+      state.screen === 'heat_s_on_repeat_performers' ? data.heat?.cards : null;
+    if (['live_today_scoreboard', 'players_research_rotation_matrix', 'heat_s_on_repeat_performers'].includes(state.screen) && (!Array.isArray(dataset) || !dataset.length)) {
+      showDataPending(Array.isArray(dataset) ? 'NO CURRENT RECORDED DATA' : 'DATA SOURCE PENDING');
+      bindCommon(data); return;
+    }
+    restoreDataView();
     bindCommon(data);
     if (state.screen === 'live_today_scoreboard') bindLive(data);
     else if (state.screen === 'players_research_rotation_matrix') bindPlayers(data);
@@ -2419,49 +2511,57 @@
   }
 
   async function refreshFull() {
-    state.data = await api(`/api/stitch/bootstrap?screen=${encodeURIComponent(state.screen)}`); bindScreen(state.data);
+    const data = await api(`/api/stitch/bootstrap?screen=${encodeURIComponent(state.screen)}`);
+    try { bindScreen(data); state.data = data; }
+    catch (error) { showDataPending('DATA BINDING UNAVAILABLE'); throw error; }
   }
-  async function poll() {
+  function poll() {
+    // Serialize refreshes; callers await their own round, not an older in-flight read.
+    const next = (state.pollQueue || Promise.resolve()).then(pollOnce);
+    state.pollQueue = next.catch(() => {});
+    return next;
+  }
+  async function pollOnce() {
     try {
-      if (state.screen === 'intelligence_ticket_builder') {
-        try { await refreshFull(); }
-        catch (_) {
-          bindIntelligence({});
-          text(one('#liveintel-development-state'), 'DEVELOPMENT STITCH • INTELLIGENCE UPDATE DEGRADED • DATA PENDING');
+      if (!state.config) state.config = await api('/api/stitch/config');
+      if (!state.data || state.screen !== 'live_today_scoreboard') {
+        await refreshFull();
+      } else {
+        const data = await api('/api/stitch/updates');
+        if (data.revision !== state.revision) {
+          const next = Object.assign({}, state.data, data);
+          bindScreen(next); state.data = next; state.revision = data.revision;
         }
-        return;
       }
-      if (state.screen.startsWith('tickets_')) {
-        try { await refreshFull(); }
-        catch (_) {
-          bindTickets({});
-          text(one('#liveintel-development-state'), 'DEVELOPMENT STITCH • TICKETS UPDATE DEGRADED • DATA PENDING');
-        }
-        return;
-      }
-      if (state.screen === 'picks_positions_specialist_challenge') {
-        try { await refreshFull(); }
-        catch (_) {
-          bindPicks({});
-          text(one('#liveintel-development-state'), 'DEVELOPMENT STITCH • PICKS UPDATE DEGRADED • DATA PENDING');
-        }
-        return;
-      }
-      if (/^(math_lab_|watch_5_)/.test(state.screen)) { await refreshFull(); return; }
-      const data = await api('/api/stitch/updates'); if (data.revision !== state.revision) { state.revision = data.revision; state.data = Object.assign({}, state.data, data); bindScreen(state.data); }
-    } catch (_) { const notice = one('#liveintel-development-state'); if (notice) notice.textContent = 'DEVELOPMENT STITCH • LIVE UPDATE DEGRADED • LAST DATA RETAINED'; }
+    } catch (_) {
+      const closeQualification = ['picks_positions_specialist_challenge', 'intelligence_ticket_builder'].includes(state.screen) || state.screen.startsWith('tickets_');
+      if (state.data && closeQualification) bindScreen({});
+      else if (!state.data) showDataPending('DATA SOURCE UNAVAILABLE');
+      const retained = state.data && !closeQualification;
+      bindCommon(retained ? { ...state.data, global: { ...state.data.global, health: { state: 'DEGRADED' } } } : { global: { health: { state: 'DEGRADED' } } });
+      text(one('#liveintel-development-state'), `DEVELOPMENT STITCH • LIVE UPDATE DEGRADED • ${retained ? 'LAST AUTHORITATIVE DATA RETAINED' : 'DATA PENDING'}`);
+    }
   }
 
   async function init() {
     addEnvironmentNotice(); bindNavigation(); bindActions();
+    bindCommon({});
     if (state.screen === 'intelligence_ticket_builder') bindIntelligence({});
     if (state.screen.startsWith('tickets_')) bindTickets({});
     if (state.screen === 'picks_positions_specialist_challenge') bindPicks({});
+    showDataPending('DATA SOURCE PENDING');
+    state.loading = true;
     try {
-      [state.config, state.data] = await Promise.all([api('/api/stitch/config'), api(`/api/stitch/bootstrap?screen=${encodeURIComponent(state.screen)}`)]);
-      bindScreen(state.data); state.revision = state.data.generated_at;
+      state.config = await api('/api/stitch/config');
+      await refreshFull(); state.revision = state.data.generated_at;
+    } catch (error) {
+      showDataPending('DATA SOURCE UNAVAILABLE'); bindCommon({});
+      notify(`LiveIntel data binding failed safely: ${error.message}`, true);
+    } finally {
+      state.loading = false;
+      // Start polling after either success or failure, so cold failures recover.
       setInterval(poll, 15000);
-    } catch (error) { notify(`LiveIntel data binding failed safely: ${error.message}`, true); }
+    }
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true }); else init();

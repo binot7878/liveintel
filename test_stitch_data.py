@@ -105,6 +105,82 @@ class StitchCalculationTests(unittest.TestCase):
         self.assertEqual(stitch_data.totals(payload)["fga"], 15)
 
 
+class StitchPortfolioTests(unittest.TestCase):
+    def sample(self):
+        return {"bobby": {"name": "BOBBY", "bankroll": None, "today_pl": 40}, "tickets": [
+            {"id": 1, "owner": "Bobby", "group": "OPEN", "book": "Recorded Book", "stake": 25, "actual_payout": None},
+            {"id": 2, "owner": "Bobby", "group": "WON", "book": "Recorded Book", "stake": 40, "actual_payout": 80},
+        ]}
+
+    def test_exact_normalized_open_and_win_aggregates(self):
+        totals = stitch_data.portfolio(None, self.sample())
+        self.assertEqual(totals["open_count"], 1)
+        self.assertEqual(totals["open"], 1)
+        self.assertEqual(totals["active_exposure"], 25)
+        self.assertEqual(totals["settled"], 1)
+        self.assertEqual(totals["settled_pl"], 40)
+        self.assertEqual(totals["book_allocation"], [{"book": "Recorded Book", "exposure": 25}])
+
+    def test_normalized_group_overrides_legacy_status(self):
+        data = self.sample()
+        data["tickets"][1]["status"] = "OPEN"
+        self.assertEqual(stitch_data.portfolio(None, data)["active_exposure"], 25)
+        data["tickets"].append({"group": "VOID", "owner": "Bobby", "stake": 10, "actual_payout": 10})
+        self.assertEqual(stitch_data.portfolio(None, data)["settled_pl"], 40)
+
+    def test_incomplete_settlement_fails_closed(self):
+        for missing in (None, "", float("nan"), -1):
+            data = self.sample()
+            data["tickets"][1]["actual_payout"] = missing
+            totals = stitch_data.portfolio(None, data)
+            self.assertIsNone(totals["settled_pl"])
+            self.assertEqual(totals["active_exposure"], 25)
+            self.assertIsNone(stitch_data.owner_portfolio(data)["today_pl"])
+
+    def test_missing_open_stake_and_book_are_not_invented(self):
+        data = self.sample()
+        data["tickets"][0]["stake"] = None
+        self.assertIsNone(stitch_data.portfolio(None, data)["active_exposure"])
+        self.assertIsNone(stitch_data.portfolio(None, data)["book_allocation"])
+        data["tickets"][0]["stake"] = 25
+        data["tickets"][0]["book"] = ""
+        self.assertEqual(stitch_data.portfolio(None, data)["active_exposure"], 25)
+        self.assertIsNone(stitch_data.portfolio(None, data)["book_allocation"])
+
+    def test_unknown_status_is_not_open_and_missing_source_is_pending(self):
+        data = {"tickets": [{"group": "HISTORY", "stake": 500}]}
+        totals = stitch_data.portfolio(None, data)
+        self.assertEqual(totals["open_count"], 0)
+        self.assertIsNone(totals["active_exposure"])
+        self.assertIsNone(totals["settled_pl"])
+        self.assertIsNone(stitch_data.portfolio(None, {})["open_count"])
+        self.assertEqual(stitch_data.portfolio(None, {"tickets": []})["settled_pl"], 0)
+
+    def test_raw_settled_missing_payout_does_not_become_open(self):
+        data = {"tickets": [{"status": "SETTLED", "wager_amount": 40}]}
+        totals = stitch_data.portfolio(None, data)
+        self.assertEqual(totals["open_count"], 0)
+        self.assertEqual(totals["active_exposure"], 0)
+        self.assertIsNone(totals["settled_pl"])
+
+    def test_owner_summary_and_shared_bootstrap_consume_same_totals(self):
+        from unittest.mock import patch
+        data = self.sample()
+        owner = stitch_data.owner_portfolio(data)
+        self.assertIsNone(owner["bankroll"])
+        self.assertEqual((owner["open_count"], owner["exposure"], owner["settled_pl"]), (1, 25, 40))
+        with patch.object(stitch_data, "board_data", side_effect=lambda c, view, filters, now: data if view == "overview" else {}), \
+             patch.object(stitch_data, "system_health", return_value={"state": "LIVE", "feeds": []}), \
+             patch.object(stitch_data, "provider_registry", return_value=[]), \
+             patch.object(stitch_data, "market_lines", return_value=[]):
+            payload = stitch_data.bootstrap(None, "picks_positions_specialist_challenge")
+            update = stitch_data.updates(None)
+        self.assertEqual(payload["global"]["slip_count"], 1)
+        self.assertEqual(payload["bobby"]["exposure"], 25)
+        self.assertEqual(update["tickets"]["settled_pl"], 40)
+        self.assertEqual(update["bobby"]["open_count"], 1)
+
+
 class StitchActionTests(unittest.TestCase):
     def setUp(self):
         self.connection = sqlite3.connect(":memory:")

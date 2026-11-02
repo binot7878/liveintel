@@ -301,16 +301,50 @@ def player_catalog(connection: sqlite3.Connection, terminal: dict[str, Any], lim
 
 
 def portfolio(connection: sqlite3.Connection, overview: dict[str, Any]) -> dict[str, Any]:
-    tickets = overview.get("tickets", [])
-    open_tickets = [ticket for ticket in tickets if clean(ticket.get("status")).upper() not in {"WON", "LOST", "VOID", "PUSH", "SETTLED"}]
-    settled = [ticket for ticket in tickets if ticket not in open_tickets]
-    exposure = sum(finite(ticket.get("stake")) or finite(ticket.get("wager_amount")) or 0 for ticket in open_tickets)
-    pnl = sum(finite(ticket.get("profit_loss")) or 0 for ticket in settled)
+    """Aggregate authoritative normalized groups; unknown money never becomes zero."""
+    supplied = isinstance(overview.get("tickets"), list)
+    tickets = overview.get("tickets") if supplied else []
+
+    def group(ticket):
+        # A normalized group takes precedence over legacy/raw status fields.
+        value = clean(ticket.get("group") if "group" in ticket else ticket.get("status")).upper()
+        return {"PENDING": "OPEN", "WIN": "WON", "LOSS": "LOST", "PUSH": "VOID",
+                "VOIDED": "VOID"}.get(value, value)
+
+    def stake(ticket):
+        value = finite(ticket.get("stake") if "stake" in ticket else ticket.get("wager_amount"))
+        return value if value is not None and value >= 0 else None
+
+    opened = [ticket for ticket in tickets if group(ticket) == "OPEN"]
+    settled = [ticket for ticket in tickets if group(ticket) in {"WON", "LOST", "VOID", "SETTLED"}]
+    groups_known = supplied and all(group(ticket) in {"OPEN", "WON", "LOST", "VOID", "SETTLED"} for ticket in tickets)
+    exposure_known = groups_known and all(stake(ticket) is not None for ticket in opened)
+    pnl_known = groups_known and all(stake(ticket) is not None and finite(ticket.get("actual_payout")) is not None
+                                   and finite(ticket["actual_payout"]) >= 0 for ticket in settled)
+    exposure = round(sum(stake(ticket) for ticket in opened), 2) if exposure_known else None
+    pnl = round(sum(finite(ticket["actual_payout"]) - stake(ticket) for ticket in settled), 2) if pnl_known else None
     books: dict[str, float] = defaultdict(float)
-    for ticket in open_tickets:
-        books[clean(ticket.get("book")) or "UNSPECIFIED"] += finite(ticket.get("stake")) or finite(ticket.get("wager_amount")) or 0
-    return {"tickets": tickets, "open": len(open_tickets), "settled": len(settled), "active_exposure": round(exposure, 2),
-            "settled_pl": round(pnl, 2), "book_allocation": [{"book": book, "exposure": round(value, 2)} for book, value in sorted(books.items())]}
+    books_known = exposure_known and all(clean(ticket.get("book")) for ticket in opened)
+    if books_known:
+        for ticket in opened:
+            books[clean(ticket["book"])] += stake(ticket)
+    return {"tickets": tickets, "open": len(opened) if supplied else None,
+            "open_count": len(opened) if supplied else None, "settled": len(settled) if supplied else None,
+            "active_exposure": exposure, "settled_pl": pnl, "aggregates_authoritative": True,
+            "book_allocation": [{"book": book, "exposure": round(value, 2)} for book, value in sorted(books.items())] if books_known else None}
+
+
+def owner_portfolio(overview: dict[str, Any]) -> dict[str, Any]:
+    """Keep owner account/record fields, using the same exposure/settlement rules."""
+    owner = dict(overview.get("bobby") or {})
+    tickets = overview.get("tickets")
+    name = clean(owner.get("name") or "Bobby").casefold()
+    own = [ticket for ticket in tickets if clean(ticket.get("owner")).casefold() == name] if isinstance(tickets, list) else None
+    totals = portfolio(None, {"tickets": own})
+    owner.update(exposure=totals["active_exposure"], open_count=totals["open_count"], settled_pl=totals["settled_pl"])
+    if totals["settled_pl"] is None:
+        owner["today_pl"] = None
+    return owner
 
 
 def _screen_needs(screen: str, token: str) -> bool:
@@ -321,18 +355,20 @@ def bootstrap(connection: sqlite3.Connection, screen: str = "all", clock: dateti
     now = clock or datetime.now(timezone.utc)
     overview = board_data(connection, "overview", {}, now)
     terminal = board_data(connection, "terminal", {}, now)
+    owner = owner_portfolio(overview)
+    ticket_totals = portfolio(connection, overview)
     result: dict[str, Any] = {
         "contract_version": 1,
         "generated_at": now.isoformat(),
         "screen": screen,
         "global": {"slate_date": overview.get("slate_date"), "health": system_health(connection, now),
-                   "bankroll": overview.get("bobby", {}).get("bankroll"), "pl": overview.get("bobby", {}).get("today_pl"),
-                   "slip_count": sum(1 for ticket in overview.get("tickets", []) if clean(ticket.get("status")).upper() == "OPEN")},
+                   "bankroll": owner.get("bankroll"), "pl": owner.get("today_pl"),
+                   "slip_count": ticket_totals["open_count"]},
         "games": terminal.get("games", []),
         "watch": terminal.get("watch_history", []),
         "team_history": terminal.get("team_history", {}),
-        "tickets": portfolio(connection, overview),
-        "bobby": overview.get("bobby", {}),
+        "tickets": ticket_totals,
+        "bobby": owner,
         "specialists": overview.get("specialists", []),
         "ai_tickets": terminal.get("ai_tickets", {}),
         "intelligence": overview.get("intelligence", {}),
@@ -352,13 +388,14 @@ def updates(connection: sqlite3.Connection, clock: datetime | None = None) -> di
     now = clock or datetime.now(timezone.utc)
     overview = board_data(connection, "overview", {}, now)
     terminal = board_data(connection, "terminal", {}, now)
+    owner = owner_portfolio(overview)
     stamps = [feed.get("updated_at") or "" for feed in system_health(connection, now)["feeds"]]
     revision = max(stamps) if stamps else now.isoformat()
     return {"contract_version": 1, "generated_at": now.isoformat(), "revision": revision,
             "global": {"slate_date": overview.get("slate_date"), "health": system_health(connection, now),
-                       "bankroll": overview.get("bobby", {}).get("bankroll"), "pl": overview.get("bobby", {}).get("today_pl")},
+                       "bankroll": owner.get("bankroll"), "pl": owner.get("today_pl")},
             "games": terminal.get("games", []), "watch": terminal.get("watch_history", []),
-            "tickets": portfolio(connection, overview), "specialists": overview.get("specialists", []),
+            "tickets": portfolio(connection, overview), "bobby": owner, "specialists": overview.get("specialists", []),
             "ai_tickets": terminal.get("ai_tickets", {}), "intelligence": overview.get("intelligence", {})}
 
 
