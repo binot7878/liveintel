@@ -1856,24 +1856,173 @@
   }
 
   function bindTickets(data) {
-    const portfolio = data.tickets || {}; const main = one('main');
-    setLabelValue(main, /^TOTAL BANKROLL$/i, money(data.bobby && data.bobby.bankroll));
-    setLabelValue(main, /ACTIVE EXPOSURE/i, money(portfolio.active_exposure));
-    setLabelValue(main, /SETTLED P\/L/i, money(portfolio.settled_pl));
-    setLabelValue(main, /WIN RATE/i, 'INSUFFICIENT REAL SAMPLE');
-    setLabelValue(main, /CLV BEAT RATE/i, 'SOURCE PENDING');
-    const streamTitle = findLeaf(/ACTIVE TICKETS & LEDGER STREAM/i);
-    if (streamTitle) {
-      const section = streamTitle.closest('section') || streamTitle.parentElement && streamTitle.parentElement.parentElement;
-      if (!portfolio.tickets || !portfolio.tickets.length) pending(section, 'NO RECORDED OWNER TICKETS IN AUTHORITATIVE VIEW');
+    const main = one('main');
+    if (!main) return;
+    const cash = value => finiteInput(value) ? money(value) : 'PENDING';
+    const valueAfter = (root, pattern) => findLeaf(pattern, root)?.nextElementSibling;
+    const copy = (element, value) => {
+      if (!element) return;
+      const nodes = Array.from(element.childNodes).filter(node => node.nodeType === 3);
+      if (!nodes.length) { text(element, value); return; }
+      const target = nodes.find(node => node.textContent.trim()) || nodes[0];
+      nodes.forEach(node => { node.textContent = node === target ? String(value) : ''; });
+    };
+    const legRefs = row => ({ row, name: one('.font-headline-sm,.font-body-sm', row),
+      game: all('.font-body-sm', row).find(el => el !== one('.font-headline-sm,.font-body-sm', row)),
+      odds: findLeaf(/^\([+-]\d+\)$/i, row), sport: findLeaf(/^(NBA|CFB|NFL)$/i, row) });
+    const cardRefs = card => {
+      const id = findLeaf(/^#TK-/i, card);
+      const header = id?.parentElement;
+      const legs = all('.bg-surface-container-low', card).map(legRefs);
+      const payoutLabel = findLeaf(/^(EST\. RETURN|EST\. PAYOUT|RETURN \(NET\)|NET P\/L)$/i, card);
+      return { card, id, status: header?.children[0], book: findLeaf(/^(CIRCA SPORTS|PINNACLE LIVE|DRAFTKINGS)$/i, card),
+        time: findLeaf(/^PLACED |^OCT \d/i, card), stake: valueAfter(card, /^STAKE$/i),
+        odds: valueAfter(card, /^ODDS$/i), payout: payoutLabel?.nextElementSibling, payoutLabel, legs };
+    };
+    const neutralize = root => {
+      // Replace every exported card claim, including text adjacent to icons.
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        const parent = node.parentElement;
+        if (node.textContent.trim() && !parent.closest('script,style,.material-symbols-outlined') &&
+            (!parent.closest('button') || /\d/.test(node.textContent)) &&
+            !/^(STAKE|ODDS|EST\. RETURN|EST\. PAYOUT|RETURN \(NET\)|NET P\/L|ARBITRAGE OPPORTUNITY:)$/i.test(node.textContent.trim())) node.textContent = 'SOURCE PENDING';
+      });
+      all('.material-symbols-outlined', root).filter(el => /^(check_circle|verified|cancel|close|autorenew)$/.test(el.textContent.trim())).forEach(el => text(el, 'help_outline'));
+      all('[style*="width:"]', root).forEach(el => { el.style.width = '0%'; });
+      all('button,input,select', root).forEach(disableControl);
+    };
+    if (!main.ticketBindings) {
+      const metrics = all('section')[1]?.querySelector('.grid');
+      const kpis = metrics ? Array.from(metrics.children).map(card => ({
+        label: one('span', card), value: one('.font-headline-lg', card),
+        detail: one('.font-headline-lg', card)?.nextElementSibling
+      })) : [];
+      const streamTitle = findLeaf(/^ACTIVE TICKETS & LEDGER STREAM$/i, main);
+      const stream = streamTitle?.parentElement.parentElement.parentElement;
+      const cards = stream ? Array.from(stream.children).slice(1).map(cardRefs) : [];
+      const tabs = all('#ticket-tabs button');
+      main.ticketBindings = { kpis, stream, cards, template: cards[0]?.card.cloneNode(true),
+        count: streamTitle?.nextElementSibling, cadence: valueAfter(main, /^AUTO-REFRESH:$/i),
+        tabs, filter: 'OPEN', data: {}, baseCards: cards.length };
+      const telemetry = findLeaf(/^REAL-TIME TELEMETRY$/i, main);
+      const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        if (!node.parentElement.closest('script,style,.material-symbols-outlined') &&
+            /\d|CIRCA|PINNACLE|DRAFTKINGS|SIGNAL LIVE|\+EV|REAL-TIME TELEMETRY|CRYPTOGRAPHIC|HASH CHAIN/i.test(node.textContent.trim())) node.textContent = 'SOURCE PENDING';
+      });
+      cards.forEach(binding => neutralize(binding.card));
+      all('svg path,svg circle,svg polyline,svg polygon', main).forEach(el => { el.style.visibility = 'hidden'; });
+      all('[style*="width:"]', main).forEach(el => { el.style.width = '0%'; });
+      all('.items-end > span', main).forEach(el => { el.style.height = '0px'; });
+      all('button,input,select', main).forEach(disableControl);
+      all('header button').forEach(disableControl);
+      all('select option', main).forEach(option => {
+        if (option.value !== 'all') text(option, 'FILTER DATA PENDING');
+      });
+      text(telemetry, 'RECORDED LEDGER DATA');
+      const hedge = all('.font-headline-sm', main).find(el => /REAL-TIME HEDGE|KELLY HEDGE/i.test(el.textContent));
+      const hedgePanel = hedge?.closest('.bg-surface-container');
+      if (hedgePanel) text(one('p', hedgePanel), 'VALIDATED LIVE MARKET INPUTS REQUIRED');
+      const footer = one('footer');
+      all('span', footer).filter(el => /INSTITUTIONAL ODDS ENGINE|SOCKET:|LATENCY:|SYS HOLD:/.test(el.textContent)).forEach(el => text(el, 'SOURCE PENDING'));
+      tabs.forEach((button, index) => {
+        button.addEventListener('click', event => {
+          event.preventDefault(); event.stopImmediatePropagation();
+          main.ticketBindings.filter = ['ALL', 'OPEN', 'WON', 'LOST', 'VOID'][index];
+          bindTickets(main.ticketBindings.data);
+        }, true);
+      });
     }
-    if (!portfolio.tickets || !portfolio.tickets.length) {
-      const kpi = findLeaf(/^TOTAL BANKROLL$/i); if (kpi) pending(kpi.closest('section') || kpi.parentElement && kpi.parentElement.parentElement, 'NO AUTHORITATIVE OWNER PORTFOLIO SAMPLE');
-    }
-    [/ACTIVE EXPOSURE BY LEAGUE/i, /BOOKMAKER ALLOCATION/i, /REAL-TIME HEDGE|KELLY HEDGE/i, /SGP CORRELATION EXPOSURE/i].forEach(pattern => {
-      const heading = findLeaf(pattern); if (heading) pending(heading.parentElement && heading.parentElement.parentElement || heading.parentElement, /BOOKMAKER|HEDGE/.test(pattern.source) ? 'VERIFIED MARKET / ACCOUNT SOURCE PENDING' : 'ALIGNED TICKET SAMPLE REQUIRED');
+    const refs = main.ticketBindings;
+    refs.data = data;
+    const supplied = Array.isArray(data.tickets?.tickets);
+    const tickets = supplied ? data.tickets.tickets : [];
+    const groups = ['OPEN', 'WON', 'LOST', 'VOID', 'HISTORY'];
+    const open = tickets.filter(ticket => ticket.group === 'OPEN');
+    const settled = tickets.filter(ticket => ['WON', 'LOST', 'VOID'].includes(ticket.group));
+    const amountsKnown = list => list.every(ticket => finiteInput(ticket.stake) && Number(ticket.stake) >= 0);
+    const groupsKnown = tickets.every(ticket => groups.includes(ticket.group) && ticket.group !== 'HISTORY');
+    const settlementsKnown = amountsKnown(settled) && settled.every(ticket => finiteInput(ticket.actual_payout) && Number(ticket.actual_payout) >= 0);
+    const exposure = supplied && groupsKnown && amountsKnown(open) ? open.reduce((sum, ticket) => sum + Number(ticket.stake), 0) : null;
+    const settledPL = supplied && groupsKnown && settlementsKnown ? settled.reduce((sum, ticket) => sum + Number(ticket.actual_payout) - Number(ticket.stake), 0) : null;
+    text(refs.kpis[0]?.value, cash(data.bobby?.bankroll));
+    copy(refs.kpis[0]?.detail, finiteInput(data.bobby?.bankroll) ? 'OWNER ACCOUNT' : 'ACCOUNT DATA REQUIRED');
+    text(refs.kpis[1]?.label, 'ACTIVE EXPOSURE (RECORDED OPEN)');
+    text(refs.kpis[1]?.value, cash(exposure));
+    text(refs.kpis[1]?.detail, supplied ? `${open.length} OPEN TICKETS` : 'COUNT PENDING');
+    text(refs.kpis[2]?.label, 'SETTLED P/L (RECORDED)');
+    text(refs.kpis[2]?.value, cash(settledPL));
+    text(refs.kpis[2]?.detail, supplied ? `${settled.length} SETTLED` : 'SETTLEMENTS PENDING');
+    // A descriptive rate needs at least 20 fully recorded decisive settlements.
+    // Voids are excluded from the denominator. No confidence or CLV is inferred.
+    const decisive = settled.filter(ticket => ticket.group !== 'VOID');
+    const wins = decisive.filter(ticket => ticket.group === 'WON').length;
+    text(refs.kpis[3]?.value, supplied && groupsKnown && settlementsKnown && decisive.length >= 20 ? `${number(wins / decisive.length * 100, 1)}%` : 'SAMPLE PENDING');
+    text(refs.kpis[3]?.detail, supplied ? `${wins}W / ${decisive.length - wins}L • MIN 20` : 'RECORD PENDING');
+    text(refs.kpis[4]?.value, 'SOURCE PENDING');
+    text(refs.kpis[4]?.detail, 'VERIFIED CLV REQUIRED');
+    const roll = findLeaf(/^ROLL$/i, one('header'));
+    text(roll?.nextElementSibling, cash(data.bobby?.bankroll));
+    const pl = findLeaf(/^P\/L$/i, one('header'));
+    text(pl?.nextElementSibling, cash(data.bobby?.today_pl));
+    text(refs.count, supplied ? `${open.length} OPEN / ${settled.length} SETTLED • ${tickets.length} RECORDED` : 'AUTHORITATIVE TICKET SOURCE PENDING');
+    text(refs.cadence, '15 SECONDS');
+    refs.tabs.forEach((button, index) => {
+      const group = ['ALL', 'OPEN', 'WON', 'LOST', 'VOID'][index];
+      const count = group === 'ALL' ? tickets.length : tickets.filter(ticket => ticket.group === group).length;
+      const label = one('span:last-child', button) || button;
+      text(label, `${group} (${supplied ? count : 'PENDING'})`);
+      button.disabled = !supplied;
+      button.classList.toggle('bg-surface-container-highest', refs.filter === group);
+      button.classList.toggle('text-on-surface', refs.filter === group);
+      button.classList.toggle('font-semibold', refs.filter === group);
+      button.classList.toggle('bg-surface-container-high', refs.filter !== group);
+      button.classList.toggle('text-on-surface-variant', refs.filter !== group);
     });
-    all('button', main).filter(button => /EXPORT|TAX REPORT|AUDIT/i.test(button.textContent)).forEach(button => button.dataset.liAction = 'export');
+    const visible = tickets.filter(ticket => refs.filter === 'ALL' || ticket.group === refs.filter);
+    // More records reuse the exported card design; never silently omit tickets.
+    while (refs.cards.length < visible.length && refs.template) {
+      const card = refs.template.cloneNode(true);
+      refs.cards.push(cardRefs(card)); neutralize(card); refs.stream.appendChild(card);
+    }
+    while (refs.cards.length > Math.max(refs.baseCards, visible.length)) refs.cards.pop().card.remove();
+    refs.cards.forEach((binding, index) => {
+      const ticket = visible[index];
+      binding.card.dataset.recordedTicketId = ticket ? String(ticket.id) : '';
+      text(binding.id, ticket ? `TICKET #${ticket.id} • ${ticket.owner || 'OWNER PENDING'}` : supplied ? `NO ${refs.filter === 'ALL' ? '' : refs.filter + ' '}RECORDED TICKET` : 'TICKET SOURCE PENDING');
+      copy(binding.status, ticket?.group || 'EMPTY SLOT');
+      text(binding.book, ticket?.book || 'BOOK PENDING');
+      text(binding.time, ticket?.placed || ticket?.settled || 'TIME PENDING');
+      text(binding.stake, cash(ticket?.stake));
+      const legs = Array.isArray(ticket?.legs) ? ticket.legs : [];
+      text(binding.odds, legs.length === 1 && finiteInput(legs[0].odds) ? legs[0].odds : 'PRICE PENDING');
+      const isSettled = ticket && ['WON', 'LOST', 'VOID'].includes(ticket.group);
+      const netKnown = isSettled && finiteInput(ticket.stake) && finiteInput(ticket.actual_payout);
+      text(binding.payoutLabel, isSettled ? 'RETURN / NET' : 'POTENTIAL PAYOUT');
+      text(binding.payout, isSettled ? netKnown ? `${money(ticket.actual_payout)} / ${money(Number(ticket.actual_payout) - Number(ticket.stake))}` : 'SETTLEMENT PENDING' : cash(ticket?.payout));
+      const baseLegs = binding.baseLegs || (binding.baseLegs = binding.legs.length);
+      while (binding.legs.length > baseLegs) binding.legs.pop().row.remove();
+      while (binding.legs.length < legs.length && binding.legs[0]) {
+        const row = binding.legs[0].row.cloneNode(true);
+        const original = binding.legs[0];
+        // Copy field positions, since labels are already rebound.
+        const locate = element => element ? row.querySelectorAll('*')[Array.from(original.row.querySelectorAll('*')).indexOf(element)] : null;
+        const extra = { row, name: locate(original.name), game: locate(original.game), odds: locate(original.odds), sport: locate(original.sport) };
+        original.row.parentElement.appendChild(row); binding.legs.push(extra);
+      }
+      binding.legs.forEach((legBinding, legIndex) => {
+        const leg = legs[legIndex];
+        text(legBinding.name, leg ? `${leg.player || leg.team || 'RECORDED GAME'} • ${leg.market || 'MARKET PENDING'} ${leg.side || ''} ${leg.line ?? ''}` : 'NO ADDITIONAL RECORDED LEG');
+        text(legBinding.game, leg?.game || 'GAME / LEG RESULT PENDING');
+        text(legBinding.odds, leg && finiteInput(leg.odds) ? leg.odds : 'PRICE PENDING');
+        text(legBinding.sport, leg?.sport || 'SPORT PENDING');
+      });
+    });
   }
 
   function bindIntelligence(data) {
@@ -2049,6 +2198,14 @@
   }
   async function poll() {
     try {
+      if (state.screen.startsWith('tickets_')) {
+        try { await refreshFull(); }
+        catch (_) {
+          bindTickets({});
+          text(one('#liveintel-development-state'), 'DEVELOPMENT STITCH • TICKETS UPDATE DEGRADED • DATA PENDING');
+        }
+        return;
+      }
       if (state.screen === 'picks_positions_specialist_challenge') {
         try { await refreshFull(); }
         catch (_) {
@@ -2064,6 +2221,7 @@
 
   async function init() {
     addEnvironmentNotice(); bindNavigation(); bindActions();
+    if (state.screen.startsWith('tickets_')) bindTickets({});
     if (state.screen === 'picks_positions_specialist_challenge') bindPicks({});
     try {
       [state.config, state.data] = await Promise.all([api('/api/stitch/config'), api(`/api/stitch/bootstrap?screen=${encodeURIComponent(state.screen)}`)]);
