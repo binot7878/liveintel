@@ -2026,17 +2026,234 @@
   }
 
   function bindIntelligence(data) {
-    const research = data.research && data.research.cards || [];
-    const qualified = research.filter(card => card.qualified && card.current_line != null && card.odds != null);
-    text(one('#intel-opp-count'), `${qualified.length} OPPORTUNIT${qualified.length === 1 ? 'Y' : 'IES'}`);
-    const feed = one('#active-targets-feed'); const empty = one('#empty-state-container');
-    if (!qualified.length) {
-      if (feed) feed.classList.add('li-hidden');
-      if (empty) { empty.classList.remove('hidden'); empty.classList.add('flex'); }
-      const builder = findLeaf(/QUICK TICKET BUILDER/i); if (builder) pending(builder.parentElement && builder.parentElement.parentElement || builder.parentElement, 'NO QUALIFIED CURRENT TARGETS');
+    const main = one('main');
+    if (!main) return;
+    const field = (root, pattern) => findLeaf(pattern, root);
+    const valueAfter = (root, pattern) => field(root, pattern)?.nextElementSibling;
+    const scrub = root => {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        if (!node.textContent.trim() || node.parentElement.closest('script,style,.material-symbols-outlined')) return;
+        if (/\d|MISSOURI|DERRICK|STROUD|PINNACLE|CIRCA|CRIS|DRAFTKINGS|CORRELATION|CONFIDENCE|MODEL EV|SYNCHRONIZED QUANT|POSITIVE FLOW|WIND EXPOSURE|SHARP VOLUME|HIGH CORR|IN PLAY|PRE-LOCK|QUANT STREAM|ZERO ARBITRAGE|NO ARB LOCK|CURRENTLY IN TICKET|HALF|HIT$|MISS$|STALL|FINISHER|SURGE|STEADY|BALANCED|CLUTCH|BLOWOUT/i.test(node.textContent)) node.textContent = 'SOURCE PENDING';
+      });
+      all('button,input,select', root).forEach(control => {
+        disableControl(control);
+        control.removeAttribute('onkeydown');
+        control.removeAttribute('onchange');
+      });
+      all('svg path,svg circle', root).forEach(el => { el.style.visibility = 'hidden'; });
+      all('[style*="width:"]', root).forEach(el => { el.style.width = '0%'; });
+    };
+    const cardRefs = card => {
+      const line = field(card, /^CURRENT LINE$/i);
+      const projection = field(card, /^AI PROJECTION$/i);
+      const edge = field(card, /^PROJECTED EDGE$/i);
+      return { card, title: one('h3', card), rationale: one('p', card),
+        sport: card.children[0]?.children[0]?.children[0], context: card.children[0]?.children[0]?.children[1],
+        signal: card.children[0]?.children[0]?.children[2], status: card.children[0]?.lastElementChild,
+        line: line?.nextElementSibling, price: line?.nextElementSibling?.nextElementSibling,
+        projectionLabel: projection, projection: projection?.nextElementSibling,
+        confidence: projection?.nextElementSibling?.nextElementSibling, edgeLabel: edge, edge: edge?.nextElementSibling,
+        ev: edge?.nextElementSibling?.nextElementSibling, sample: valueAfter(card, /^SAMPLE SIZE:$/i),
+        hit: valueAfter(card, /^HISTORICAL HIT:$/i),
+        stage: all('button', card).find(button => /ADD(?:ED)? TO TICKET/i.test(button.textContent)),
+        inspect: all('button', card).find(button => /INSPECT GAME LOG/i.test(button.textContent)),
+        log: one('[id^="log-"]', card) };
+    };
+    const legRefs = slot => ({ slot, sport: slot.children[0]?.children[0]?.children[0],
+      name: slot.children[0]?.children[0]?.children[1], remove: one('button', slot),
+      market: slot.children[1]?.children[0], odds: slot.children[1]?.children[1],
+      edge: slot.children[2]?.children[0], book: slot.children[2]?.children[1] });
+    const fingerprint = card => JSON.stringify([card.id, card.game_id, card.player_id, card.player, card.team, card.sport, card.market, card.side, Number(card.current_line), Number(card.odds), card.book]);
+    if (!main.intelligenceBindings) {
+      const feed = one('#active-targets-feed');
+      const empty = one('#empty-state-container');
+      const builder = one('h2', one('aside', main))?.closest('.bg-surface-container');
+      const slots = builder ? Array.from(builder.children[1].children).map(legRefs) : [];
+      const cards = Array.from(feed?.children || []).map(cardRefs);
+      const refs = main.intelligenceBindings = { feed, empty, builder, slots, cards, template: cards[0]?.card.cloneNode(true),
+        baseCards: cards.length, baseSlots: slots.length, selected: [], qualified: new Map(), data: {},
+        search: one('#search-input'), model: one('#model-selector'), stake: one('#ticket-stake'),
+        count: field(builder, /^2 LEGS$/i), clear: one('button[title="Clear all selections"]', builder),
+        odds: valueAfter(builder, /^COMBINED ODDS$/i), profit: valueAfter(builder, /^EST\. PROFIT$/i),
+        payout: valueAfter(builder, /^TOTAL PAYOUT$/i), record: all('button', builder).find(button => /PLACE \/ SAVE TICKET/i.test(button.textContent)),
+        researchCount: valueAfter(main, /^HEAT DETECTED$/i), researchLabel: field(main, /^HEAT DETECTED$/i),
+        emptyTitle: field(empty, /^NO QUALIFIED CURRENT TARGETS$/i), emptyText: one('p', empty) };
+      scrub(main);
+      // Clear hidden demo tables and narratives as well as the visible feed.
+      const clearCard = binding => {
+        const walker = document.createTreeWalker(binding.card, NodeFilter.SHOW_TEXT);
+        const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(node => {
+          if (node.textContent.trim() && !node.parentElement.closest('button,script,style,.material-symbols-outlined') &&
+              !/^(CURRENT LINE|AI PROJECTION|PROJECTED EDGE|SAMPLE SIZE:|HISTORICAL HIT:|DATE|OPPONENT|LOC|OPP DEF|MARKET|SUPPORTING DATA:)$/i.test(node.textContent.trim())) node.textContent = 'SOURCE PENDING';
+        });
+        all('[data-hit],[data-hit-1h],[data-hit-2h]', binding.card).forEach(row => Array.from(row.attributes).filter(attr => attr.name.startsWith('data-')).forEach(attr => row.removeAttribute(attr.name)));
+      };
+      refs.clearCard = clearCard;
+      cards.forEach(clearCard);
+      text(refs.researchLabel, 'RECORDED RESEARCH');
+      text(refs.emptyText, 'No current targets have complete verified market terms and authoritative qualification. Research history alone does not qualify a ticket.');
+      const correlation = one('aside > div:last-child p', main);
+      text(correlation, 'ALIGNED HISTORY AND VERIFIED COMBINED MARKET TERMS REQUIRED');
+      text(one('#toggle-btn-text'), 'QUALIFICATION IS DATA-DRIVEN');
+      all('input[type="checkbox"]', main).forEach(input => { input.checked = false; });
+      refs.stake.value = ''; refs.stake.placeholder = 'ENTER STAKE';
+      refs.search.removeAttribute('onkeydown'); refs.search.placeholder = 'FILTER REAL TEAM, PLAYER, OR MARKET';
+      refs.model.value = 'all';
+      all('header button').forEach(disableControl);
+      const footer = one('footer');
+      all('span', footer).filter(el => /INSTITUTIONAL ODDS ENGINE|SOCKET:|LATENCY:|SYS HOLD:/.test(el.textContent)).forEach(el => text(el, 'SOURCE PENDING'));
+      // Exported handlers only manipulate demo data. They are never authoritative.
+      ['toggleEmptyStatePreview', 'applyLogFilter', 'filterVenue', 'toggleCardLog'].forEach(name => { window[name] = () => {}; });
+      refs.search.addEventListener('input', () => bindIntelligence(refs.data));
+      refs.model.addEventListener('change', () => bindIntelligence(refs.data));
+      main.addEventListener('input', event => {
+        if (event.target !== refs.stake) return;
+        event.stopImmediatePropagation(); // Suppress the frozen 3.10 multiplier simulator.
+        refs.renderBuilder();
+      }, true);
+      refs.renderBuilder = () => {
+        const selected = refs.selected.map(item => refs.qualified.get(item.id)).filter(Boolean);
+        text(refs.count, `${selected.length} LEGS`);
+        refs.stake.disabled = !selected.length;
+        refs.clear.disabled = !selected.length;
+        refs.clear.dataset.intelAction = 'clear';
+        text(refs.odds, selected.length === 1 ? `${number(selected[0].odds, 3)}x DECIMAL` : selected.length ? 'COMBINED QUOTE REQUIRED' : 'PRICE REQUIRED');
+        const stake = finiteInput(refs.stake.value) && Number(refs.stake.value) > 0 ? Number(refs.stake.value) : null;
+        const payout = selected.length === 1 && stake != null ? Math.round(stake * Number(selected[0].odds) * 100) / 100 : null;
+        text(refs.profit, payout == null ? 'INPUTS REQUIRED' : money(payout - stake));
+        text(refs.payout, payout == null ? 'INPUTS REQUIRED' : money(payout));
+        const recordable = selected.length === 1 && payout != null && Number.isFinite(payout) && payout >= stake && payout > 0 && state.config?.writes_enabled === true && state.config?.database === 'isolated' && state.config?.wager_execution === false;
+        refs.record.disabled = !recordable || Boolean(refs.recording);
+        refs.record.dataset.intelAction = 'record';
+        text(one('span:last-child', refs.record), recordable ? 'RECORD ONLY • NO WAGER' : 'RECORDING • VERIFIED INPUTS REQUIRED');
+        while (refs.slots.length < selected.length) {
+          const slot = refs.slots[0].slot.cloneNode(true);
+          refs.slots[0].slot.parentElement.appendChild(slot); refs.slots.push(legRefs(slot));
+        }
+        while (refs.slots.length > Math.max(refs.baseSlots, selected.length)) refs.slots.pop().slot.remove();
+        refs.slots.forEach((binding, index) => {
+          const card = selected[index];
+          text(binding.sport, card?.sport || 'NO SELECTION');
+          text(binding.name, card?.player || card?.team || 'NO QUALIFIED LEG STAGED');
+          text(binding.market, card ? `${card.market} • ${card.side} ${card.current_line}` : 'VERIFIED TARGET REQUIRED');
+          text(binding.odds, card ? `${card.odds} DECIMAL` : 'PRICE REQUIRED');
+          text(binding.edge, card && finiteInput(card.edge) ? `DESCRIPTIVE DELTA ${number(card.edge, 2)}` : 'DELTA PENDING');
+          text(binding.book, card ? `BOOK: ${card.book}` : 'BOOK PENDING');
+          binding.remove.disabled = !card;
+          binding.remove.dataset.intelAction = 'remove'; binding.remove.dataset.targetId = card?.id || '';
+        });
+        const slip = findLeaf(/^SLIP\s*\(/i, one('header')); text(slip, `SLIP (${selected.length})`);
+      };
+      refs.action = async button => {
+        if (button.disabled || refs.recording) return;
+        const action = button.dataset.intelAction;
+        if (action === 'stage') {
+          const card = refs.qualified.get(button.dataset.targetId);
+          if (card && !refs.selected.some(item => item.id === card.id)) refs.selected.push({ id: card.id, fingerprint: fingerprint(card) });
+        } else if (action === 'clear') refs.selected = [];
+        else if (action === 'remove') refs.selected = refs.selected.filter(item => item.id !== button.dataset.targetId);
+        else if (action === 'inspect') {
+          const binding = refs.cards.find(item => item.card.dataset.targetId === button.dataset.targetId);
+          binding?.log?.classList.toggle('hidden');
+        } else if (action === 'record') {
+          refs.recording = true; refs.renderBuilder();
+          try {
+            // Recheck current qualification/terms before a record-only request.
+            await refreshFull();
+            const card = refs.selected.length === 1 && refs.qualified.get(refs.selected[0].id);
+            const stake = finiteInput(refs.stake.value) ? Number(refs.stake.value) : 0;
+            if (!card || stake <= 0 || state.config?.writes_enabled !== true || state.config?.database !== 'isolated' || state.config?.wager_execution !== false) throw new Error('Current verified target, positive stake and isolated record-only mode required');
+            const decimal = Number(card.odds);
+            const american = decimal >= 2 ? (decimal - 1) * 100 : -100 / (decimal - 1);
+            const payout = Math.round(stake * decimal * 100) / 100;
+            if (!Number.isFinite(payout) || payout < stake || payout <= 0) throw new Error('Valid verified payout terms required');
+            const result = await post('/api/stitch/tickets/record', { owner_name: 'Bobby', book: card.book, stake,
+              potential_payout: payout,
+              legs: [{ sport: card.sport, game_id: card.game_id, player_id: card.player_id || '', player: card.player || '', team: card.team || '', market: card.market, line: Number(card.current_line), side: card.side, odds: american }] });
+            if (result.wager_placed !== false || result.recorded !== true) throw new Error('Record-only confirmation missing');
+            refs.selected = []; refs.stake.value = '';
+            notify(`Ticket #${result.ticket_id} recorded in the isolated development ledger. No wager was placed.`);
+          } catch (error) { bindIntelligence({}); notify(`Ticket failed closed: ${error.message}`, true); }
+          finally { refs.recording = false; refs.renderBuilder(); }
+        }
+        refs.renderBuilder();
+      };
     }
-    const search = one('#search-input');
-    if (search && feed) search.addEventListener('input', () => all(':scope > div', feed).forEach(card => card.classList.toggle('li-hidden', !card.textContent.toLowerCase().includes(search.value.toLowerCase()))));
+    const refs = main.intelligenceBindings;
+    refs.data = data;
+    const research = Array.isArray(data.research?.cards) ? data.research.cards : [];
+    // These are decimal prices from scan_offers(), never American template odds.
+    const qualified = research.filter(card => card && typeof card.id === 'string' && card.qualified === true &&
+      card.sport && card.game_id && (card.player_id || card.team) && (card.player || card.team) && card.market &&
+      card.game && String(card.game.id) === String(card.game_id) && card.game.sport === card.sport && ['PRE', 'LIVE'].includes(card.game.status) &&
+      finiteInput(card.current_line) && finiteInput(card.odds) && Number(card.odds) > 1 &&
+      typeof card.book === 'string' && card.book.trim() && !/^(manual|manual_entry|test manual|unknown)$/i.test(card.book.trim()) &&
+      card.heat && card.heat.milestone === false && finiteInput(card.heat.hits) && finiteInput(card.heat.total) &&
+      Number(card.heat.hits) >= 4 && Number(card.heat.total) >= Number(card.heat.hits) &&
+      finiteInput(card.heat.current_line) && Number(card.heat.current_line) === Number(card.current_line) &&
+      finiteInput(card.heat.odds) && Number(card.heat.odds) === Number(card.odds) && card.heat.book === card.book && card.heat.side === card.side &&
+      Array.isArray(card.heat.values) && card.heat.values.length === Number(card.heat.total) && card.heat.values.every(finiteInput) &&
+      finiteInput(card.projection) && finiteInput(card.edge) && ((['OVER', 'MORE'].includes(card.side) && Number(card.edge) > 0) || (['UNDER', 'LESS'].includes(card.side) && Number(card.edge) < 0)));
+    const unique = new Map();
+    qualified.forEach(card => { if (!unique.has(card.id)) unique.set(card.id, card); });
+    refs.qualified = unique;
+    refs.selected = refs.selected.filter(item => unique.has(item.id) && fingerprint(unique.get(item.id)) === item.fingerprint);
+    if (!refs.selected.length) refs.stake.value = '';
+    text(one('#intel-opp-count'), `${unique.size} OPPORTUNIT${unique.size === 1 ? 'Y' : 'IES'}`);
+    text(refs.researchCount, data.research ? `${research.length} RESEARCH CARDS` : 'RESEARCH SOURCE PENDING');
+    const models = Array.isArray(data.research?.ai_filters) ? data.research.ai_filters : [];
+    all('option', refs.model).forEach((option, index) => {
+      option.value = index ? models[index - 1] || `pending-${index}` : 'all';
+      text(option, index ? models[index - 1]?.replaceAll('_', ' ') || 'MODEL DATA PENDING' : 'ALL SUPPLIED MODELS');
+      option.disabled = index > models.length;
+    });
+    refs.model.disabled = !models.length; refs.search.disabled = false;
+    if (!models.includes(refs.model.value)) refs.model.value = 'all';
+    const query = refs.search.value.trim().toLowerCase();
+    const visible = Array.from(unique.values()).filter(card => (refs.model.value === 'all' || card.ai_ids?.includes(refs.model.value)) &&
+      `${card.player || ''} ${card.team || ''} ${card.market || ''} ${card.sport || ''}`.toLowerCase().includes(query));
+    refs.feed.classList.toggle('li-hidden', !visible.length); refs.feed.classList.toggle('hidden', !visible.length);
+    refs.empty.classList.toggle('hidden', Boolean(visible.length)); refs.empty.classList.toggle('flex', !visible.length);
+    text(refs.emptyTitle, unique.size ? 'NO MATCHING QUALIFIED TARGETS' : 'NO QUALIFIED CURRENT TARGETS');
+    while (refs.cards.length < visible.length && refs.template) {
+      const card = refs.template.cloneNode(true);
+      const binding = cardRefs(card); scrub(card); refs.clearCard(binding);
+      all('[id]', card).forEach(el => el.removeAttribute('id'));
+      refs.cards.push(binding); refs.feed.appendChild(card);
+    }
+    while (refs.cards.length > Math.max(refs.baseCards, visible.length)) refs.cards.pop().card.remove();
+    refs.cards.forEach((binding, index) => {
+      const card = visible[index];
+      binding.card.classList.toggle('li-hidden', !card);
+      binding.card.dataset.targetId = card?.id || '';
+      if (!card) { refs.clearCard(binding); all('button', binding.card).forEach(disableControl); return; }
+      text(binding.title, `${card.player || card.team} • ${card.market} ${card.side} ${card.current_line}`);
+      text(binding.sport, card.sport); text(binding.context, card.game.away && card.game.home ? `${card.game.away} @ ${card.game.home} • ${card.game.status}` : card.game.status);
+      text(binding.signal, 'RECORDED RESEARCH'); text(binding.status, 'QUALIFIED • VERIFIED TERMS');
+      text(binding.rationale, card.ai_read || 'AUTHORITATIVE RESEARCH • ADDITIONAL RATIONALE PENDING');
+      text(binding.line, card.current_line); text(binding.price, `${card.odds} DECIMAL • ${card.book}`);
+      text(binding.projectionLabel, 'DESCRIPTIVE PROJECTION'); text(binding.projection, finiteInput(card.projection) ? number(card.projection, 2) : 'PROJECTION PENDING');
+      text(binding.confidence, 'CONFIDENCE: SOURCE PENDING');
+      text(binding.edgeLabel, 'DESCRIPTIVE DELTA'); text(binding.edge, number(card.edge, 2)); text(binding.ev, 'EV: INPUTS REQUIRED');
+      const values = Array.isArray(card.values) ? card.values : [];
+      text(binding.sample, `${values.filter(finiteInput).length} RECORDED GAMES`);
+      text(binding.hit, `${card.heat.hits} / ${card.heat.total} HISTORICAL • NOT A FORECAST`);
+      binding.stage.disabled = false; binding.stage.dataset.intelAction = 'stage'; binding.stage.dataset.targetId = card.id;
+      text(one('span:last-child', binding.stage), 'STAGE VERIFIED TARGET');
+      const rows = all('tbody tr', binding.log);
+      const dates = Array.isArray(card.dates) ? card.dates : [];
+      all('thead tr', binding.log).forEach(row => { text(row.children[0], 'DATE'); text(row.children[1], 'RECORDED VALUE'); });
+      rows.forEach((row, i) => Array.from(row.children).forEach((cell, column) => text(cell, column === 0 ? dates[i] || 'DATE PENDING' : column === 1 && finiteInput(values[i]) ? number(values[i], 1) : 'SOURCE PENDING')));
+      binding.inspect.disabled = !values.some(finiteInput); binding.inspect.dataset.intelAction = 'inspect'; binding.inspect.dataset.targetId = card.id;
+    });
+    const cash = value => finiteInput(value) ? money(value) : 'PENDING';
+    text(field(one('header'), /^ROLL$/i)?.nextElementSibling, cash(data.bobby?.bankroll));
+    text(field(one('header'), /^P\/L$/i)?.nextElementSibling, cash(data.bobby?.today_pl));
+    refs.renderBuilder();
   }
 
   function bindScreen(data) {
@@ -2062,6 +2279,7 @@
     return { decimal, payout: stake > 0 ? Math.round(stake * decimal * 100) / 100 : null, profit: stake > 0 ? Math.round(stake * (decimal - 1) * 100) / 100 : null, stake };
   }
   function updateDraftDisplay() {
+    if (state.screen === 'intelligence_ticket_builder') { one('main')?.intelligenceBindings?.renderBuilder(); return; }
     const count = state.draft.length; const price = draftPricing();
     ['headerSlipCount', 'floatLegCount'].forEach(id => text(one(`#${id}`), count));
     text(one('#slipLegCountBadge'), `${count} ACTIVE LEG${count === 1 ? '' : 'S'}`); text(one('#parlayLegsCount'), count);
@@ -2132,6 +2350,12 @@
   function bindActions() {
     document.addEventListener('click', event => {
       const button = event.target.closest('button,a'); if (!button) return;
+      if (state.screen === 'intelligence_ticket_builder') {
+        if (button.closest('nav')) return;
+        event.preventDefault(); event.stopImmediatePropagation();
+        one('main')?.intelligenceBindings?.action(button);
+        return;
+      }
       const label = button.textContent.replace(/\s+/g, ' ').trim();
       if (externalAction.test(label)) { event.preventDefault(); event.stopImmediatePropagation(); return notify('External sportsbook execution is not authorized. Component remains source-pending.', true); }
       const action = button.dataset.liAction;
@@ -2181,6 +2405,7 @@
       else if (button.id === 'stageTicketBtn' || button.id === 'transmitTicketBtn' || /RECORD TICKET/i.test(label)) { event.preventDefault(); event.stopImmediatePropagation(); recordDraft(); }
     }, true);
     document.addEventListener('paste', event => {
+      if (state.screen === 'intelligence_ticket_builder') return;
       if (event.target.matches('input,textarea,[contenteditable=true]')) return;
       const value = event.clipboardData && event.clipboardData.getData('text'); if (!value) return;
       const parsed = [];
@@ -2198,6 +2423,14 @@
   }
   async function poll() {
     try {
+      if (state.screen === 'intelligence_ticket_builder') {
+        try { await refreshFull(); }
+        catch (_) {
+          bindIntelligence({});
+          text(one('#liveintel-development-state'), 'DEVELOPMENT STITCH • INTELLIGENCE UPDATE DEGRADED • DATA PENDING');
+        }
+        return;
+      }
       if (state.screen.startsWith('tickets_')) {
         try { await refreshFull(); }
         catch (_) {
@@ -2221,6 +2454,7 @@
 
   async function init() {
     addEnvironmentNotice(); bindNavigation(); bindActions();
+    if (state.screen === 'intelligence_ticket_builder') bindIntelligence({});
     if (state.screen.startsWith('tickets_')) bindTickets({});
     if (state.screen === 'picks_positions_specialist_challenge') bindPicks({});
     try {
