@@ -1666,40 +1666,193 @@
   }
 
   function bindPicks(data) {
-    const bobbyHeading = findLeaf(/BOBBY|OWNER POSITION/i); const bobbyCard = closestCardFromHeading(bobbyHeading);
-    if (bobbyCard) {
-      setLabelValue(bobbyCard, /OWNER BANKROLL|CURRENT BANKROLL/i, money(data.bobby && data.bobby.bankroll));
-      setLabelValue(bobbyCard, /TOTAL EXPOSURE|EXPOSURE/i, money(data.bobby && data.bobby.exposure));
-      setLabelValue(bobbyCard, /OPEN TICKETS|OPEN SLIPS/i, `${data.bobby && data.bobby.open_count || 0} ACTIVE`);
-      const active = Array.from(bobbyCard.querySelectorAll('div')).find(element => /ACTIVE TICKET/.test(element.textContent) && element.children.length < 8);
-      if (active && !(data.bobby && data.bobby.tickets && data.bobby.tickets.length)) pending(active.parentElement || active, 'NO RECORDED BOBBY TICKET');
-    }
-    (data.specialists || []).forEach(specialist => {
-      const heading = findLeaf(new RegExp(`^${specialist.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i'));
-      const card = closestCardFromHeading(heading); if (!card) return;
-      setLabelValue(card, /^BANKROLL$|CURRENT BANKROLL/i, money(specialist.bankroll));
-      setLabelValue(card, /^RECORD$/i, `${specialist.wins || 0}-${specialist.losses || 0}`);
-      setLabelValue(card, /^EXPOSURE$/i, money(specialist.exposure));
-      const ticketArea = Array.from(card.querySelectorAll('div')).find(element => /AI TICKET SUBMISSION|PRIMARY DIRECT SIGNAL|NO QUALIFIED/.test(element.textContent) && element.children.length < 10);
-      if (ticketArea && !specialist.pick) pending(ticketArea.parentElement || ticketArea, 'NO AUTHORITATIVE QUALIFIED AI TICKET');
-    });
-    const aggregate = findLeaf(/FOUR HORSEMEN RUNNER INDEX/i);
-    if (aggregate && aggregate.parentElement) {
-      const container = aggregate.parentElement.parentElement || aggregate.parentElement;
-      const wins = (data.specialists || []).reduce((sum, item) => sum + Number(item.wins || 0), Number(data.bobby && data.bobby.wins || 0));
-      const losses = (data.specialists || []).reduce((sum, item) => sum + Number(item.losses || 0), Number(data.bobby && data.bobby.losses || 0));
-      const bankroll = (data.specialists || []).reduce((sum, item) => sum + Number(item.bankroll || 0), Number(data.bobby && data.bobby.bankroll || 0));
-      leafElements(container).forEach(element => {
-        if (/AGGREGATE RECORD:/i.test(element.textContent)) text(element, `AGGREGATE RECORD: ${wins}-${losses}`);
-        else if (/COMBINED BANKROLL:/i.test(element.textContent)) text(element, `COMBINED BANKROLL: ${money(bankroll)}`);
-        else if (/PACER:/i.test(element.textContent)) text(element, 'PACER: INSUFFICIENT SETTLED SAMPLE');
+    const main = one('main');
+    if (!main) return;
+    const cash = value => finiteInput(value) ? money(value) : 'PENDING';
+    const record = owner => owner && finiteInput(owner.wins) && finiteInput(owner.losses) ? `${owner.wins}-${owner.losses}` : 'PENDING';
+    const field = (root, pattern) => findLeaf(pattern, root);
+    const sibling = (root, pattern) => field(root, pattern)?.nextElementSibling;
+    const write = (root, pattern, value) => text(field(root, pattern), value);
+    // Save stable references before replacing demo text. No components are removed.
+    if (!main.picksBindings) {
+      const owner = closestCardFromHeading(field(main, /^OWNER POSITION & TICKETS$/i));
+      const ownerBalance = field(owner, /^OWNER BANKROLL$/i)?.closest('.bg-surface-container-lowest');
+      const ownerTicket = field(owner, /^ACTIVE TICKET/i)?.closest('.bg-surface-container');
+      const specialists = ['BASKETBALL_AI', 'CFB_AI', 'NFL_AI'].map(id => {
+        const card = closestCardFromHeading(field(main, new RegExp(`^${id.replace('_', ' ')}$`, 'i')));
+        const heading = field(card, new RegExp(`^${id.replace('_', ' ')}$`, 'i'));
+        const area = field(card, /^AI TICKET SUBMISSION$/i)?.closest('.bg-surface-container');
+        const detail = area?.children[1];
+        return { id, card, area, detail, bankroll: sibling(card, /^BANKROLL$/i),
+          goal: field(card, /^GOAL /i), record: field(card, /^RECORD:/i),
+          exposure: heading?.parentElement.parentElement.children[1],
+          badge: heading?.parentElement.parentElement.parentElement.lastElementChild,
+          status: area?.children[0].lastElementChild,
+          sample: field(area, /^\[SAMPLE DATA\]$/i),
+          name: detail && one('.font-body-md', detail),
+          market: field(detail, /^MARKET:/i), line: field(detail, /^LINE:/i),
+          odds: field(detail, /^\+115$|^-110$/i)?.parentElement,
+          stake: field(detail, /^STAKE:/i), payout: sibling(detail, /^POTENTIAL PAYOUT$/i),
+          result: sibling(detail, /^RESULT$/i),
+          empty: detail && leafElements(detail).filter(el => !el.matches('.material-symbols-outlined')) };
       });
+      // Both labels contain nested values; select their full span explicitly.
+      const aggregateSpan = all('span', main).find(el => /^AGGREGATE RECORD:/.test(el.textContent.trim()));
+      const combinedSpan = all('span', main).find(el => /^COMBINED BANKROLL:/.test(el.textContent.trim()));
+      main.picksBindings = { owner, ownerBalance, ownerTicket, specialists,
+        balance: ownerBalance && one('.font-headline-xl', ownerBalance),
+        today: field(ownerBalance, /TODAY$/i), ownerRecord: field(ownerBalance, /^VERIFIED RECORD:/i),
+        exposure: sibling(owner, /^TOTAL EXPOSURE$/i), open: sibling(owner, /^OPEN TICKETS$/i),
+        aggregate: aggregateSpan, combined: combinedSpan,
+        goal: sibling(main, /^GOAL CAP$/i) };
+
+      // Clear unsupported claims at text-node level, including parent text
+      // around nested spans. Retain every panel, table, SVG and layout class.
+      const scrub = (root, pattern) => {
+        if (!root) return;
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+        nodes.forEach(node => {
+          if (!node.parentElement.closest('script,style,.material-symbols-outlined') && pattern.test(node.textContent.trim())) node.textContent = 'SOURCE PENDING';
+        });
+      };
+      const ownerName = field(owner, /^BOBBY \(MANUAL DESK\)/i);
+      const trajectoryTitle = field(main, /^CUMULATIVE BANKROLL VELOCITY/i);
+      const ledgerTitle = field(main, /^PROVABLE LEDGER HASHES$/i);
+      main.picksBindings.ledgerEntries = Array.from(closestCardFromHeading(ledgerTitle)?.children[1]?.children || []);
+      scrub(main, /\d|SAMPLE DATA|AUDITED|VERIFIED|PASSED|SYNC PROTOCOL ACTIVE|ORACLE|ZERO.KNOWLEDGE|ZK.LOGGED|PROVABLE|CRYPTOGRAPHIC|CHAINLINK|CONSENSUS INTEGRITY|HIGH CONFIDENCE|High overlap|Joint expected|closing line edge|PRE.COMMITTED|CO.SIGNED|execution buffer|copied to your active slip|PROPRIETARY CAPITAL|PENDING TIP.OFF|PENDING KICKOFF|IN.FLIGHT|SUBMITTED$/i);
+      // Static demo narratives without numbers also require explicit pending copy.
+      write(main, /^SYNAPSE DRIFT:$/i, 'MODEL TELEMETRY:');
+      write(main, /^CHALLENGE CONTRACT:$/i, 'LEDGER SOURCE:');
+      write(main, /^ACTIVE AUDITOR:$/i, 'AUDIT SOURCE:');
+      write(main, /^CURRENT VERIFICATION BLOCK:$/i, 'VERIFICATION:');
+      text(ownerName, 'BOBBY • REAL OWNER LEDGER');
+      text(ledgerTitle, 'CHALLENGE TICKET LEDGER • TEST');
+      write(main, /^WNBA AI SPECIALIST$/i, 'WNBA • DATA PENDING');
+      text(one('#tabBtnRolling span:last-child'), 'ROLLING 10-GAME HIT RATE');
+      // No historical curves, probability bars or trajectory samples are supplied.
+      all('svg path,svg circle,svg polyline,svg polygon', main).forEach(el => { el.style.visibility = 'hidden'; });
+      all('[style*="width:"]', main).forEach(el => { el.style.width = '0%'; });
+      const benchmark = one('#historicalWinRateSuite');
+      write(benchmark, /^SOURCE PENDING$/i, 'HISTORY / CLV PENDING');
+      const correlation = field(main, /^CROSS-SPECIALIST CORRELATION ALERT$/i);
+      if (correlation) {
+        text(one('p', correlation.parentElement.parentElement), 'CORRELATION PENDING • ALIGNED AUTHORITATIVE TICKET SAMPLE REQUIRED');
+        text(correlation, 'CROSS-SPECIALIST CORRELATION • DATA PENDING');
+      }
+      text(trajectoryTitle, 'CUMULATIVE BANKROLL VELOCITY • HISTORY PENDING');
+      // Co-signing has no supported mutation. Keep the controls in place.
+      all('button,input,select', main).forEach(control => {
+        if (!['ledgerModalTrigger', 'closeLedgerModal', 'closeLedgerModalBtn'].includes(control.id)) disableControl(control);
+        else control.removeAttribute('onclick');
+      });
+      const ledgerButton = one('#ledgerModalTrigger');
+      text(ledgerButton?.querySelector('span:last-child'), 'CHALLENGE DATA STATUS');
+      const modal = one('#ledgerModal');
+      text(one('h2', modal), 'CHALLENGE DATA STATUS');
+      text(one('p', modal), 'LOCAL LEDGER READS • SPECIALISTS ARE TEST CHALLENGES');
+      const oracleButton = all('button', main).find(button => /EXPLORE PUBLIC/.test(button.textContent));
+      if (oracleButton) text(one('span:last-child', oracleButton), 'EXTERNAL AUDIT • NOT CONNECTED');
+      const footer = one('footer');
+      all('span', footer).filter(el => /INSTITUTIONAL ODDS ENGINE|SOCKET:|LATENCY:|SYS HOLD:/.test(el.textContent)).forEach(el => text(el, 'SOURCE PENDING'));
+      all('header button').forEach(disableControl);
+      // The exported co-sign function only animates a fictional submission.
+      window.cosignPick = () => notify('Co-signing is not connected. No ticket was created.', true);
     }
-    const benchmark = one('#historicalWinRateSuite'); if (benchmark) pending(benchmark, 'SETTLED CHALLENGE SAMPLE INSUFFICIENT • CLV SOURCE PENDING');
-    const correlation = findLeaf(/CROSS-SPECIALIST CORRELATION ALERT/i); if (correlation) pending(correlation.parentElement && correlation.parentElement.parentElement || correlation.parentElement, 'ALIGNED AUTHORITATIVE TICKET SAMPLE REQUIRED');
-    const velocity = findLeaf(/CUMULATIVE BANKROLL VELOCITY/i); if (velocity) pending(velocity.parentElement && velocity.parentElement.parentElement, 'HISTORICAL CHALLENGE TRAJECTORY SAMPLE INSUFFICIENT');
-    const hashes = findLeaf(/PROVABLE LEDGER HASHES/i); if (hashes) pending(hashes.parentElement && hashes.parentElement.parentElement, 'NO AUTHORITATIVE CHALLENGE TICKETS RECORDED');
-    const sync = findLeaf(/SYNC PROTOCOL ACTIVE/i); if (sync) pending(sync.parentElement && sync.parentElement.parentElement, 'CHALLENGE STATUS BOUND • ORACLE / CRYPTOGRAPHIC CLAIMS NOT SUPPLIED');
+    const refs = main.picksBindings;
+    const bobby = data.bobby || {};
+    const specialists = data.specialists || [];
+    text(refs.balance, cash(bobby.bankroll));
+    text(refs.today, finiteInput(bobby.today_pl) ? `${money(bobby.today_pl)} TODAY` : 'P/L PENDING');
+    text(refs.ownerRecord, `RECORD: ${record(bobby)}`);
+    text(refs.exposure, cash(bobby.exposure));
+    text(refs.open, finiteInput(bobby.open_count) ? `${bobby.open_count} OPEN` : 'COUNT PENDING');
+    const headerRoll = field(one('header'), /^ROLL$/i);
+    text(headerRoll?.nextElementSibling, cash(bobby.bankroll));
+    const headerPl = field(one('header'), /^P\/L$/i);
+    text(headerPl?.nextElementSibling, cash(bobby.today_pl));
+
+    // Bind the owner ticket without fabricating legs, prices or a parlay price.
+    const ownerTicket = Array.isArray(bobby.tickets) ? bobby.tickets[0] : null;
+    if (refs.ownerTicket) {
+      const rows = refs.ownerTicket.children;
+      text(one('span:last-child', rows[0]?.firstElementChild), ownerTicket ? `ACTIVE TICKET #${ownerTicket.id}` : 'NO RECORDED OWNER TICKET');
+      text(rows[0]?.lastElementChild, ownerTicket?.group || 'NO TICKET');
+      const legs = ownerTicket?.legs || [];
+      Array.from(rows[1]?.children || []).forEach((row, i) => {
+        const leg = legs[i];
+        text(row.children[0], leg ? `${leg.player || leg.team || leg.game || 'GAME'} • ${leg.market || 'MARKET PENDING'} ${leg.side || ''} ${leg.line ?? ''}` : 'NO ADDITIONAL RECORDED LEG');
+        text(row.children[1], leg && finiteInput(leg.odds) ? leg.odds : 'PRICE PENDING');
+      });
+      if (legs.length > 2) text(rows[1].children[1].children[0], legs.slice(1).map(leg => `${leg.player || leg.team || leg.game || 'GAME'} ${leg.market || ''} ${leg.side || ''} ${leg.line ?? ''}`).join(' • '));
+      const cells = rows[2]?.children;
+      text(cells?.[0]?.lastElementChild, cash(ownerTicket?.stake));
+      text(cells?.[1]?.lastElementChild, 'PRICE PENDING');
+      text(cells?.[2]?.lastElementChild, cash(ownerTicket?.payout));
+    }
+    let qualifiedCount = 0;
+    refs.specialists.forEach(binding => {
+      const specialist = specialists.find(item => item.id === binding.id && item.available === true);
+      text(binding.bankroll, cash(specialist?.bankroll));
+      text(binding.record, `RECORD: ${record(specialist)}`);
+      text(binding.goal, finiteInput(specialist?.goal) ? `GOAL ${money(specialist.goal)}` : 'GOAL PENDING');
+      text(binding.exposure, `TEST • EXPOSURE ${cash(specialist?.exposure)}`);
+      text(binding.badge, specialist ? 'TEST LEDGER' : 'DATA PENDING');
+      // Backend picks() alone qualifies current picks. Ledger history is never
+      // promoted to a new pick or used to invent a confidence/qualification rule.
+      const pick = specialist?.pick;
+      const qualified = pick && finiteInput(pick.ticket_id) && Number(pick.ticket_id) > 0 && pick.book &&
+        finiteInput(pick.stake) && Number(pick.stake) > 0 && finiteInput(pick.payout) && Number(pick.payout) > 0 &&
+        ((finiteInput(pick.odds) && Number(pick.odds) > 1) || (finiteInput(pick.multiplier) && Number(pick.multiplier) > 0)) &&
+        Array.isArray(pick.legs) && pick.legs.length && pick.legs.every(leg => leg.sport && leg.game_id &&
+          (leg.player || leg.team || leg.game) && leg.market && finiteInput(leg.line) && leg.side);
+      if (qualified) qualifiedCount += 1;
+      text(binding.status, qualified ? `TEST TICKET #${pick.ticket_id}` : 'NO QUALIFIED TICKET');
+      text(binding.sample, qualified ? `${pick.book} • ${pick.confidence || 'CONFIDENCE PENDING'}` : 'QUALIFIED INPUTS REQUIRED');
+      if (binding.name) {
+        text(binding.name, qualified ? pick.legs.map(leg => leg.player || leg.team || leg.game || 'GAME').join(' / ') : 'NO QUALIFIED CURRENT OPPORTUNITY');
+        text(binding.market, qualified ? `MARKET: ${pick.legs.map(leg => leg.market).join(' / ')}` : 'MARKET: PENDING');
+        text(binding.line, qualified ? `LINE: ${pick.legs.map(leg => `${leg.side} ${leg.line}`).join(' / ')}` : 'LINE: PENDING');
+        text(binding.odds, qualified && finiteInput(pick.odds) ? `DECIMAL ODDS: ${pick.odds}` : qualified && finiteInput(pick.multiplier) ? `MULTIPLIER: ${pick.multiplier}` : 'ODDS: PENDING');
+        text(binding.stake, qualified ? `STAKE: ${money(pick.stake)}` : 'STAKE: PENDING');
+        text(binding.payout, qualified ? money(pick.payout) : 'PENDING');
+        text(binding.result, qualified ? 'PENDING' : 'NO TICKET');
+      } else {
+        text(binding.empty?.[0], qualified ? pick.legs.map(leg => `${leg.player || leg.team || leg.game || 'GAME'} • ${leg.market} ${leg.side} ${leg.line}`).join(' / ') : 'NO QUALIFIED CURRENT OPPORTUNITY');
+        text(binding.empty?.[1], qualified ? `${pick.book} • STAKE ${money(pick.stake)} • PAYOUT ${money(pick.payout)} • ${finiteInput(pick.odds) ? `DECIMAL ${pick.odds}` : `MULTIPLIER ${pick.multiplier}`} • ${pick.confidence || 'CONFIDENCE PENDING'}` : 'AUTHORITATIVE QUALIFIED TICKET REQUIRED');
+      }
+    });
+    const participants = [data.bobby, ...['BASKETBALL_AI', 'CFB_AI', 'NFL_AI'].map(id => specialists.find(item => item.id === id && item.available === true))];
+    const complete = key => participants.every(item => item && finiteInput(item[key]));
+    text(refs.aggregate, complete('wins') && complete('losses') ? `AGGREGATE RECORD: ${participants.reduce((sum, item) => sum + Number(item.wins), 0)}-${participants.reduce((sum, item) => sum + Number(item.losses), 0)}` : 'AGGREGATE RECORD: PENDING');
+    text(refs.combined, complete('bankroll') ? `COMBINED BANKROLL: ${money(participants.reduce((sum, item) => sum + Number(item.bankroll), 0))}` : 'COMBINED BANKROLL: PENDING');
+    const goals = specialists.filter(item => item.available === true).map(item => item.goal);
+    text(refs.goal, goals.length === 3 && goals.every(goal => finiteInput(goal) && Number(goal) === Number(goals[0])) ? `${money(goals[0])} • TEST GOAL` : 'GOAL PENDING');
+    // Recorded TEST tickets are history, not evidence of a current qualified pick.
+    (refs.ledgerEntries || []).forEach((entry, index) => {
+      const id = ['CFB_AI', 'BASKETBALL_AI', 'NFL_AI'][index];
+      const ledger = data.ai_tickets && data.ai_tickets[id];
+      const ticket = Array.isArray(ledger) ? ledger.slice().sort((a, b) => Number(b.id) - Number(a.id))[0] : null;
+      const rows = entry.children;
+      text(rows[0]?.children[0], `${id.replace('_', ' ')} • ${ticket ? `TICKET #${ticket.id}` : 'NO RECORDED TICKET'}`);
+      text(rows[0]?.children[1], ticket?.created_at || 'TIME PENDING');
+      text(rows[1]?.children[0], ticket ? `${ticket.book || 'BOOK PENDING'} • ${ticket.ticket_type || 'TYPE PENDING'} • ${ticket.number_of_legs ?? '—'} LEGS` : 'NO RECORDED CHALLENGE TICKET');
+      text(rows[1]?.children[1], ticket && finiteInput(ticket.stake_cents) ? `STAKE ${money(Number(ticket.stake_cents) / 100)}` : 'STAKE PENDING');
+      text(rows[2], ticket ? `LOCAL TEST LEDGER • ${ticket.ticket_result || 'RESULT PENDING'}` : 'LOCAL TEST LEDGER • HISTORY PENDING');
+    });
+    // Keep hidden modal fields truthful as well as visible panels.
+    const modal = one('#ledgerModal');
+    const statusRows = modal?.children[0]?.children[1]?.children;
+    [
+      ['LEDGER SOURCE:', 'LOCAL TEST CHALLENGE LEDGER'],
+      ['CURRENT QUALIFICATION:', participants.slice(1).every(Boolean) ? `${qualifiedCount} QUALIFIED CURRENT TICKETS` : 'DATA PENDING'],
+      ['AGGREGATE RECORD:', refs.aggregate?.textContent.replace('AGGREGATE RECORD: ', '')],
+      ['COMBINED BANKROLL:', refs.combined?.textContent.replace('COMBINED BANKROLL: ', '')]
+    ].forEach(([label, value], i) => {
+      text(statusRows?.[i]?.firstElementChild, label);
+      text(statusRows?.[i]?.lastElementChild, value);
+    });
   }
 
   function bindTickets(data) {
@@ -1896,6 +2049,14 @@
   }
   async function poll() {
     try {
+      if (state.screen === 'picks_positions_specialist_challenge') {
+        try { await refreshFull(); }
+        catch (_) {
+          bindPicks({});
+          text(one('#liveintel-development-state'), 'DEVELOPMENT STITCH • PICKS UPDATE DEGRADED • DATA PENDING');
+        }
+        return;
+      }
       if (/^(math_lab_|watch_5_)/.test(state.screen)) { await refreshFull(); return; }
       const data = await api('/api/stitch/updates'); if (data.revision !== state.revision) { state.revision = data.revision; state.data = Object.assign({}, state.data, data); bindScreen(state.data); }
     } catch (_) { const notice = one('#liveintel-development-state'); if (notice) notice.textContent = 'DEVELOPMENT STITCH • LIVE UPDATE DEGRADED • LAST DATA RETAINED'; }
@@ -1903,6 +2064,7 @@
 
   async function init() {
     addEnvironmentNotice(); bindNavigation(); bindActions();
+    if (state.screen === 'picks_positions_specialist_challenge') bindPicks({});
     try {
       [state.config, state.data] = await Promise.all([api('/api/stitch/config'), api(`/api/stitch/bootstrap?screen=${encodeURIComponent(state.screen)}`)]);
       bindScreen(state.data); state.revision = state.data.generated_at;
