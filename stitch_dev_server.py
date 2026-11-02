@@ -170,6 +170,19 @@ class Handler(BaseHTTPRequestHandler):
             # browser JavaScript. Normalize only that invalid selector at serve
             # time; the authoritative HTML file and its DOM remain unchanged.
             html = html.replace("button:has-text, button", "button")
+
+            # WATCH 5 exported HTML contains a frozen demo simulator that
+            # mutates odds, latency, lines and player stats with timers.
+            # Remove only that inline script at serve time. The authoritative
+            # Stitch HTML file remains byte-for-byte untouched.
+            if screen.startswith("watch_5_") and "Live Feed Simulation State" in html:
+                marker_at = html.find("Live Feed Simulation State")
+                script_start = html.rfind("<script", 0, marker_at)
+                script_end = html.find("</script>", marker_at)
+
+                if script_start != -1 and script_end != -1:
+                    html = html[:script_start] + html[script_end + len("</script>"):]
+
             injection = (f'<link rel="stylesheet" href="/stitch-app.css">'
                          f'<script>window.__STITCH_SCREEN__={json.dumps(screen)};window.__STITCH_ENV__="DEVELOPMENT";</script>'
                          f'<script src="/stitch-app.js" defer></script>')

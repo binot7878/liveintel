@@ -1312,45 +1312,526 @@
 
 
   function bindWatch(data) {
-    const watch = data.watch || []; const ticketData = data.tickets || {};
+    const watch = data.watch || [];
+    const ticketData = data.tickets || {};
+    const main = one('main');
+
     for (let index = 0; index < 5; index += 1) {
-      const element = one(`#cardSlot0${index + 1}`) || all('main [class*="grid-cols-5"] > div')[index];
+      const element =
+        one(`#cardSlot0${index + 1}`) ||
+        all('main [class*="grid-cols-5"] > div')[index];
+
       if (!element) continue;
+
       const target = watch[index];
-      if (!target) { pending(element, 'EMPTY WATCH SLOT'); continue; }
-      unpending(element); element.draggable = true; element.dataset.watchIndex = index; element.dataset.playerId = target.player_id || target.id;
-      const knownNames = [/D\.\s*WHITE|DERRICK WHITE/i, /MISSOURI/i, /L\.\s*BALL|LAMelo Ball/i, /C\.J\.\s*STROUD/i, /C\.\s*HOLMGREN/i];
-      text(findLeaf(knownNames[index] || /$a/, element), target.player_name || target.name);
-      leafElements(element).filter(leaf => /3-POINTERS MADE|TEAM TOTAL OVER|OVER 7\.5 ASSISTS|PASS YARDS UNDER|OVER 7\.5 REBOUNDS/i.test(leaf.textContent)).forEach(leaf => text(leaf, target.market || 'RECORDED HISTORY'));
-      const values = target.values || []; const latest = values[0];
-      text(one(`#card${index + 1}LinePrice`), 'LINE: DATA SOURCE PENDING');
-      text(one(`#card${index + 1}ScoreVal`), latest == null ? '—' : latest);
-      text(one(`#card${index + 1}ScoreTarget`), target.market || 'RECORDED HISTORY');
-      text(one(`#card${index + 1}ScoreSub`), `${values.length} RECORDED GAMES`);
-      text(one(`#card${index + 1}Rotation`), target.average == null ? 'HISTORICAL CONTEXT AVAILABLE' : `AVG ${number(target.average, 1)}`);
-      text(one(`#card${index + 1}HitProb`), `HISTORY N=${values.length}`);
-      const bar = one(`#card${index + 1}Bar`); if (bar) bar.style.width = values.length ? '100%' : '0%';
-      pending(one(`#card${index + 1}SteamBox`), 'ODDS MOVEMENT SOURCE PENDING');
+
+      if (!target) {
+        pending(element, 'EMPTY WATCH SLOT');
+        continue;
+      }
+
+      unpending(element);
+
+      element.draggable = true;
+      element.dataset.watchIndex = index;
+      element.dataset.playerId = target.player_id || target.id || '';
+
+      const values = target.values || [];
+      const latest = values.length ? values[0] : null;
+      const average =
+        target.average != null
+          ? Number(target.average)
+          : values.length
+            ? values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length
+            : null;
+
+      // Replace known frozen demo player names.
+      const knownNames = [
+        /D\.\s*WHITE|DERRICK WHITE/i,
+        /MISSOURI/i,
+        /L\.\s*BALL|LAMELO BALL/i,
+        /C\.J\.\s*STROUD/i,
+        /C\.\s*HOLMGREN/i
+      ];
+
+      text(
+        findLeaf(knownNames[index] || /$a/, element),
+        target.player_name || target.name || 'WATCH TARGET'
+      );
+
+      // Normalize card-level frozen demo claims.
+      leafElements(element).forEach(leaf => {
+        const value = leaf.textContent.trim();
+
+        if (/^(NBA|CFB|NFL|NCAAB|WNBA|MLB|NHL)$/i.test(value)) {
+          text(leaf, target.sport || 'SPORT');
+
+        } else if (
+          /^(BOS|CHA|HOU|OKC|NCAA|MIZZ|ARK|MEM|NYJ)\s*•/i.test(value)
+        ) {
+          text(leaf, `${target.team || '—'} • ROLE NOT SUPPLIED`);
+
+        } else if (
+          /\b(?:BOS|CHA|HOU|NYJ|OKC|MEM|MIZZ|ARK)\b.*(?:@|VS)/i.test(value) ||
+          /\b(?:@|VS)\b.*\b(?:BOS|CHA|HOU|NYJ|OKC|MEM|MIZZ|ARK)\b/i.test(value)
+        ) {
+          text(leaf, 'GAME CONTEXT NOT SUPPLIED');
+
+        } else if (/^(IN-PLAY|PRE-LOCK)\s*\/\//i.test(value)) {
+          text(leaf, 'GAME STATE NOT SUPPLIED');
+
+        } else if (/^[+-]?\d+(?:\.\d+)?%\s*(EDGE|FLOW)$/i.test(value)) {
+          text(leaf, 'MARKET SIGNAL: SOURCE PENDING');
+
+        } else if (/^WEATHER HIT$/i.test(value)) {
+          text(leaf, 'WEATHER: SOURCE PENDING');
+
+        } else if (/^\d+\/\d+\s*STREAK$/i.test(value)) {
+          text(leaf, `${values.length} RECORDED GAMES`);
+
+        } else if (/^LINE:/i.test(value)) {
+          text(leaf, 'LINE: DATA SOURCE PENDING');
+
+        } else if (/STEAM DRIFT:/i.test(value)) {
+          text(leaf, 'ODDS MOVEMENT: SOURCE PENDING');
+
+        } else if (/SHARP ACTION STEAM/i.test(value)) {
+          text(leaf, 'SHARP ACTION: SOURCE PENDING');
+
+        } else if (/^\d+%\s*MONEY ON/i.test(value)) {
+          text(leaf, 'MARKET SPLIT: SOURCE PENDING');
+
+        } else if (/CRASH:\s*/i.test(value)) {
+          text(leaf, 'LINE MOVEMENT: SOURCE PENDING');
+
+        } else if (/^\+\d+(?:\.\d+)?\s*YD ADVANTAGE$/i.test(value)) {
+          text(leaf, 'EDGE: LINE REQUIRED');
+
+        } else if (/METLIFE TELEMETRY/i.test(value)) {
+          text(leaf, 'WEATHER TELEMETRY: SOURCE PENDING');
+
+        } else if (/\d+MPH\s*CROSSWIND/i.test(value)) {
+          text(leaf, 'WIND: SOURCE PENDING');
+
+        } else if (/VOLUME IMPACT/i.test(value)) {
+          text(leaf, 'VOLUME IMPACT: INPUTS REQUIRED');
+
+        } else if (/[-+]\d+(?:\.\d+)?%\s*PASS VOL/i.test(value)) {
+          text(leaf, 'VOLUME CHANGE: INPUTS REQUIRED');
+
+        } else if (/USAGE DELTA|USAGE RATE/i.test(value)) {
+          text(leaf, 'USAGE: SOURCE PENDING');
+
+        } else if (/TEAM USG|BUMP$/i.test(value)) {
+          text(leaf, 'USAGE VALUE: SOURCE PENDING');
+
+        } else if (/ROTATION$/i.test(value)) {
+          text(leaf, 'ROLE / ROTATION: SOURCE PENDING');
+
+        } else if (/MINS|MPG RUNTIME/i.test(value)) {
+          text(leaf, 'MINUTES: SOURCE PENDING');
+
+        } else if (/REDZONE CONV/i.test(value)) {
+          text(leaf, 'REDZONE: SOURCE PENDING');
+
+        } else if (/DRIVE SUCCESS RATE/i.test(value)) {
+          text(leaf, 'DRIVE RATE: SOURCE PENDING');
+
+        } else if (/MATH LAB PACE:/i.test(value)) {
+          text(leaf, 'PACE MODEL: INPUTS REQUIRED');
+
+        } else if (/SHARP CEILING/i.test(value)) {
+          text(leaf, 'CEILING: INPUTS REQUIRED');
+
+        } else if (/MINS PROJECTION/i.test(value)) {
+          text(leaf, 'MINUTES PROJECTION: INPUTS REQUIRED');
+
+        } else if (/HIT IN \d+ CONSECUTIVE/i.test(value)) {
+          text(leaf, `${values.length} RECORDED GAMES`);
+
+        } else if (/^\d+%$/i.test(value)) {
+          if (
+            leaf.parentElement &&
+            /HIT PROBABILITY|CASH REACH/i.test(
+              leaf.parentElement.textContent || ''
+            )
+          ) {
+            text(leaf, 'PROBABILITY NOT DERIVABLE');
+          }
+
+        } else if (/POTENTIAL ASSISTS/i.test(value)) {
+          text(leaf, 'PLAYER CREATION: SOURCE PENDING');
+
+        } else if (/^\d+\s*CREATED$/i.test(value)) {
+          text(leaf, 'SOURCE PENDING');
+
+        } else if (/LOCKED IN TICKET/i.test(value)) {
+          text(leaf, 'TICKET STATUS: NOT SUPPLIED');
+
+        } else if (/OPP MATCHUP/i.test(value)) {
+          text(leaf, 'MATCHUP: SOURCE PENDING');
+
+        } else if (/EDEY OUT|RIM VAC/i.test(value)) {
+          text(leaf, 'AVAILABILITY: SOURCE PENDING');
+
+        } else if (/PROJ:/i.test(value)) {
+          text(leaf, 'PROJECTION: INPUTS REQUIRED');
+
+        } else if (/^[+-]?\d+(?:\.\d+)?%\s*EV$/i.test(value)) {
+          text(leaf, 'EV: PRICE REQUIRED');
+
+        } else if (/REBOUND CHANCE CHUNKS/i.test(value)) {
+          text(leaf, 'REBOUND MODEL: INPUTS REQUIRED');
+
+        } else if (/PER 32M/i.test(value)) {
+          text(leaf, 'RATE: INPUTS REQUIRED');
+
+        } else if (/TARGET CASHED/i.test(value)) {
+          text(leaf, `${values.length} RECORDED GAMES`);
+
+        } else if (/HIT PROBABILITY/i.test(value)) {
+          text(leaf, 'HISTORICAL SAMPLE');
+
+        } else if (/CASH REACH/i.test(value)) {
+          text(leaf, `N=${values.length} RECORDED`);
+        }
+      });
+
+      // Bind supported Watch history.
+      text(
+        one(`#card${index + 1}LinePrice`),
+        'LINE: DATA SOURCE PENDING'
+      );
+
+      text(
+        one(`#card${index + 1}ScoreVal`),
+        latest == null ? '—' : number(latest, 1)
+      );
+
+      text(
+        one(`#card${index + 1}ScoreTarget`),
+        target.market || 'RECORDED HISTORY'
+      );
+
+      text(
+        one(`#card${index + 1}ScoreSub`),
+        `${values.length} RECORDED GAMES`
+      );
+
+      text(
+        one(`#card${index + 1}Rotation`),
+        average == null
+          ? 'HISTORICAL CONTEXT AVAILABLE'
+          : `AVG ${number(average, 1)}`
+      );
+
+      text(
+        one(`#card${index + 1}HitProb`),
+        `HISTORY N=${values.length}`
+      );
+
+      const bar = one(`#card${index + 1}Bar`);
+      if (bar) bar.style.width = values.length ? '100%' : '0%';
+
+      pending(
+        one(`#card${index + 1}SteamBox`),
+        'ODDS MOVEMENT SOURCE PENDING'
+      );
+
+      // Only DROP TARGET is actionable with current Watch data.
       all('button', element).forEach(button => {
-        button.dataset.liAction = /ADD|ROUTE|TICKET/i.test(button.textContent) ? 'ticket-add' : button.dataset.liAction || '';
-        Object.assign(button.dataset, { playerId: target.player_id || target.id || '', playerName: target.player_name || target.name || '', team: target.team || '', sport: target.sport || '', market: target.market || '', line: '', odds: '', book: '', side: 'OVER' });
+        const label = button.textContent.trim();
+
+        Object.assign(button.dataset, {
+          playerId: target.player_id || target.id || '',
+          playerName: target.player_name || target.name || '',
+          team: target.team || '',
+          sport: target.sport || '',
+          market: target.market || '',
+          line: '',
+          odds: '',
+          book: '',
+          side: 'OVER'
+        });
+
+        if (/DROP TARGET/i.test(label)) {
+          button.dataset.liAction = 'watch-remove';
+          button.disabled = false;
+          return;
+        }
+
+        delete button.dataset.liAction;
+        button.disabled = true;
+
+        if (/ADD TICKET/i.test(label)) {
+          text(button, 'TICKET • LINE / PRICE REQUIRED');
+
+        } else if (/HEDGE SLIP/i.test(label)) {
+          text(button, 'HEDGE • MARKET INPUTS REQUIRED');
+
+        } else if (/DISPATCH/i.test(label)) {
+          text(button, 'DISPATCH • MARKET INPUTS REQUIRED');
+
+        } else if (/OPEN PROPS/i.test(label)) {
+          text(button, 'PROPS • SOURCE PENDING');
+
+        } else if (/GAMECAST/i.test(label)) {
+          text(button, 'GAMECAST • GAME ID REQUIRED');
+
+        } else if (/WEATHER/i.test(label)) {
+          text(button, 'WEATHER • SOURCE PENDING');
+
+        } else if (/COMPARE/i.test(label)) {
+          text(button, 'COMPARE • INPUTS REQUIRED');
+
+        } else if (/HEAT LOG/i.test(label)) {
+          text(button, 'HISTORY • RECORDED DATA ONLY');
+        }
       });
     }
+
+    // Remove frozen ticket-lock banner that is plain text inside
+    // a container rather than a leaf node.
+    if (main) {
+      const frozenTicketLocks = Array.from(main.querySelectorAll('div'))
+        .filter(element =>
+          /LOCKED IN TICKET\s*#?\d+/i.test(element.textContent.trim())
+        )
+        .sort((a, b) =>
+          a.textContent.trim().length - b.textContent.trim().length
+        );
+
+      if (frozenTicketLocks[0]) {
+        text(frozenTicketLocks[0], 'TICKET STATUS: NOT SUPPLIED');
+      }
+    }
+
+    // Aggregate Watch 5 metrics.
     text(one('#totalEdgeMetric'), '—');
-    text(one('#ribbonSteamCount'), 'MARKET FEED PENDING'); text(one('#pinLatency'), 'PENDING'); text(one('#circaLatency'), 'PENDING');
-    const ticker = findLeaf(/LIVE LINE TICKER/i); if (ticker) pending(ticker.parentElement && ticker.parentElement.parentElement, 'LIVE MULTI-BOOK TICKER • DATA SOURCE PENDING');
-    setLabelValue(document, /LIVE SLATE TRIGGERS/i, `${watch.filter(target => target.game_id).length} CURRENT`);
-    setLabelValue(document, /TOTAL TARGET EDGE/i, 'PRICE REQUIRED');
-    setLabelValue(document, /RAPID STEAM ALERTS|STEAM ALERTS/i, 'SOURCE PENDING');
-    const ledger = findLeaf(/WATCH 5 RAPID DRIFT|RAPID EXECUTION ARBITRAGE|RAPID ARB LEDGER/i); if (ledger) {
-      const section = ledger.closest('section') || ledger.parentElement && ledger.parentElement.parentElement;
-      const table = section && one('table', section); if (table) pending(table.parentElement || table, 'MULTI-BOOK ODDS / MOVEMENT SOURCE PENDING');
+
+    text(one('#ribbonSteamCount'), 'MARKET FEED PENDING');
+    text(one('#pinLatency'), 'PENDING');
+    text(one('#circaLatency'), 'PENDING');
+
+    const ticker = findLeaf(/LIVE LINE TICKER/i);
+
+    if (ticker) {
+      // Replace the exported fake sportsbook ticker contents with one
+      // truthful source-pending panel while retaining the WATCH 5 layout.
+      let tickerRegion = ticker.parentElement;
+
+      while (
+        tickerRegion &&
+        tickerRegion !== main &&
+        !/STEAM DETECTED|SHARP INFLOW|VALUE ARB|HIGH LIQUIDITY/i.test(
+          tickerRegion.textContent || ''
+        )
+      ) {
+        tickerRegion = tickerRegion.parentElement;
+      }
+
+      if (tickerRegion && tickerRegion !== main) {
+        const title = document.createElement('div');
+        title.className = 'font-headline-sm text-headline-sm uppercase text-on-surface';
+        title.textContent = 'LIVE LINE TICKER';
+
+        const status = document.createElement('div');
+        status.className = 'font-label-mono-sm text-label-mono-sm text-outline py-space-md';
+        status.textContent = 'MULTI-BOOK ODDS / MOVEMENT SOURCE PENDING';
+
+        tickerRegion.replaceChildren(title, status);
+        pending(tickerRegion, 'LIVE MULTI-BOOK TICKER • DATA SOURCE PENDING');
+      }
     }
-    const exposure = findLeaf(/^MONITORED EXPOSURE$/i); if (exposure && exposure.parentElement) {
-      const value = leafElements(exposure.parentElement).find(element => element !== exposure && /^\$/.test(element.textContent)); text(value, money(ticketData.active_exposure));
+
+    setLabelValue(
+      document,
+      /LIVE SLATE TRIGGERS/i,
+      `${watch.length} WATCHED`
+    );
+
+    setLabelValue(
+      document,
+      /TOTAL TARGET EDGE/i,
+      'PRICE REQUIRED'
+    );
+
+    setLabelValue(
+      document,
+      /RAPID STEAM ALERTS|STEAM ALERTS/i,
+      'SOURCE PENDING'
+    );
+
+    const ledger = findLeaf(
+      /WATCH 5 RAPID DRIFT|RAPID EXECUTION ARBITRAGE|RAPID ARB LEDGER/i
+    );
+
+    if (ledger) {
+      const section =
+        ledger.closest('section') ||
+        ledger.parentElement && ledger.parentElement.parentElement;
+
+      const table = section && one('table', section);
+
+      if (table) {
+        const placeholder = document.createElement('div');
+        placeholder.className =
+          'p-space-md bg-surface-container-low text-outline font-label-mono-sm text-label-mono-sm text-center uppercase';
+
+        placeholder.textContent =
+          'MULTI-BOOK ODDS / MOVEMENT SOURCE PENDING';
+
+        table.replaceWith(placeholder);
+        pending(placeholder, 'MULTI-BOOK ODDS / MOVEMENT SOURCE PENDING');
+      }
+
+      // Neutralize exported ledger subtitles that claim live bookmakers.
+      if (section) {
+        leafElements(section).forEach(element => {
+          const value = element.textContent.trim();
+
+          if (/AUTO-POLLING PINNACLE\/CIRCA/i.test(value)) {
+            text(element, 'MARKET POLLING • SOURCE PENDING');
+
+          } else if (/COLOR KEY:.*BEST EXECUTION.*RAPID STEAM/i.test(value)) {
+            text(element, 'MARKET COMPARISON • SOURCE PENDING');
+          }
+        });
+      }
     }
+
+    const exposure = findLeaf(/^MONITORED EXPOSURE$/i);
+
+    if (exposure && exposure.parentElement) {
+      const value = leafElements(exposure.parentElement).find(
+        element =>
+          element !== exposure &&
+          /^\$/.test(element.textContent)
+      );
+
+      text(value, money(ticketData.active_exposure));
+    }
+
+    // Remove the remaining exported demo odds ledger completely.
+    // All residual fake player/book names live inside this one stale table.
+    const staleBookHeader = Array.from(document.querySelectorAll('th')).find(
+      element => /^PINNACLE \(SHARP\)$/i.test(element.textContent.trim())
+    );
+
+    if (staleBookHeader) {
+      const staleTable = staleBookHeader.closest('table');
+
+      if (staleTable) {
+        const placeholder = document.createElement('div');
+
+        placeholder.className =
+          'p-space-md bg-surface-container-low text-outline font-label-mono-sm text-label-mono-sm text-center uppercase';
+
+        placeholder.textContent =
+          'MULTI-BOOK ODDS / MOVEMENT SOURCE PENDING';
+
+        staleTable.replaceWith(placeholder);
+
+        pending(
+          placeholder,
+          'MULTI-BOOK ODDS / MOVEMENT SOURCE PENDING'
+        );
+      }
+    }
+
+    // Neutralize frozen Watch-wide status copy that cannot be
+    // derived from the current Watch records.
+    leafElements(main).forEach(element => {
+      const value = element.textContent.trim();
+
+      if (/^\d+\s+IN-PLAY$/i.test(value)) {
+        text(element, 'GAME STATE NOT SUPPLIED');
+
+      } else if (/^\d+\s+PRE-LOCK$/i.test(value)) {
+        text(element, 'GAME STATE NOT SUPPLIED');
+
+      } else if (/^NEXT EVENT STARTS/i.test(value)) {
+        text(element, 'SCHEDULE CONTEXT NOT SUPPLIED');
+
+      } else if (/HEAVY OFFSHORE STEAM/i.test(value)) {
+        text(element, 'MARKET MOVEMENT SOURCE PENDING');
+
+      } else if (/^AVG EV$/i.test(value)) {
+        text(element, 'EV REQUIRES PRICE');
+
+      } else if (/QUANT MODEL VS SHARP CONSENSUS/i.test(value)) {
+        text(element, 'VERIFIED MARKET INPUTS REQUIRED');
+
+      } else if (/^2 ACTIVE$/i.test(value)) {
+        text(element, 'SOURCE PENDING');
+
+      } else if (/^<5M DELTA$/i.test(value)) {
+        text(element, 'MOVEMENT DATA REQUIRED');
+
+      } else if (/DEDICATED OWNER EXECUTION QUEUE/i.test(value)) {
+        text(
+          element,
+          'OWNER WATCH QUEUE • RECORDED HISTORY BOUND • MARKET DATA FAILS CLOSED'
+        );
+      }
+    });
+
+    // Remove remaining frozen Watch-wide market claims.
+    leafElements(document).forEach(element => {
+      const value = element.textContent.trim();
+
+      if (/^[+-]?\d+(?:\.\d+)?%\s*EDGE$/i.test(value)) {
+        text(element, 'EDGE: PRICE REQUIRED');
+
+      } else if (/SHARP ACTION STEAM/i.test(value)) {
+        text(element, 'SHARP ACTION: SOURCE PENDING');
+
+      } else if (/^\d+\s*STEAM EVENTS DETECTED$/i.test(value)) {
+        text(element, 'STEAM EVENTS: SOURCE PENDING');
+      }
+    });
+
+    // Neutralize remaining frozen Watch ledger development / EV cells.
+    Array.from(document.querySelectorAll('[id$="-dev"]')).forEach(element => {
+      const value = element.textContent.trim();
+
+      if (/^[+-]?\d+(?:\.\d+)?%\s*EV$/i.test(value)) {
+        text(element, 'EV: PRICE REQUIRED');
+      }
+    });
+
+    // Defensive cleanup for frozen ticket-lock narratives.
+    leafElements(document).forEach(element => {
+      if (/LOCKED IN TICKET\s*#?\d+/i.test(element.textContent.trim())) {
+        text(element, 'TICKET STATUS: NOT SUPPLIED');
+      }
+    });
+
+    // Footer is outside main.
+    const footer = one('footer');
+
+    if (footer) {
+      Array.from(footer.querySelectorAll('span')).forEach(element => {
+        const value = element.textContent.trim();
+
+        if (/^INSTITUTIONAL ODDS ENGINE$/i.test(value)) {
+          text(element, 'MARKET DATA ENGINE • SOURCE PENDING');
+
+        } else if (/^SOCKET:\s*CONNECTED$/i.test(value)) {
+          text(element, 'SOCKET: NOT REQUIRED');
+
+        } else if (/^LATENCY:\s*14MS$/i.test(value)) {
+          text(element, 'INGEST: DATABASE CURRENT');
+
+        } else if (/^SYS HOLD:\s*2\.41%$/i.test(value)) {
+          text(element, 'MARKET HOLD: SOURCE PENDING');
+        }
+      });
+    }
+
     wireWatchDrag();
   }
+
 
   function setLabelValue(container, labelPattern, value) {
     const label = findLeaf(labelPattern, container); if (!label) return;
